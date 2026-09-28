@@ -63,21 +63,19 @@
                     <span id="user-role-display" class="block text-[9px] text-brand-500 font-bold uppercase"></span>
                 </div>
                 <button onclick="Auth.logout()" class="px-4 py-2 rounded-xl bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white font-bold text-xs uppercase">
-          <i class="fa-solid fa-right-from-bracket"></i> Sair
-        </button>
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                </button>
             </div>
         </div>
     </header>
 
     <main class="relative z-10 flex-grow max-w-7xl w-full mx-auto px-4 py-12">
 
-        <!-- LOGIN INICIAL COM VÍDEO HERO EM CÂMERA LENTA E MAIS VISÍVEL -->
+        <!-- LOGIN INICIAL COM VÍDEO HERO -->
         <section id="aba-login" class="tab-content relative overflow-hidden rounded-3xl p-8 md:p-16 border border-white/10 space-y-12">
-            <!-- Vídeo Hero de Fundo -->
+            <!-- Vídeo Hero de Fundo Corrigido -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                <video id="hero-video" autoplay muted loop playsinline class="w-full h-full object-cover opacity-60 filter brightness-90">
-         <video id="hero-video" src="mp4/hero.mp4" autoplay muted loop></video>
-                </video>
+                <video id="hero-video" src="mp4/hero.mp4" autoplay muted loop playsinline class="w-full h-full object-cover opacity-60 filter brightness-90"></video>
                 <div class="absolute inset-0 bg-gradient-to-b from-darkbg-300/60 via-darkbg-300/40 to-darkbg-300"></div>
             </div>
 
@@ -103,11 +101,11 @@
                     <!-- BOTÕES DE REDES SOCIAIS -->
                     <div class="grid grid-cols-2 gap-3">
                         <button onclick="Auth.loginSocial('google')" type="button" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-zinc-950 border border-white/10 text-xs font-bold text-white hover:border-brand-500 transition">
-              <i class="fa-brands fa-google text-rose-500"></i> Google
-            </button>
+                            <i class="fa-brands fa-google text-rose-500"></i> Google
+                        </button>
                         <button onclick="Auth.loginSocial('facebook')" type="button" class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-zinc-950 border border-white/10 text-xs font-bold text-white hover:border-brand-500 transition">
-              <i class="fa-brands fa-facebook text-blue-500"></i> Facebook
-            </button>
+                            <i class="fa-brands fa-facebook text-blue-500"></i> Facebook
+                        </button>
                     </div>
 
                     <div class="flex items-center gap-3 text-zinc-600 text-[10px] uppercase font-bold">
