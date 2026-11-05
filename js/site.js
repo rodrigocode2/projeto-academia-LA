@@ -106,6 +106,17 @@ const LASite = {
       el.addEventListener('click', function (e) {
         e.preventDefault();
         LASite.irPara(el.getAttribute('data-view'));
+
+        const href = el.getAttribute('href');
+        if (href && href.charAt(0) === '#') {
+          const secao = document.getElementById(href.slice(1));
+          if (secao && !secao.classList.contains('view-screen')) {
+            secao.scrollIntoView({
+              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+              block: 'start'
+            });
+          }
+        }
       });
     });
   },

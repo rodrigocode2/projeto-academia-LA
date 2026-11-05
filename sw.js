@@ -13,7 +13,7 @@
    suba a VERSAO abaixo (ex.: 'v2') para o cache antigo ser descartado.
    ========================================================================== */
 
-const VERSAO = 'la-fitness-v3';
+const VERSAO = 'la-fitness-v4';
 
 const ESSENCIAIS = [
   'index.html',
@@ -22,6 +22,7 @@ const ESSENCIAIS = [
   'css/admin.css',
   'js/dados.js',
   'js/site.js',
+  'js/supabase.js',
   'js/splash.js',
   'js/app-nav.js',
   'js/aluno.js',

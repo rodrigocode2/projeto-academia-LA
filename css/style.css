@@ -671,7 +671,8 @@ nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .rodape-links { display: flex; flex-direction: column; gap: 9px; }
 .rodape-links b { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #fff; margin-bottom: 4px; }
 
-.rodape-links a {
+.rodape-links a,
+.rodape-links button {
   color: var(--la-text-muted);
   font-size: 0.85rem;
   cursor: pointer;
@@ -679,7 +680,16 @@ nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
   transition: 0.2s;
 }
 
-.rodape-links a:hover { color: var(--la-red); }
+.rodape-links button {
+  background: none;
+  border: 0;
+  font-family: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.rodape-links a:hover,
+.rodape-links button:hover { color: var(--la-red); }
 
 .rodape-fim {
   text-align: center;

@@ -97,11 +97,11 @@
            data-fallbacks="img/logo-la.png|img/Logo LA Fitness em 3D Cinemático.png">
       <div class="logo-text">FITNESS<span>.</span></div>
     </div>
-    <nav>
-      <a class="nav-link" data-view="landing">Início</a>
-      <a class="nav-link" data-view="landing">Sobre</a>
-      <a class="nav-link" data-view="planos">Planos</a>
-      <button class="btn-student-area" data-view="login">
+    <nav aria-label="Navegação principal">
+      <a class="nav-link" href="#view-splash" data-view="splash">Início</a>
+      <a class="nav-link" href="#sobre" data-view="landing">Sobre</a>
+      <a class="nav-link" href="#view-planos" data-view="planos">Planos</a>
+      <button class="btn-student-area" type="button" data-view="login">
         <i class="fa-solid fa-lock"></i> <span>Área do Aluno</span>
       </button>
     </nav>
@@ -1022,14 +1022,13 @@
       </div>
       <div class="rodape-links">
         <b>Navegar</b>
-        <a data-view="landing">Início</a>
-        <a data-view="planos">Planos</a>
-        <a data-view="login">Área do Aluno</a>
+        <a href="#view-splash" data-view="splash">Início</a>
+        <a href="#view-planos" data-view="planos">Planos</a>
+        <a href="#view-login" data-view="login">Área do Aluno</a>
       </div>
       <div class="rodape-links">
         <b>Contato</b>
-        <a class="js-zap-contato"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-        <a class="js-ver-privacidade">Privacidade</a>
+        <button class="js-zap-contato" type="button"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp</button>
       </div>
     </div>
     <p class="rodape-fim">© <span class="js-ano"></span> L.A Fitness — Cidade Ocidental, GO</p>
@@ -1111,9 +1110,6 @@
             ? 'Olá! Gostaria de agendar uma aula experimental na L.A Fitness.'
             : 'Olá! Vim pelo site da L.A Fitness e gostaria de falar com a recepção.');
         });
-      });
-      document.querySelectorAll('.js-ver-privacidade').forEach(function (b) {
-        b.addEventListener('click', function () { window.location.href = 'privacidade.html'; });
       });
       document.querySelectorAll('.js-ano').forEach(function (e) { e.textContent = new Date().getFullYear(); });
     });
