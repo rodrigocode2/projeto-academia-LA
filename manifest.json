@@ -1,0 +1,57 @@
+{
+  "name": "L.A Fitness — Área do Aluno",
+  "short_name": "L.A Fitness",
+  "description": "Musculação, aulas coletivas e ficha de treino digital da L.A Fitness em Cidade Ocidental - GO.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0b0d",
+  "theme_color": "#0b0b0d",
+  "categories": [
+    "health",
+    "fitness",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "img/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Meu treino",
+      "short_name": "Treino",
+      "description": "Abrir a ficha do dia",
+      "url": "index.html?ir=app-dash"
+    },
+    {
+      "name": "Mensagens",
+      "short_name": "Mensagens",
+      "description": "Falar com a academia",
+      "url": "index.html?ir=app-dash"
+    }
+  ],
+  "display_override": [
+    "standalone",
+    "fullscreen"
+  ],
+  "prefer_related_applications": false
+}

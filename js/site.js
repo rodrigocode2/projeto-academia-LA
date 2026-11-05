@@ -1,12 +1,16 @@
 /* ==========================================================================
    L.A FITNESS — comportamento do site
-   Navegação, login do aluno, ficha de treino e medição de acessos.
+   Navegação entre telas, login do aluno, ficha de treino e medição de acessos.
    Depende de: js/dados.js e js/bot.js (carregados antes)
    ========================================================================== */
 
 const LASite = {
 
   iniciar() {
+    /* se veio de um "sair" ou "ver o site", abre direto na tela pedida */
+    const params = new URLSearchParams(window.location.search);
+    const destino = params.get('ir');
+    this._destinoInicial = destino || null;
     laGarantirConteudo();
     laRegistrarVisita('inicio');
 
@@ -15,9 +19,20 @@ const LASite = {
     this.ligarLogin();
     this.ligarFicha();
     this.ligarMedicao();
-    laSemearExemplo();
+    this.semear();
+
     LABot.iniciar();
 
+    if (this._destinoInicial) {
+      setTimeout(() => {
+        this.irPara(this._destinoInicial);
+        this._destinoInicial = null;
+        /* limpa a URL para não repetir ao recarregar */
+        try { history.replaceState(null, '', 'index.html'); } catch (e) {}
+      }, 60);
+    }
+
+    /* se o aluno já tem sessão aberta nesta aba, entra direto */
     const aluno = laAlunoLogado();
     if (aluno) this.entrarApp(aluno);
   },
@@ -26,15 +41,14 @@ const LASite = {
   pintarConteudo() {
     const c = laGarantirConteudo();
 
+    /* textos da abertura */
     const slogan = document.querySelector('.js-slogan');
     if (slogan && c.geral.slogan) slogan.innerHTML = c.geral.slogan;
 
     const endereco = document.querySelector('.js-endereco');
     if (endereco && c.geral.endereco) endereco.textContent = c.geral.endereco;
 
-    const horarios = document.querySelector('.js-horarios');
-    if (horarios && c.geral.horarios) horarios.textContent = c.geral.horarios;
-
+    /* modalidades */
     const grade = document.querySelector('.js-modalidades');
     if (grade && Array.isArray(c.modalidades)) {
       grade.innerHTML = c.modalidades.map(function (m) {
@@ -46,6 +60,7 @@ const LASite = {
       }).join('');
     }
 
+    /* planos */
     const planos = document.querySelector('.js-planos');
     if (planos && Array.isArray(c.planos)) {
       planos.innerHTML = c.planos.map(function (p) {
@@ -55,7 +70,8 @@ const LASite = {
                  (p.preco ? '<p class="plano-preco">R$ ' + laEscapar(p.preco) + '</p>' : '<p class="plano-preco">Consulte</p>') +
                  '<p class="card-desc">' + laEscapar(p.descricao) + '</p>' +
                  '<button class="btn-secondary js-plano" data-plano="' + laEscapar(p.nome) + '" style="margin-top:14px;">' +
-                   '<i class="fa-brands fa-whatsapp"></i> Quero este</button>' +
+                   '<i class="fa-brands fa-whatsapp"></i> Quero este' +
+                 '</button>' +
                '</div>';
       }).join('');
 
@@ -65,6 +81,13 @@ const LASite = {
         });
       });
     }
+
+    /* horários e contato */
+    const horarios = document.querySelector('.js-horarios');
+    if (horarios && c.geral.horarios) horarios.textContent = c.geral.horarios;
+
+    this.pintarSobre(c);
+    this.pintarBlocos(c);
   },
 
   /* ---------- troca de telas ---------- */
@@ -93,6 +116,153 @@ const LASite = {
     window.scrollTo(0, 0);
   },
 
+
+  /* ---------- Sobre: vem do painel (Conteúdo do site) ---------- */
+  pintarSobre(c) {
+    const so = (c && c.sobre) ? c.sobre : null;
+    if (!so) return;
+
+    const et = document.querySelector('.js-sobre-etiqueta');
+    if (et && so.etiqueta) et.textContent = so.etiqueta;
+
+    const olar = document.querySelector('.js-sobre-olar');
+    if (olar && so.olar) olar.textContent = so.olar;
+
+    const tit = document.querySelector('.js-sobre-titulo');
+    if (tit) {
+      tit.innerHTML = laEscapar(so.titulo || '') +
+        (so.titulo2 ? '<br><span>' + laEscapar(so.titulo2) + '</span>' : '');
+    }
+
+    /* os parágrafos */
+    const texto = document.querySelector('.js-sobre-texto');
+    if (texto && Array.isArray(so.paragrafos) && so.paragrafos.length) {
+      texto.innerHTML = so.paragrafos.map(function (t, i) {
+        return '<p' + (i === 0 ? ' class="jr-capitular"' : '') + '>' + laEscapar(t) + '</p>';
+      }).join('');
+    }
+
+    /* a faixa principal: foto e texto, no formato escolhido no painel */
+    const faixa = document.querySelector('.js-sobre-faixa');
+    if (faixa && so.faixa) {
+      const f = so.faixa;
+      const foto = function (src, leg) {
+        if (!src) return '';
+        return '<figure class="jr-foto">' +
+                 '<img src="' + laEscapar(src) + '" alt="' + laEscapar(leg || '') + '" loading="lazy">' +
+                 (leg ? '<figcaption>' + laEscapar(leg) + '</figcaption>' : '') +
+               '</figure>';
+      };
+      const texto = function () {
+        return '<div class="jr-texto js-sobre-texto">' +
+                 (Array.isArray(so.paragrafos) ? so.paragrafos.map(function (t, k) {
+                   return '<p' + (k === 0 ? ' class="jr-capitular"' : '') + '>' + laEscapar(t) + '</p>';
+                 }).join('') : '') +
+               '</div>';
+      };
+
+      let miolo = '';
+      if (f.formato === 'so-foto') {
+        miolo = foto(f.foto, f.legenda);
+      } else if (f.formato === 'duas-fotos') {
+        miolo = foto(f.foto, f.legenda) + foto(f.foto2, f.legenda2);
+      } else if (f.formato === 'texto-foto') {
+        miolo = texto() + foto(f.foto, f.legenda);
+      } else {
+        miolo = foto(f.foto, f.legenda) + texto();
+      }
+      faixa.className = 'jr-faixa js-sobre-faixa ' +
+        (f.formato === 'so-foto' ? 'jr-so-foto' :
+         f.formato === 'duas-fotos' ? 'jr-duas' :
+         f.formato === 'texto-foto' ? 'jr-invertido' : '');
+      faixa.innerHTML = miolo;
+    }
+
+    /* a grade de fotos */
+    const grade = document.querySelector('.js-sobre-grade');
+    if (grade && Array.isArray(so.fotos) && so.fotos.length) {
+      const padrao = ['img/musculacao.jpg', 'img/halteres-estante.jpg',
+                      'img/cordas-cintos.jpg', 'img/fachada-logo.jpg'];
+      const classes = ['jr-bloco jr-g1', 'jr-bloco', 'jr-bloco', 'jr-bloco jr-g2'];
+      grade.innerHTML = so.fotos.map(function (f, i) {
+        const src = f.foto || padrao[i] || padrao[0];
+        return '<figure class="' + (classes[i] || 'jr-bloco') + '">' +
+                 '<img src="' + laEscapar(src) + '" alt="' + laEscapar(f.nome || '') + '" loading="lazy">' +
+                 '<figcaption><b>' + laEscapar(f.nome || '') + '</b>' +
+                   '<span>' + laEscapar(f.texto || '') + '</span></figcaption>' +
+               '</figure>';
+      }).join('');
+    }
+  },
+
+  /* ---------- Blocos novos: o dono criou no painel ---------- */
+  pintarBlocos(c) {
+    const casa = document.querySelector('.js-blocos-extras');
+    if (!casa) return;
+
+    const lista = (c && Array.isArray(c.blocos)) ? c.blocos.filter(function (b) {
+      return b && b.ativo !== false && (b.titulo || b.texto || b.foto);
+    }) : [];
+
+    if (!lista.length) { casa.innerHTML = ''; return; }
+
+    const eu = this;
+    casa.innerHTML = lista.map(function (b) {
+      const formato = b.formato || 'foto-texto';
+      const lado = b.lado || 'foto-esquerda';
+      return eu.blocoHTML(b, formato, lado, (c.geral && c.geral.cidade) || '');
+    }).join('');
+  },
+
+  /* monta UM bloco no formato escolhido */
+  blocoHTML(b, formato, lado, cidade) {
+    const foto = function (src, alt, leg) {
+      if (!src) return '';
+      return '<figure class="jr-foto">' +
+               '<img src="' + laEscapar(src) + '" alt="' + laEscapar(alt || '') + '" loading="lazy">' +
+               (leg ? '<figcaption>' + laEscapar(leg) + '</figcaption>' : '') +
+             '</figure>';
+    };
+
+    const texto = function () {
+      let t = '';
+      if (b.titulo) t += '<h2 class="jr-titulo" style="font-size:clamp(2rem,5vw,3.4rem)">' +
+        laEscapar(b.titulo) + '</h2>';
+      if (b.texto) t += '<p class="jr-capitular">' + laEscapar(b.texto) + '</p>';
+      return t ? '<div class="jr-texto js-sobre-texto">' + t + '</div>' : '';
+    };
+
+    let miolo = '';
+
+    if (formato === 'so-foto') {
+      /* uma foto so, largura cheia */
+      miolo = '<div class="jr-faixa jr-so-foto">' +
+                foto(b.foto, b.titulo, b.legenda) +
+              '</div>';
+
+    } else if (formato === 'duas-fotos') {
+      /* duas fotos, lado a lado */
+      miolo = '<div class="jr-faixa jr-duas">' +
+                foto(b.foto, b.titulo, b.legenda) +
+                foto(b.foto2, b.titulo, b.legenda2) +
+              '</div>';
+
+    } else if (formato === 'texto-foto') {
+      miolo = '<div class="jr-faixa jr-invertido">' + texto() + foto(b.foto, b.titulo, b.legenda) + '</div>';
+
+    } else {
+      miolo = '<div class="jr-faixa">' + foto(b.foto, b.titulo, b.legenda) + texto() + '</div>';
+    }
+
+    const etiqueta = b.etiqueta || 'Novidade';
+
+    return '<div class="jr-topo">' +
+             '<span class="jr-etiqueta">' + laEscapar(etiqueta) + '</span>' +
+             '<div class="jr-linha"></div>' +
+             '<span class="jr-data">' + laEscapar(cidade) + '</span>' +
+           '</div>' + miolo;
+  },
+
   /* ---------- login do aluno ---------- */
   ligarLogin() {
     const form = document.getElementById('form-login-aluno');
@@ -107,7 +277,10 @@ const LASite = {
       const r = laAutenticar(usuario, senha);
 
       if (!r.ok) {
-        if (aviso) { aviso.textContent = r.erro; aviso.classList.remove('hidden'); }
+        if (aviso) {
+          aviso.textContent = r.erro;
+          aviso.classList.remove('hidden');
+        }
         laRegistrarAcesso('login', 'clique', { alvo: 'login-falhou' });
         return;
       }
@@ -119,14 +292,24 @@ const LASite = {
   },
 
   entrarApp(aluno) {
-    const nome = document.querySelector('.js-aluno-nome');
-    const matr = document.querySelector('.js-aluno-matricula');
-    const av   = document.querySelector('.js-aluno-avatar');
+    /* cabeçalho do app */
+    const nome  = document.querySelector('.js-aluno-nome');
+    const matr  = document.querySelector('.js-aluno-matricula');
+    const av    = document.querySelector('.js-aluno-avatar');
     if (nome) nome.textContent = aluno.nome;
     if (matr) matr.textContent = 'Matrícula ' + aluno.matricula;
     if (av)   av.textContent = laIniciais(aluno.nome);
 
-    this.pintarTreinos(aluno);
+    const foto = document.querySelector('.js-aluno-foto');
+    if (foto && aluno.foto) { foto.src = aluno.foto; foto.classList.remove('hidden'); }
+
+    /* quem manda na área do aluno é o LAAluno (treino de hoje, agenda e
+       lista de treinos). O pintarTreinos antigo só entra se ele não existir. */
+    if (typeof LAAluno !== 'undefined' && LAAluno.iniciar) {
+      LAAluno.iniciar();
+    } else {
+      this.pintarTreinos(aluno);
+    }
     this.irPara('app-dash');
   },
 
@@ -134,6 +317,8 @@ const LASite = {
   pintarTreinos(aluno) {
     const casa = document.querySelector('.js-lista-treinos');
     if (!casa) return;
+    /* o LAAluno cuida desta lista; sai fora para não sobrescrever */
+    if (typeof LAAluno !== 'undefined' && LAAluno.iniciar) return;
 
     const treinos = Array.isArray(aluno.treinos) ? aluno.treinos : [];
     if (!treinos.length) {
@@ -148,7 +333,8 @@ const LASite = {
                  '<span class="etiqueta-treino">TREINO ' + laEscapar(t.letra) + '</span>' +
                  '<h4 style="margin-top:5px; font-size:1rem;">' + laEscapar(t.nome) + '</h4>' +
                  '<p style="font-size:0.8rem; color:var(--la-text-muted);">' +
-                   t.exercicios.length + ' exercícios • ' + total + ' séries</p>' +
+                   t.exercicios.length + ' exercícios • ' + total + ' séries' +
+                 '</p>' +
                '</div>' +
                '<i class="fa-solid fa-chevron-right" style="color:var(--la-red)"></i>' +
              '</div>';
@@ -174,7 +360,8 @@ const LASite = {
         const series = ex.series.map(function (s, j) {
           return '<div class="set-row">' +
                    '<span>Série ' + (j + 1) + ' • ' + laEscapar(s.reps) + ' Reps • ' + laEscapar(s.peso) + '</span>' +
-                   '<div class="set-check' + (s.feito ? ' done' : '') + '" data-ex="' + i + '" data-serie="' + j + '">' +
+                   '<div class="set-check' + (s.feito ? ' done' : '') + '" ' +
+                        'data-ex="' + i + '" data-serie="' + j + '">' +
                      '<i class="fa-solid fa-check"></i>' +
                    '</div>' +
                  '</div>';
@@ -216,24 +403,24 @@ const LASite = {
   },
 
   ligarFicha() {
-    document.querySelectorAll('.js-sair-aluno').forEach(function (sair) {
-      sair.addEventListener('click', function () {
-        laSairAluno();
-        LASite.irPara('splash');
-      });
+    const sair = document.querySelector('.js-sair-aluno');
+    if (sair) sair.addEventListener('click', function () {
+      laSairAluno();
+      /* toda saída volta para a TELA DE ABERTURA do site */
+      window.location.href = 'index.html';
     });
 
-    document.querySelectorAll('.js-qrcode').forEach(function (qr) {
-      qr.addEventListener('click', function () {
-        alert('QR Code de acesso da catraca — apresente na entrada da L.A Fitness.');
-      });
+    const qr = document.querySelector('.js-qrcode');
+    if (qr) qr.addEventListener('click', function () {
+      alert('QR Code de acesso da catraca — apresente na entrada da L.A Fitness.');
     });
   },
 
-  /* ---------- medição de navegação ---------- */
+  /* ---------- medição de navegação e cliques ---------- */
   ligarMedicao() {
     window.addEventListener('scroll', function () {
-      document.querySelectorAll('section[data-secao]').forEach(function (s) {
+      const telas = document.querySelectorAll('section[data-secao]');
+      telas.forEach(function (s) {
         const r = s.getBoundingClientRect();
         if (r.top < window.innerHeight * 0.6 && r.bottom > 0) {
           const nome = s.getAttribute('data-secao');
@@ -250,10 +437,15 @@ const LASite = {
         laRegistrarAcesso('clique', 'clique', { alvo: el.getAttribute('data-medir') });
       });
     });
+  },
+
+  semear() {
+    /* aluno de exemplo, se ainda não houver nenhum cadastrado */
+    laSemearExemplo();
   }
 };
 
-/* atalho usado pelos onclick do HTML */
+/* atalhos usados pelos onclick que já existiam no HTML */
 function switchView(qual) { LASite.irPara(qual); }
 
 document.addEventListener('DOMContentLoaded', function () { LASite.iniciar(); });

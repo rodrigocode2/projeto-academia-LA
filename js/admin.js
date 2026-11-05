@@ -1,18 +1,18 @@
 /* ==========================================================================
    L.A FITNESS — painel de controle
    Acesso: comando /admin-academia-LA no chat do bot + senha
-   Depende de: js/dados.js (e js/bot.js para o WhatsApp)
+   Depende de: js/dados.js e js/treinos.js
    ========================================================================== */
 
 const LAAdmin = {
 
   iniciar() {
     if (!laAdminLogado()) { window.location.href = 'index.html'; return; }
-
     laGarantirConteudo();
     this.ligarAbas();
     this.ligarSair();
     this.ligarAlunos();
+    this.ligarTreinos();
     this.pintarTudo();
   },
 
@@ -20,11 +20,11 @@ const LAAdmin = {
     document.querySelectorAll('[data-aba-admin]').forEach(function (b) {
       b.addEventListener('click', function () {
         const qual = b.getAttribute('data-aba-admin');
-        document.querySelectorAll('[data-aba-admin]').forEach(function (x) { x.classList.remove('ativa'); });
+        document.querySelectorAll('[data-aba-admin]').forEach(function (x) { x.classList.remove('ativo'); });
         document.querySelectorAll('.painel-aba').forEach(function (p) { p.classList.remove('ativa'); });
-        b.classList.add('ativa');
+        b.classList.add('ativo');
         const alvo = document.getElementById('painel-' + qual);
-        if (alvo) alvo.classList.add('ativa');
+        if (alvo) alvo.classList.add('ativo');
       });
     });
   },
@@ -32,7 +32,9 @@ const LAAdmin = {
   ligarSair() {
     const b = document.querySelector('.js-admin-sair');
     if (b) b.addEventListener('click', function () {
+      if (!confirm('Sair do painel de controle?')) return;
       laSairAdmin();
+      /* toda saída volta para a TELA DE ABERTURA do site */
       window.location.href = 'index.html';
     });
   },
@@ -40,16 +42,19 @@ const LAAdmin = {
   pintarTudo() {
     this.pintarMetricas();
     this.pintarAlunos();
+    this.pintarExercicios();
+    this.pintarFichas();
   },
 
   /* ======================================================================
-     MÉTRICAS — mesma leitura do dashboard do CiR
+     MÉTRICAS
      ====================================================================== */
   pintarMetricas() {
     const r = laResumo();
+    const eu = this;
 
-    const colocar = function (seletor, valor) {
-      const el = document.querySelector(seletor);
+    const colocar = function (sel, valor) {
+      const el = document.querySelector(sel);
       if (el) el.textContent = valor;
     };
 
@@ -61,6 +66,9 @@ const LAAdmin = {
     colocar('.js-m-media', r.mediaVisitas);
     colocar('.js-m-primeira', r.primeiraVisita);
     colocar('.js-m-varias', r.variasSecoes);
+    colocar('.js-m-alunos', laListarAlunos().length);
+    colocar('.js-m-exercicios', laListarExercicios().length);
+    colocar('.js-m-fichas', laListarFichas().length);
 
     const sec = document.querySelector('.js-m-secoes');
     if (sec) {
@@ -81,10 +89,27 @@ const LAAdmin = {
         : '<p class="vazio">Sem dados ainda.</p>';
     }
 
-    const ori = document.querySelector('.js-m-origem');     if (ori) ori.innerHTML = this.linhas(r.porOrigem);
-    const apa = document.querySelector('.js-m-aparelho');   if (apa) apa.innerHTML = this.linhas(r.porAparelho);
-    const nav = document.querySelector('.js-m-navegador');  if (nav) nav.innerHTML = this.linhas(r.porNavegador);
-    const cli = document.querySelector('.js-m-cliques');    if (cli) cli.innerHTML = this.linhas(r.cliques);
+    /* onde clicaram — as secoes com mais cliques */
+    const cli = document.querySelector('.js-m-cliques');
+    if (cli) {
+      const c = (r.porClique && typeof r.porClique === 'object') ? r.porClique : null;
+      if (c) {
+        cli.innerHTML = this.linhas(c);
+      } else if (r.porSecao && typeof r.porSecao === 'object') {
+        /* sem dados de clique ainda: mostra o que se sabe dos acessos */
+        cli.innerHTML = '<p class="vazio">Ainda sem cliques registrados. ' +
+                        'Os acessos aparecem abaixo.</p>' + this.linhas(r.porSecao);
+      } else {
+        cli.innerHTML = '<p class="vazio">Sem dados ainda.</p>';
+      }
+    }
+
+    const ori = document.querySelector('.js-m-origem');
+    if (ori) ori.innerHTML = this.linhas(r.porOrigem);
+    const apa = document.querySelector('.js-m-aparelho');
+    if (apa) apa.innerHTML = this.linhas(r.porAparelho);
+    const nav = document.querySelector('.js-m-navegador');
+    if (nav) nav.innerHTML = this.linhas(r.porNavegador);
 
     this.desenharGrafico(r.lista);
   },
@@ -106,7 +131,6 @@ const LAAdmin = {
       }).join('');
   },
 
-  /* ---------- gráfico em canvas, 14 dias ---------- */
   desenharGrafico(lista) {
     const cv = document.querySelector('.js-m-grafico');
     if (!cv) return;
@@ -128,7 +152,8 @@ const LAAdmin = {
     const px = Math.min(window.devicePixelRatio || 1, 2);
     const w = cv.clientWidth || 640;
     const h = 200;
-    cv.width = w * px; cv.height = h * px;
+    cv.width = w * px;
+    cv.height = h * px;
     ctx.setTransform(px, 0, 0, px, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
@@ -170,8 +195,10 @@ const LAAdmin = {
      ALUNOS
      ====================================================================== */
   ligarAlunos() {
+    const eu = this;
+
     const form = document.getElementById('form-novo-aluno');
-    if (form) form.addEventListener('submit', (e) => {
+    if (form) form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       const nome  = document.getElementById('aluno-nome').value.trim();
@@ -179,12 +206,12 @@ const LAAdmin = {
       const senha = document.getElementById('aluno-senha').value.trim();
       const erro  = document.getElementById('aluno-erro');
 
-      if (nome.split(/\s+/).length < 2) return this.avisar(erro, 'Informe o nome completo.');
-      if (cpf.length !== 11) return this.avisar(erro, 'O CPF precisa ter 11 números.');
-      if (senha.length < 4) return this.avisar(erro, 'A senha precisa ter pelo menos 4 caracteres.');
-
-      const repetido = laListarAlunos().some(function (a) { return a.cpf === cpf; });
-      if (repetido) return this.avisar(erro, 'Já existe um aluno com esse CPF.');
+      if (nome.split(/\s+/).length < 2) { eu.avisar(erro, 'Informe o nome completo.'); return; }
+      if (cpf.length !== 11) { eu.avisar(erro, 'O CPF precisa ter 11 números.'); return; }
+      if (senha.length < 4) { eu.avisar(erro, 'A senha precisa ter pelo menos 4 caracteres.'); return; }
+      if (laListarAlunos().some(function (a) { return a.cpf === cpf; })) {
+        eu.avisar(erro, 'Já existe um aluno com esse CPF.'); return;
+      }
 
       const aluno = laCriarAluno({
         nome: nome,
@@ -193,25 +220,24 @@ const LAAdmin = {
         telefone: document.getElementById('aluno-telefone').value.trim(),
         email: document.getElementById('aluno-email').value.trim(),
         plano: document.getElementById('aluno-plano').value,
-        objetivo: document.getElementById('aluno-objetivo').value.trim(),
-        treinos: laTreinoPadrao()
+        objetivo: document.getElementById('aluno-objetivo').value.trim()
       });
 
       if (erro) erro.classList.add('hidden');
       form.reset();
-      this.pintarAlunos();
-      this.avisarSucesso('Aluno cadastrado. Matrícula ' + aluno.matricula + ' — entregue o acesso a ele.');
+      eu.pintarAlunos();
+      eu.avisarSucesso('Aluno cadastrado. Matrícula ' + aluno.matricula + ' — entregue o acesso a ele.');
     });
 
     const buscar = document.getElementById('busca-aluno');
-    if (buscar) buscar.addEventListener('input', () => this.pintarAlunos(buscar.value));
+    if (buscar) buscar.addEventListener('input', function () { eu.pintarAlunos(buscar.value); });
 
     const semear = document.querySelector('.js-semear');
-    if (semear) semear.addEventListener('click', () => {
+    if (semear) semear.addEventListener('click', function () {
       const a = laSemearExemplo();
-      this.pintarAlunos();
-      if (a) this.avisarSucesso('Aluno de exemplo criado: ' + a.nome + ' (CPF 123.456.789-00, senha 123456).');
-      else this.avisarSucesso('Já existe aluno cadastrado — o exemplo só é criado quando a lista está vazia.');
+      eu.pintarAlunos();
+      if (a) eu.avisarSucesso('Aluno de exemplo criado: ' + a.nome + ' (CPF 123.456.789-00, senha 123456).');
+      else eu.avisarSucesso('Já existe aluno cadastrado — o exemplo só entra quando a lista está vazia.');
     });
   },
 
@@ -248,6 +274,7 @@ const LAAdmin = {
     }
 
     casa.innerHTML = lista.map(function (a) {
+      const v = laFichaDoAluno(a.id);
       return '<div class="linha-aluno">' +
                '<div class="da-esquerda">' +
                  '<div class="avatar-aluno">' + laIniciais(a.nome) + '</div>' +
@@ -258,18 +285,20 @@ const LAAdmin = {
                '</div>' +
                '<div class="do-meio">' +
                  '<span class="pilula">' + laEscapar(a.plano || 'Mensal') + '</span>' +
-                 '<span class="pilula ' + (a.ativo ? 'ok' : 'off') + '">' + (a.ativo ? 'Ativo' : 'Inativo') + '</span>' +
+                 '<span class="pilula ' + (a.ativo ? 'ok' : 'off') + '">' + (a.ativo ? 'Ativo' : 'Bloqueado') + '</span>' +
+                 (v ? '<span class="pilula">' + laEscapar(v.ficha.nome) + '</span>' : '') +
                '</div>' +
                '<div class="da-direita">' +
-                 '<button class="btn-mini js-ficha" data-id="' + a.id + '">Ficha</button>' +
-                 '<button class="btn-mini js-ativar" data-id="' + a.id + '">' + (a.ativo ? 'Inativar' : 'Ativar') + '</button>' +
+                 '<button class="btn-mini js-ficha" data-id="' + a.id + '">Treino</button>' +
+                 '<button class="btn-mini js-bloquear" data-id="' + a.id + '">' + (a.ativo ? 'Bloquear' : 'Liberar') + '</button>' +
                  '<button class="btn-mini perigo js-excluir" data-id="' + a.id + '">Excluir</button>' +
                '</div>' +
              '</div>';
     }).join('');
 
     const eu = this;
-    casa.querySelectorAll('.js-ativar').forEach(function (b) {
+
+    casa.querySelectorAll('.js-bloquear').forEach(function (b) {
       b.addEventListener('click', function () {
         const a = laBuscarAluno(b.getAttribute('data-id'));
         if (!a) return;
@@ -283,19 +312,24 @@ const LAAdmin = {
       b.addEventListener('click', function () {
         const a = laBuscarAluno(b.getAttribute('data-id'));
         if (!a) return;
-        if (!confirm('Excluir ' + a.nome + '? Isso não pode ser desfeito.')) return;
-        laExcluirAluno(a.id);
+        if (!confirm('Excluir ' + a.nome + '?\n\nSai do sistema: treinos, conversas, cobranças e amizades. Não pode ser desfeito.')) return;
+        /* apaga tudo que pertence ao aluno, nao so o cadastro */
+        if (typeof laExcluirAlunoDeVez === 'function') {
+          laExcluirAlunoDeVez(a.id);
+        } else {
+          laExcluirAluno(a.id);
+        }
         eu.pintarAlunos();
       });
     });
 
     casa.querySelectorAll('.js-ficha').forEach(function (b) {
-      b.addEventListener('click', function () { eu.abrirFicha(b.getAttribute('data-id')); });
+      b.addEventListener('click', function () { eu.atribuirFicha(b.getAttribute('data-id')); });
     });
   },
 
-  /* ---------- edição da ficha de treino ---------- */
-  abrirFicha(alunoId) {
+  /* ---------- atribuir ficha ao aluno ---------- */
+  atribuirFicha(alunoId) {
     const aluno = laBuscarAluno(alunoId);
     if (!aluno) return;
 
@@ -306,103 +340,184 @@ const LAAdmin = {
 
     if (nome) nome.textContent = aluno.nome + ' — ' + aluno.matricula;
 
-    const treinos = Array.isArray(aluno.treinos) ? aluno.treinos : [];
+    const atual = laFichaDoAluno(alunoId);
+    const fichas = laListarFichas();
 
-    casa.innerHTML = treinos.map(function (t, ti) {
-      const exercicios = t.exercicios.map(function (ex, ei) {
-        const series = ex.series.map(function (s, si) {
-          return '<div class="linha-serie">' +
-                   '<input class="inp-mini" data-t="' + ti + '" data-e="' + ei + '" data-s="' + si + '" data-campo="reps" value="' + laEscapar(s.reps) + '" placeholder="reps">' +
-                   '<span>×</span>' +
-                   '<input class="inp-mini" data-t="' + ti + '" data-e="' + ei + '" data-s="' + si + '" data-campo="peso" value="' + laEscapar(s.peso) + '" placeholder="peso">' +
-                   '<button class="btn-mini perigo js-tirar-serie" data-t="' + ti + '" data-e="' + ei + '" data-s="' + si + '">−</button>' +
+    casa.innerHTML =
+      '<p class="nota-bloco">Escolha qual ficha este aluno vai treinar. Ele vê na hora, no celular.</p>' +
+      '<div class="lista-fichas">' +
+        fichas.map(function (f) {
+          const escolhida = atual && atual.ficha.id === f.id;
+          const origem = f.autoria === 'padrao' ? 'Treino pronto do sistema' :
+                         f.autoria === 'dona' ? 'Montada pela academia' : 'Montada pelo professor';
+          return '<div class="opcao-ficha' + (escolhida ? ' escolhida' : '') + '" data-ficha="' + f.id + '">' +
+                   '<div>' +
+                     '<b>' + laEscapar(f.nome) + '</b>' +
+                     '<span>' + laEscapar(f.objetivo || f.nivel || '') + '</span>' +
+                     '<small>' + origem + ' · ' + (f.treinos || []).length + ' treino(s)</small>' +
+                   '</div>' +
+                   (escolhida ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-regular fa-circle"></i>') +
                  '</div>';
-        }).join('');
-
-        return '<div class="bloco-exercicio">' +
-                 '<div class="linha-exercicio">' +
-                   '<input class="inp-nome" data-t="' + ti + '" data-e="' + ei + '" data-campo="nome" value="' + laEscapar(ex.nome) + '" placeholder="Nome do exercício">' +
-                   '<input class="inp-mini" data-t="' + ti + '" data-e="' + ei + '" data-campo="descanso" value="' + laEscapar(ex.descanso) + '" placeholder="descanso">' +
-                   '<button class="btn-mini perigo js-tirar-exercicio" data-t="' + ti + '" data-e="' + ei + '">Remover</button>' +
-                 '</div>' + series +
-                 '<button class="btn-mini js-mais-serie" data-t="' + ti + '" data-e="' + ei + '">+ série</button>' +
-               '</div>';
-      }).join('');
-
-      return '<h4 style="margin-bottom:10px;">Treino ' + laEscapar(t.letra) + ' — ' + laEscapar(t.nome) + '</h4>' + exercicios;
-    }).join('') || '<p class="vazio">Sem treinos. Use "Exercício" para começar.</p>';
+        }).join('') +
+      '</div>';
 
     modal.classList.add('active');
 
     const eu = this;
-
-    casa.querySelectorAll('input[data-campo]').forEach(function (inp) {
-      inp.addEventListener('change', function () {
-        const t = +inp.getAttribute('data-t');
-        const e = +inp.getAttribute('data-e');
-        const s = inp.getAttribute('data-s');
-        const campo = inp.getAttribute('data-campo');
-        const atual = laBuscarAluno(alunoId);
-        if (!atual) return;
-
-        if (campo === 'nome') atual.treinos[t].exercicios[e].nome = inp.value;
-        else if (campo === 'descanso') atual.treinos[t].exercicios[e].descanso = inp.value;
-        else atual.treinos[t].exercicios[e].series[+s][campo] = inp.value;
-
-        laAtualizarAluno(alunoId, { treinos: atual.treinos });
-      });
-    });
-
-    casa.querySelectorAll('.js-mais-serie').forEach(function (b) {
-      b.addEventListener('click', function () {
-        const t = +b.getAttribute('data-t');
-        const e = +b.getAttribute('data-e');
-        const atual = laBuscarAluno(alunoId);
-        if (!atual) return;
-        atual.treinos[t].exercicios[e].series.push({ reps: '10', peso: '', feito: false });
-        laAtualizarAluno(alunoId, { treinos: atual.treinos });
-        eu.abrirFicha(alunoId);
-      });
-    });
-
-    casa.querySelectorAll('.js-tirar-serie').forEach(function (b) {
-      b.addEventListener('click', function () {
-        const t = +b.getAttribute('data-t');
-        const e = +b.getAttribute('data-e');
-        const s = +b.getAttribute('data-s');
-        const atual = laBuscarAluno(alunoId);
-        if (!atual) return;
-        atual.treinos[t].exercicios[e].series.splice(s, 1);
-        laAtualizarAluno(alunoId, { treinos: atual.treinos });
-        eu.abrirFicha(alunoId);
-      });
-    });
-
-    casa.querySelectorAll('.js-tirar-exercicio').forEach(function (b) {
-      b.addEventListener('click', function () {
-        const t = +b.getAttribute('data-t');
-        const e = +b.getAttribute('data-e');
-        const atual = laBuscarAluno(alunoId);
-        if (!atual) return;
-        atual.treinos[t].exercicios.splice(e, 1);
-        laAtualizarAluno(alunoId, { treinos: atual.treinos });
-        eu.abrirFicha(alunoId);
+    casa.querySelectorAll('.opcao-ficha').forEach(function (o) {
+      o.addEventListener('click', function () {
+        const f = laBuscarFicha(o.getAttribute('data-ficha'));
+        laVincularFicha(alunoId, o.getAttribute('data-ficha'), f ? f.autoria : 'academia');
+        modal.classList.remove('active');
+        eu.pintarAlunos();
+        eu.avisarSucesso('Ficha ' + (f ? f.nome : '') + ' atribuída a ' + aluno.nome + '.');
       });
     });
 
     document.querySelectorAll('.js-fechar-ficha').forEach(function (b) {
       b.onclick = function () { modal.classList.remove('active'); eu.pintarAlunos(); };
     });
+  },
 
-    const addEx = document.querySelector('.js-add-exercicio');
-    if (addEx) addEx.onclick = function () {
-      const atual = laBuscarAluno(alunoId);
-      if (!atual) return;
-      if (!atual.treinos.length) atual.treinos = laTreinoPadrao();
-      atual.treinos[0].exercicios.push({ nome: 'Novo exercício', descanso: '60s', series: [{ reps: '12', peso: '', feito: false }] });
-      laAtualizarAluno(alunoId, { treinos: atual.treinos });
-      eu.abrirFicha(alunoId);
-    };
+  /* ======================================================================
+     EXERCÍCIOS
+     ====================================================================== */
+  ligarTreinos() {
+    const eu = this;
+
+    const form = document.getElementById('form-novo-exercicio');
+    if (form) form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const nome = document.getElementById('ex-nome').value.trim();
+      if (!nome) return;
+
+      laCriarExercicio({
+        nome: nome,
+        grupo: document.getElementById('ex-grupo').value,
+        equipamento: document.getElementById('ex-equipamento').value.trim(),
+        video: document.getElementById('ex-video').value.trim(),
+        instrucoes: document.getElementById('ex-instrucoes').value.trim()
+      });
+
+      form.reset();
+      eu.pintarExercicios();
+      eu.avisarSucesso('Exercício "' + nome + '" cadastrado.');
+    });
+
+    const buscar = document.getElementById('busca-exercicio');
+    if (buscar) buscar.addEventListener('input', function () { eu.pintarExercicios(buscar.value); });
+
+    const formFicha = document.getElementById('form-nova-ficha');
+    if (formFicha) formFicha.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const nome = document.getElementById('ficha-nome').value.trim();
+      if (!nome) return;
+      laCriarFicha({
+        nome: nome,
+        objetivo: document.getElementById('ficha-objetivo').value.trim(),
+        nivel: document.getElementById('ficha-nivel').value,
+        autoria: 'dona',
+        autor: 'Academia',
+        treinos: [{ letra: 'A', nome: 'Treino A', exercicios: [] }]
+      });
+      formFicha.reset();
+      eu.pintarFichas();
+      eu.avisarSucesso('Ficha "' + nome + '" criada. Agora adicione os exercícios.');
+    });
+  },
+
+  pintarExercicios(filtro) {
+    const casa = document.querySelector('.js-tabela-exercicios');
+    if (!casa) return;
+
+    let lista = laListarExercicios();
+    if (filtro) {
+      const f = filtro.toLowerCase();
+      lista = lista.filter(function (e) {
+        return (e.nome || '').toLowerCase().includes(f) || (e.grupo || '').toLowerCase().includes(f);
+      });
+    }
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum exercício cadastrado.</p>';
+      return;
+    }
+
+    casa.innerHTML = lista.map(function (ex) {
+      const v = laVideoInfo(ex.video);
+      return '<div class="linha-exercicio-admin">' +
+               '<div class="da-esquerda">' +
+                 '<b>' + laEscapar(ex.nome) + '</b>' +
+                 '<span>' + laEscapar(ex.grupo) + (ex.equipamento ? ' • ' + laEscapar(ex.equipamento) : '') + '</span>' +
+               '</div>' +
+               '<div class="do-meio">' +
+                 (v.link
+                   ? '<span class="pilula ok"><i class="fa-solid fa-video"></i> vídeo</span>'
+                   : '<span class="pilula">sem vídeo</span>') +
+               '</div>' +
+               '<div class="da-direita">' +
+                 '<button class="btn-mini perigo js-excluir-ex" data-id="' + ex.id + '">Excluir</button>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+
+    const eu = this;
+    casa.querySelectorAll('.js-excluir-ex').forEach(function (b) {
+      b.addEventListener('click', function () {
+        const ex = laBuscarExercicio(b.getAttribute('data-id'));
+        if (!ex) return;
+        if (!confirm('Excluir "' + ex.nome + '"?')) return;
+        laExcluirExercicio(ex.id);
+        eu.pintarExercicios();
+      });
+    });
+  },
+
+  /* ======================================================================
+     FICHAS
+     ====================================================================== */
+  pintarFichas() {
+    const casa = document.querySelector('.js-lista-fichas');
+    if (!casa) return;
+
+    const fichas = laListarFichas();
+    if (!fichas.length) {
+      casa.innerHTML = '<p class="vazio">Nenhuma ficha criada ainda.</p>';
+      return;
+    }
+
+    casa.innerHTML = fichas.map(function (f) {
+      const origem = f.autoria === 'padrao' ? 'Pronta do sistema' :
+                     f.autoria === 'dona' ? 'Da academia' : 'Do professor';
+      const totalEx = (f.treinos || []).reduce(function (a, t) {
+        return a + (t.exercicios || []).length;
+      }, 0);
+
+      return '<div class="cartao-ficha-admin">' +
+               '<div class="topo-cartao">' +
+                 '<div>' +
+                   '<b>' + laEscapar(f.nome) + '</b>' +
+                   '<span>' + laEscapar(f.objetivo || f.nivel || '') + '</span>' +
+                 '</div>' +
+                 '<span class="pilula">' + origem + '</span>' +
+               '</div>' +
+               '<div class="divisoes">' +
+                 (f.treinos || []).map(function (t) {
+                   return '<span class="divisao">Treino ' + laEscapar(t.letra) +
+                          ' · ' + (t.exercicios || []).length + ' ex</span>';
+                 }).join('') +
+                 '<span class="divisao total">' + totalEx + ' exercícios no total</span>' +
+               '</div>' +
+               '<button class="btn-mini js-usar-ficha" data-id="' + f.id + '">Usar com um aluno</button>' +
+             '</div>';
+    }).join('');
+
+    const eu = this;
+    casa.querySelectorAll('.js-usar-ficha').forEach(function (b) {
+      b.addEventListener('click', function () {
+        eu.avisarSucesso('Vá em "Alunos", clique em "Treino" no aluno e escolha esta ficha.');
+      });
+    });
   }
 };
 

@@ -2,295 +2,1060 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>L.A FITNESS - Venha se preparar para o seu melhor!</title>
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="L.A Fitness — Venha se preparar para o seu melhor!">
+  <meta property="og:description" content="Musculação, aulas coletivas e ficha de treino digital em Cidade Ocidental - GO. Aceitamos Wellhub / Gympass.">
+  <meta property="og:image" content="img/fachada-logo.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L.A FITNESS — Venha se preparar para o seu melhor!</title>
 
-  <!-- Configurações PWA -->
+  <!-- PWA -->
   <meta name="theme-color" content="#0b0b0d">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="L.A Fitness">
+  <meta name="description" content="L.A Fitness — musculação, aulas coletivas e ficha de treino digital em Cidade Ocidental - GO.">
 
-  <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,900;1,800&family=Teko:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="L.A Fitness">
+  <meta name="theme-color" content="#0b0b0d">
+  <link rel="apple-touch-icon" href="img/logo.png">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- BARRA SUPERIOR DE TESTE DE UX -->
-  <div class="ux-bar">
-    <div class="ux-bar-title">
-      <i class="fa-solid fa-flask"></i>
-      PAINEL DE TESTES UX/UI - L.A FITNESS
-    </div>
-    <div class="ux-switcher">
-      <button class="ux-btn active" onclick="switchView('splash')">1. Hero Entrada</button>
-      <button class="ux-btn" onclick="switchView('landing')">2. Site Institucional</button>
-      <button class="ux-btn" onclick="switchView('login')">3. Login Aluno</button>
-      <button class="ux-btn" onclick="switchView('app-dash')">4. App Dashboard</button>
-      <button class="ux-btn" onclick="switchView('app-workout')">5. Ficha Treino</button>
+  <!-- ================= TELA DE ABERTURA ================= -->
+  <div id="splash-la">
+
+    <!-- fundo: brilhos, grade e varredura de luz -->
+    <div class="la-glow la-glow-1"></div>
+    <div class="la-glow la-glow-2"></div>
+    <div class="la-glow la-glow-3"></div>
+    <div class="la-grade-luz" aria-hidden="true"></div>
+    <div class="la-varredura" aria-hidden="true"></div>
+    <canvas id="la-particulas" class="la-particulas" aria-hidden="true"></canvas>
+
+    <div class="la-hero-content">
+
+      <!-- faixa de titulo, linha 1 -->
+      <div class="la-faixa la-faixa-1" data-reveal="1">
+        <span class="la-faixa-txt">SUPERE SEUS LIMITES</span>
+      </div>
+
+      <!-- LOGO -->
+      <div class="la-logo-palco" data-reveal="2">
+        <div class="la-logo-halo" aria-hidden="true"></div>
+        <img class="la-logo-img" src="img/logo.png" alt="L.A Fitness"
+             data-fallbacks="img/logo-la.png|img/Logo LA Fitness em 3D Cinemático.png|img/Logo LA Fitness em 3D Cinematico.png|img/fachada-logo.jpg">
+        <div class="la-logo-varredura" aria-hidden="true"></div>
+      </div>
+
+      <!-- FITNESS com as duas linhas -->
+      <div class="la-assinatura" data-reveal="3">
+        <span class="la-assinatura-linha"></span>
+        <span class="la-assinatura-txt">FITNESS</span>
+        <span class="la-assinatura-linha"></span>
+      </div>
+
+      <p class="la-mote" data-reveal="3">MOVIMENTANDO SEU CORPO</p>
+
+      <!-- faixa de titulo, linha 2 -->
+      <div class="la-faixa la-faixa-2" data-reveal="4">
+        <span class="la-faixa-txt">TODO SANTO <em>DIA.</em></span>
+      </div>
+
+      <!-- botao -->
+      <div class="la-hero-acoes" data-reveal="5">
+        <button class="splash-iniciar" id="btn-iniciar" type="button">
+          <span class="la-btn-brilho" aria-hidden="true"></span>
+          <i class="fa-solid fa-play"></i>
+          <span>Clique aqui para continuar</span>
+        </button>
+        <p class="splash-dica">ou pressione qualquer tecla / toque na tela</p>
+      </div>
+
+      <div class="la-badge-footer" data-reveal="6">
+        <span><i class="fa-solid fa-check-circle" style="color:var(--la-accent-green)"></i> Aceitamos Wellhub / Gympass</span>
+        <span><i class="fa-solid fa-location-dot" style="color:var(--la-red)"></i> Parque Nova Friburgo B</span>
+      </div>
     </div>
   </div>
 
-  <!-- HEADER FIXA -->
+  <!-- ================= HEADER ================= -->
   <header>
-    <div class="logo-container" onclick="switchView('splash')">
-      <div class="logo-badge">LA</div>
+    <div class="logo-container" data-view="splash">
+      <img class="logo-img" src="img/logo.png" alt="L.A Fitness"
+           data-fallbacks="img/logo-la.png|img/Logo LA Fitness em 3D Cinemático.png">
       <div class="logo-text">FITNESS<span>.</span></div>
     </div>
     <nav>
-      <a class="nav-link" onclick="switchView('landing')">Início</a>
-      <a class="nav-link" onclick="switchView('landing')">Sobre</a>
-      <a class="nav-link" onclick="switchView('landing')">Planos</a>
-      <button class="btn-student-area" onclick="switchView('login')">
-        <i class="fa-solid fa-lock"></i>
-        <span>Área do Aluno</span>
+      <a class="nav-link" data-view="landing">Início</a>
+      <a class="nav-link" data-view="landing">Sobre</a>
+      <a class="nav-link" data-view="planos">Planos</a>
+      <button class="btn-student-area" data-view="login">
+        <i class="fa-solid fa-lock"></i> <span>Área do Aluno</span>
       </button>
     </nav>
   </header>
 
-  <!-- ==========================================
-       TELA 1: HERO / SPLASH ENTRADA
-       ========================================== -->
-  <div id="view-splash" class="view-screen active">
+  <!-- ================= TELA 1: ENTRADA ================= -->
+  <div id="view-splash" class="view-screen">
     <div class="splash-container">
       <h1 class="splash-title">VENHA SE PREPARAR<br>PARA O SEU <span style="color:var(--la-red)">MELHOR!</span></h1>
-      <p class="splash-subtitle">A melhor estrutura para a sua evolução física em <strong>Cidade Ocidental - GO</strong>.</p>
+      <p class="splash-subtitle js-slogan">A melhor estrutura para a sua evolução física em <strong>Cidade Ocidental - GO</strong>.</p>
       <div class="splash-actions">
-        <button class="btn-primary" onclick="switchView('landing')">
+        <button class="btn-primary" data-view="landing" data-medir="conhecer">
           <i class="fa-solid fa-compass"></i> Conhecer a Academia
         </button>
-        <button class="btn-secondary" onclick="switchView('login')">
+        <button class="btn-secondary" data-view="login" data-medir="area-aluno">
           <i class="fa-solid fa-user-check"></i> Sou Aluno L.A
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ==========================================
-       TELA 2: SITE INSTITUCIONAL
-       ========================================== -->
+  <!-- ================= TELA 2: INSTITUCIONAL ================= -->
   <div id="view-landing" class="view-screen">
-    <section class="hero-banner">
-      <div class="hero-content">
-        <span class="hero-tag"><i class="fa-solid fa-location-dot"></i> Parque Nova Friburgo B</span>
-        <h2 class="section-title">EXCELÊNCIA EM TREINO</h2>
-        <p style="color:var(--la-text-muted); margin-bottom: 25px; line-height: 1.6;">
-          Musculação pesada, treinos funcionais e acompanhamento profissional. Estrutura completa para você atingir seus objetivos com saúde e alta performance.
-        </p>
-        <button class="btn-primary" onclick="openWhatsapp('Olá! Gostaria de agendar uma aula experimental na L.A Fitness.')">
-          <i class="fa-brands fa-whatsapp"></i> Agendar Aula Experimental
-        </button>
+    <section class="jr" id="sobre" data-secao="institucional">
+      <div class="jr-topo">
+        <span class="jr-etiqueta js-sobre-etiqueta">Sobre a L.A Fitness</span>
+        <div class="jr-linha"></div>
+        <span class="jr-data">Cidade Ocidental — GO</span>
+      </div>
+
+      <h2 class="jr-titulo js-sobre-titulo">EXCELÊNCIA<br><span>EM TREINO</span></h2>
+      <p class="jr-olar js-sobre-olar">Musculação &nbsp;·&nbsp; aulas coletivas &nbsp;·&nbsp; ginástica artística</p>
+
+      <div class="jr-faixa js-sobre-faixa">
+        <figure class="jr-foto">
+          <img src="img/fachada-logo.jpg" alt="Fachada da L.A Fitness em Cidade Ocidental - GO" loading="lazy">
+          <figcaption>A fachada: onde tudo começa</figcaption>
+        </figure>
+        <div class="jr-texto js-sobre-texto">
+          <p class="jr-capitular">
+            A L.A Fitness é uma academia em Cidade Ocidental - GO, com musculação, treinos funcionais e acompanhamento profissional. Estrutura completa para você atingir seus objetivos com saúde e alta performance.
+          </p>
+          <p>
+            Aqui ninguém precisa treinar sozinho nem adivinhar o que fazer: a recepção orienta, o professor corrige a execução e a ficha acompanha a evolução de cada aluno.
+          </p>
+          <p>
+            Do peso livre à ginástica artística, o espaço foi montado para caber a rotina de quem tem pouco tempo e quer resultado.
+          </p>
+        </div>
+      </div>
+
+      <div class="jr-numeros">
+        <div class="jr-num"><b>06h</b><span>Segunda a sexta, até 12h</span></div>
+        <div class="jr-num"><b>15h</b><span>Reabre e vai até 22h</span></div>
+        <div class="jr-num"><b>08h</b><span>Sábado e domingo, até 12h</span></div>
+      </div>
+
+      <div class="jr-grade js-sobre-grade">
+        <figure class="jr-bloco jr-g1">
+          <img src="img/musculacao.jpg" alt="Sala de musculação da L.A Fitness" loading="lazy">
+          <figcaption><b>Musculação</b><span>Equipamentos para todos os níveis, do iniciante ao avançado.</span></figcaption>
+        </figure>
+        <figure class="jr-bloco">
+          <img src="img/halteres-estante.jpg" alt="Estante de halteres da L.A Fitness" loading="lazy">
+          <figcaption><b>Peso livre</b><span>Estante completa de halteres para quem monta o treino à mão.</span></figcaption>
+        </figure>
+        <figure class="jr-bloco">
+          <img src="img/cordas-cintos.jpg" alt="Cordas e cintos de treino da L.A Fitness" loading="lazy">
+          <figcaption><b>Acessórios</b><span>Cordas, cintos e elásticos para variar o estímulo.</span></figcaption>
+        </figure>
+        <figure class="jr-bloco jr-g2">
+          <img src="img/fachada-logo.jpg" alt="Entrada da L.A Fitness" loading="lazy">
+          <figcaption><b>Estrutura</b><span>Espaço amplo e climatizado, com atendimento de verdade.</span></figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- CARDS DE MODALIDADES -->
-    <div class="grid-cards">
-      <div class="card-feature">
-        <i class="fa-solid fa-dumbbell card-icon"></i>
-        <h3 class="card-title">Musculação &amp; Hipertrofia</h3>
-        <p class="card-desc">Equipamentos modernos e ambiente projetado para todos os níveis de alunos, do iniciante ao avançado.</p>
+    <!-- ================= LOCALIZAÇÃO ================= -->
+    <section class="jr-local" id="local" data-secao="local">
+      <div class="jr-local-topo">
+        <span class="jr-etiqueta">Onde treinar</span>
+        <div class="jr-linha"></div>
       </div>
-      <div class="card-feature">
-        <i class="fa-solid fa-heart-pulse card-icon"></i>
-        <h3 class="card-title">Aulas Coletivas &amp; Cardiopack</h3>
-        <p class="card-desc">Atividades dinâmicas para queimar calorias, melhorar o condicionamento e aumentar a sua disposição diária.</p>
+      <div class="jr-local-grade">
+        <div class="jr-local-info">
+          <h3>Venha nos fazer uma visita</h3>
+          <p>Apareça para conhecer a estrutura, tirar dúvidas sobre os planos e agendar sua aula experimental.</p>
+          <ul class="jr-local-lista">
+            <li><i class="fa-solid fa-location-dot"></i><div><b>Endereço</b><span class="js-endereco">Parque Nova Friburgo B, Cidade Ocidental - GO</span></div></li>
+            <li><i class="fa-solid fa-clock"></i><div><b>Horários</b><span class="js-horarios">Seg a Sex 06h às 12h e 15h às 22h · Sáb e Dom 08h às 12h</span></div></li>
+            <li><i class="fa-solid fa-check-circle"></i><div><b>Benefício</b><span>Aceitamos Wellhub (Gympass)</span></div></li>
+          </ul>
+          <div class="jr-local-botoes">
+            <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=Parque+Nova+Friburgo+B,+Cidade+Ocidental+-+GO" target="_blank" rel="noopener">
+              <i class="fa-solid fa-map-location-dot"></i> Abrir no mapa
+            </a>
+            <button class="btn-secondary js-zap-experimental" data-medir="aula-experimental">
+              <i class="fa-brands fa-whatsapp"></i> Agendar aula experimental
+            </button>
+          </div>
+        </div>
+        <figure class="jr-mapa">
+          <iframe title="Mapa da L.A Fitness"
+            src="https://www.google.com/maps?q=Parque+Nova+Friburgo+B,+Cidade+Ocidental+-+GO&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </figure>
       </div>
-      <div class="card-feature">
-        <i class="fa-solid fa-mobile-screen-button card-icon"></i>
-        <h3 class="card-title">Ficha de Treino Digital</h3>
-        <p class="card-desc">Acesse sua ficha exclusiva no celular via Web App PWA sem precisar baixar nada da loja de aplicativos.</p>
-      </div>
-    </div>
+    </section>
 
-    <!-- PARCERIA WELLHUB / GYMPASS -->
+    <!-- ============ BLOCOS NOVOS — criados pelo painel ============ -->
+    <section class="jr" id="blocos-extras" data-secao="extras">
+      <div class="js-blocos-extras"></div>
+    </section>
+
+    <div class="grid-cards js-modalidades"><!-- preenchido por site.js --></div>
+
     <div class="partner-box">
       <div>
         <h3 style="font-size: 1.5rem; margin-bottom: 6px;">Treine com o seu benefício corporativo</h3>
         <p style="color:var(--la-text-muted); font-size: 0.9rem;">Aceitamos parceiros de saúde corporativa na L.A Fitness.</p>
       </div>
-      <div style="display:flex; gap:10px;">
-        <span class="partner-badge"><i class="fa-solid fa-check-circle" style="color:var(--la-accent-green)"></i> Wellhub (Gympass)</span>
+      <span class="partner-badge">
+        <i class="fa-solid fa-check-circle" style="color:var(--la-accent-green)"></i> Wellhub (Gympass)
+      </span>
+    </div>
+
+    <div class="faixa-info">
+      <div class="info-item">
+        <i class="fa-solid fa-clock"></i>
+        <div>
+          <b>Horários</b>
+          <span class="js-horarios">Segunda a Sexta: 06h às 22h · Sábado: 08h às 14h</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>
+          <b>Endereço</b>
+          <span class="js-endereco">Parque Nova Friburgo B, Cidade Ocidental - GO</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ==========================================
-       TELA 3: LOGIN DO ALUNO
-       ========================================== -->
+  <!-- ================= TELA 3: PLANOS ================= -->
+  <div id="view-planos" class="view-screen">
+    <section class="bloco-pagina" data-secao="planos">
+      <h2 class="section-title">PLANOS DA L.A</h2>
+      <p style="color:var(--la-text-muted); max-width:60ch; margin-bottom:30px; line-height:1.6;">
+        Escolha o plano que combina com a sua rotina. Todos incluem musculação, aulas coletivas
+        e acompanhamento profissional.
+      </p>
+      <div class="grid-cards js-planos" style="padding:0;"><!-- preenchido por site.js --></div>
+    </section>
+  </div>
+
+  <!-- ================= ENTRADA: LOGIN / CADASTRO ================= -->
   <div id="view-login" class="view-screen">
-    <div class="login-wrapper">
+    <div class="login-wrapper" data-secao="area-aluno">
       <div class="login-card">
+
         <div class="login-header">
-          <div class="logo-badge" style="display:inline-block; margin-bottom: 10px;">LA</div>
-          <h3 style="font-size: 1.5rem;">ÁREA DO ALUNO L.A</h3>
-          <p style="color:var(--la-text-muted); font-size: 0.85rem;">Acesse sua ficha de treino e evolução</p>
+          <img class="logo-img logo-img-mini" src="img/logo.png" alt="L.A Fitness" data-fallbacks="img/logo-la.png" style="margin-bottom:10px;">
+          <h3 style="font-size: 1.4rem;">ÁREA DO ALUNO</h3>
+          <p style="color:var(--la-text-muted); font-size: 0.85rem;">Seus treinos, sua evolução</p>
         </div>
 
-        <div class="login-notice">
-          <i class="fa-solid fa-circle-info" style="font-size: 1.1rem; margin-top:2px;"></i>
-          <div>
-            <strong>Acesso exclusivo para cadastrados.</strong><br>
-            Seu login e senha são liberados exclusivamente pela recepção da L.A Fitness após a sua matrícula.
-          </div>
+        <!-- alternador -->
+        <div class="abas-entrada">
+          <button class="aba-entrada ativa" data-aba="entrar">Entrar</button>
+          <button class="aba-entrada" data-aba="cadastrar">Quero me cadastrar</button>
         </div>
 
-        <form onsubmit="handleLogin(event)">
-          <div class="form-group">
-            <label class="form-label">CPF ou Usuário</label>
-            <input type="text" class="form-input" placeholder="000.000.000-00" required>
+        <!-- ENTRAR -->
+        <div id="painel-entrar" class="painel-entrada ativa">
+          <div id="login-aviso" class="aviso-erro hidden"></div>
+
+          <form id="form-login-aluno">
+            <div class="form-group">
+              <label class="form-label">CPF ou Matrícula</label>
+              <input type="text" class="form-input" id="login-usuario" placeholder="000.000.000-00" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Senha</label>
+              <input type="password" class="form-input" id="login-senha" placeholder="••••••" inputmode="numeric" required>
+            </div>
+
+            <label class="check-lembrar">
+              <input type="checkbox" id="login-lembrar" checked>
+              <span>Lembrar de mim neste aparelho</span>
+            </label>
+
+            <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">
+              ENTRAR NO PAINEL <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <p class="link-esqueci js-esqueci">Esqueci minha senha</p>
+
+          <p class="dica-login">
+            <i class="fa-solid fa-circle-info"></i>
+            Demonstração: CPF <b>123.456.789-00</b> · senha <b>123456</b>
+          </p>
+        </div>
+
+        <!-- CADASTRAR -->
+        <div id="painel-cadastrar" class="painel-entrada">
+          <div class="login-notice">
+            <i class="fa-solid fa-circle-info" style="font-size:1.1rem; margin-top:2px;"></i>
+            <div>
+              <strong>Após o cadastro, sua matrícula fica aguardando liberação.</strong><br>
+              A recepção confirma o pagamento e monta o seu primeiro treino.
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Senha de Acesso</label>
-            <input type="password" class="form-input" required>
-          </div>
-          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
-            Entrar no Treino <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </form>
+
+          <div id="cad-aviso" class="aviso-erro hidden"></div>
+          <div id="cad-ok" class="aviso-erro hidden" style="background:rgba(0,230,118,.12); border-color:rgba(0,230,118,.4); color:#00e676;"></div>
+
+          <form id="form-cadastro-aluno">
+            <div class="form-group">
+              <label class="form-label">Nome completo</label>
+              <input type="text" class="form-input" id="cad-nome" placeholder="Seu nome e sobrenome" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CPF</label>
+              <input type="text" class="form-input" id="cad-cpf" placeholder="000.000.000-00" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp</label>
+              <input type="text" class="form-input" id="cad-zap" placeholder="(61) 90000-0000" inputmode="tel">
+            </div>
+            <div class="form-group">
+              <label class="form-label">E-mail</label>
+              <input type="email" class="form-input" id="cad-email" placeholder="seu@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Crie uma senha</label>
+              <input type="password" class="form-input" id="cad-senha" placeholder="mínimo 4 caracteres" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">
+              CRIAR CADASTRO <i class="fa-solid fa-user-plus"></i>
+            </button>
+          </form>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- ==========================================
-       TELA 4: APP DO ALUNO (SIMULADOR MOBILE)
-       ========================================== -->
+  <!-- ================= ÁREA DO ALUNO (CONSOLE) ================= -->
   <div id="view-app-dash" class="view-screen">
-    <div class="app-viewport">
-      <!-- Topo do App -->
-      <div class="app-header">
-        <div class="app-user-info">
-          <div class="user-avatar">RS</div>
-          <div>
-            <h4 style="font-size:0.95rem;">Rodrigo Silva</h4>
-            <span style="font-size:0.75rem; color:var(--la-accent-green);"><i class="fa-solid fa-circle"></i> Matrícula Ativa</span>
-          </div>
+    <div class="la-app">
+
+      <aside class="la-side js-side">
+        <div class="la-brand">
+          <div class="la-brand-mark">LA</div>
+          <div class="la-brand-txt"><b>FITNESS</b><span>Área do aluno</span></div>
         </div>
-        <i class="fa-solid fa-qrcode" style="font-size: 1.4rem; color: var(--la-red); cursor:pointer;" onclick="alert('QR Code de Acesso da Catraca L.A Fitness')"></i>
-      </div>
-
-      <!-- Conteúdo das Abas do App -->
-      <div class="app-content" id="app-tab-content">
-        <div id="tab-home">
-          <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Seu Treino de Hoje</h3>
-
-          <div class="workout-card-select active" onclick="switchView('app-workout')">
-            <div>
-              <span style="background:var(--la-red); color:#fff; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700;">TREINO A</span>
-              <h4 style="margin-top:5px; font-size:1rem;">Peito, Tríceps &amp; Ombros</h4>
-              <p style="font-size:0.8rem; color:var(--la-text-muted);">5 Exercícios • Aprox. 50 min</p>
-            </div>
-            <i class="fa-solid fa-chevron-right" style="color:var(--la-red)"></i>
+        <nav class="la-nav">
+          <button class="la-nav-item ativo" data-painel="painel">
+            <i class="fa-solid fa-chart-simple"></i> Painel</button>
+          <button class="la-nav-item" data-painel="treino">
+            <i class="fa-solid fa-dumbbell"></i> Meu treino</button>
+          <button class="la-nav-item" data-painel="esteira">
+            <i class="fa-solid fa-person-running"></i> Corrida / Esteira</button>
+          <button class="la-nav-item" data-painel="evolucao">
+            <i class="fa-solid fa-chart-line"></i> Evolução</button>
+          <button class="la-nav-item" data-painel="loja">
+            <i class="fa-solid fa-cart-shopping"></i> Loja</button>
+          <button class="la-nav-item" data-painel="carrinho">
+            <i class="fa-solid fa-basket-shopping"></i> Carrinho
+            <span class="la-nav-badge js-badge-carrinho hidden">0</span></button>
+          <button class="la-nav-item" data-painel="mensagens">
+            <i class="fa-solid fa-comments"></i> Mensagens
+            <span class="la-nav-badge js-badge-msg hidden">0</span></button>
+          <button class="la-nav-item" data-painel="mensalidade">
+            <i class="fa-solid fa-credit-card"></i> Mensalidade</button>
+          <button class="la-nav-item" data-painel="perfil">
+            <i class="fa-solid fa-user"></i> Meu perfil</button>
+        </nav>
+        <div class="la-side-foot">
+          <div class="la-usuario">
+            <div class="la-av js-aluno-avatar">LA</div>
+            <div><b class="js-aluno-nome">Aluno</b><span class="js-aluno-matricula">—</span></div>
           </div>
-
-          <div class="workout-card-select" onclick="switchView('app-workout')">
-            <div>
-              <span style="background:#333; color:#aaa; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700;">TREINO B</span>
-              <h4 style="margin-top:5px; font-size:1rem;">Costas, Bíceps &amp; Abdômen</h4>
-              <p style="font-size:0.8rem; color:var(--la-text-muted);">6 Exercícios • Aprox. 55 min</p>
-            </div>
-            <i class="fa-solid fa-chevron-right" style="color:var(--la-border)"></i>
-          </div>
+          <button class="la-baixar js-baixar-app" type="button" hidden>
+            <i class="fa-solid fa-mobile-screen-button"></i> Baixar o app
+          </button>
+          <button class="la-sair js-sair-aluno">
+            <i class="fa-solid fa-right-from-bracket"></i> Sair da conta
+          </button>
         </div>
-      </div>
+      </aside>
 
-      <!-- Bottom Bar do App -->
-      <div class="app-bottom-nav">
-        <a class="nav-item-app active" onclick="switchView('app-dash')">
-          <i class="fa-solid fa-house"></i>
-          <span>Início</span>
-        </a>
-        <a class="nav-item-app" onclick="switchView('app-workout')">
-          <i class="fa-solid fa-dumbbell"></i>
-          <span>Ficha</span>
-        </a>
-        <a class="nav-item-app" onclick="alert('Histórico de Frequência na L.A Fitness')">
-          <i class="fa-solid fa-calendar-check"></i>
-          <span>Frequência</span>
-        </a>
-        <a class="nav-item-app" onclick="switchView('login')">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
-        </a>
+      <div class="la-main">
+        <header class="la-top">
+          <div class="la-crumb">
+            <span>L.A Fitness</span><i>›</i><b class="js-crumb">Painel</b>
+          </div>
+          <div class="la-top-actions">
+            <span class="la-status js-aluno-status"></span>
+            <div class="sino js-sino-aluno"></div>
+            <i class="fa-solid fa-qrcode js-qrcode" title="QR de acesso"></i>
+          </div>
+        </header>
+
+        <main class="la-page">
+
+          <!-- ===== PAINEL ===== -->
+          <section class="la-painel ativo" id="painel-painel">
+            <div class="la-head">
+              <div class="la-eyebrow">Bem-vindo</div>
+              <h1>Olá, <span class="js-primeiro-nome">aluno</span></h1>
+              <p class="la-sub">Seu treino está aqui, na palma da mão. Vamos começar?</p>
+            </div>
+
+            <div class="tutorial-trilha">
+              <div class="tut-passo">
+                <span class="tut-num">1</span>
+                <b>Veja seu treino</b>
+                <p>O treino que a recepção montou para você fica em <b>Meu treino</b>, separado em A, B e C.</p>
+              </div>
+              <div class="tut-passo">
+                <span class="tut-num">2</span>
+                <b>Faça o exercício</b>
+                <p>Cada exercício tem o GIF mostrando o movimento, as séries e um espaço para anotar a carga que você usou.</p>
+              </div>
+              <div class="tut-passo">
+                <span class="tut-num">3</span>
+                <b>Marque o que fez</b>
+                <p>Toque no ✓ a cada série concluída. É o seu diário de treino — não se perde como o papel.</p>
+              </div>
+            </div>
+
+            <div class="la-kpis">
+              <div class="la-kpi">
+                <span class="l">Treinos na semana</span>
+                <b class="v js-k-treinos">0/0</b>
+                <div class="mini-barras js-k-treinos-barras"></div>
+              </div>
+              <div class="la-kpi">
+                <span class="l">Séries concluídas</span>
+                <b class="v js-k-series">0/0</b>
+                <span class="n">no total da ficha</span>
+              </div>
+              <div class="la-kpi">
+                <span class="l">Peso atual</span>
+                <b class="v js-k-peso">—</b>
+                <span class="n js-k-variacao">—</span>
+              </div>
+              <div class="la-kpi">
+                <span class="l">Medidas registradas</span>
+                <b class="v js-k-medidas">0</b>
+                <span class="n">acompanhe a evolução</span>
+              </div>
+            </div>
+
+            <div class="la-2col">
+              <div class="la-card">
+                <div class="la-card-head"><b>Treino de hoje</b><span class="js-hoje-dia"></span></div>
+                <div class="js-treino-hoje"></div>
+              </div>
+              <div class="la-card">
+                <div class="la-card-head"><b>Últimos treinos</b></div>
+                <div class="js-historico"></div>
+              </div>
+            </div>
+
+            <div class="la-card tutorial-descanso">
+              <div class="la-card-head"><b>Como treinar do jeito certo</b></div>
+              <div class="dicas-grade">
+                <div class="dica">
+                  <i class="fa-solid fa-stopwatch"></i>
+                  <b>Descanso entre séries</b>
+                  <p>Musculação pesada: 2 a 3 minutos. Média: 60 a 90 segundos. Isoladores e abdômen: 45 segundos.</p>
+                </div>
+                <div class="dica">
+                  <i class="fa-solid fa-layer-group"></i>
+                  <b>Séries e repetições</b>
+                  <p><b>3x12</b> significa 3 séries de 12 repetições. Descanse entre cada série, não entre as repetições.</p>
+                </div>
+                <div class="dica">
+                  <i class="fa-solid fa-weight-hanging"></i>
+                  <b>Carga certa</b>
+                  <p>Escolha um peso que deixe as duas últimas repetições difíceis, mas sem perder a postura.</p>
+                </div>
+                <div class="dica">
+                  <i class="fa-solid fa-droplet"></i>
+                  <b>Água</b>
+                  <p>Beba água entre as séries. Em dia quente, leve a garrafa — a loja tem na recepção.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="la-card">
+              <div class="la-card-head"><b>Alongamento — faça antes e depois</b></div>
+              <div class="alonga-grade">
+                <div class="alonga">
+                  <i class="fa-solid fa-person-walking"></i>
+                  <b>Aquecimento na esteira</b>
+                  <span>5 minutos caminhando leve, antes de puxar peso.</span>
+                </div>
+                <div class="alonga">
+                  <i class="fa-solid fa-child-reaching"></i>
+                  <b>Alonga peito e ombro</b>
+                  <span>Segure 30 segundos de cada lado, na parede ou no batente.</span>
+                </div>
+                <div class="alonga">
+                  <i class="fa-solid fa-person"></i>
+                  <b>Alonga posterior</b>
+                  <span>Pés juntos, desça a mão em direção ao chão. 30 segundos.</span>
+                </div>
+                <div class="alonga">
+                  <i class="fa-solid fa-person-rays"></i>
+                  <b>Alonga quadríceps</b>
+                  <span>Segure o pé atrás do corpo, joelho apontando para baixo. 30 segundos.</span>
+                </div>
+                <div class="alonga">
+                  <i class="fa-solid fa-spa"></i>
+                  <b>Respira e relaxa</b>
+                  <span>No fim do treino, respire fundo 5 vezes para o corpo desacelerar.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== TREINO ===== -->
+          <section class="la-painel" id="painel-treino">
+            <div class="la-head"><div class="la-eyebrow">Execução</div><h1>Meu treino</h1></div>
+            <div class="la-card" style="margin-bottom:16px;">
+              <div class="la-card-head"><b>Sua semana</b><span class="js-semana"></span></div>
+              <div class="js-agenda"></div>
+            </div>
+            <div class="la-card">
+              <div class="la-card-head"><b>Todos os treinos da ficha</b></div>
+              <div class="js-lista-treinos"></div>
+            </div>
+          </section>
+
+          <!-- ===== ESTEIRA ===== -->
+          <section class="la-painel" id="painel-esteira">
+            <div class="la-head">
+              <div class="la-eyebrow">Cardio</div>
+              <h1>Corrida / Esteira</h1>
+              <p class="la-sub">Escolha o tempo, comece a correr e o alarme avisa quando acabar.</p>
+            </div>
+
+            <div class="la-card esteira-card">
+              <div class="esteira-escolha js-esteira-escolha">
+                <span class="esteira-rotulo">Quanto tempo você vai correr?</span>
+                <div class="tempos-rapidos">
+                  <button class="tempo-op js-tempo" data-min="10">10 min</button>
+                  <button class="tempo-op js-tempo" data-min="15">15 min</button>
+                  <button class="tempo-op js-tempo" data-min="20">20 min</button>
+                  <button class="tempo-op js-tempo" data-min="30">30 min</button>
+                  <button class="tempo-op js-tempo" data-min="45">45 min</button>
+                  <button class="tempo-op js-tempo" data-min="60">60 min</button>
+                </div>
+                <div class="tempo-livre">
+                  <input class="form-input js-tempo-livre" type="number" min="1" max="180" placeholder="ou digite os minutos">
+                  <span>minutos</span>
+                </div>
+              </div>
+
+              <div class="cronometro-palco js-crono-palco hidden">
+                <div class="crono-grande js-crono">00:00</div>
+                <div class="crono-barra"><i class="js-crono-barra" style="width:0%"></i></div>
+                <div class="crono-info">
+                  <span>Correndo: <b class="js-crono-total">00:00</b></span>
+                  <span>Faltam: <b class="js-crono-resta">00:00</b></span>
+                </div>
+                <div class="crono-acoes">
+                  <button class="btn-secondary js-pausar-corrida" type="button"><i class="fa-solid fa-pause"></i> Pausar</button>
+                  <button class="btn-primary js-parar-corrida" type="button"><i class="fa-solid fa-stop"></i> Encerrar</button>
+                </div>
+              </div>
+
+              <button class="btn-primary js-comecar-corrida" type="button" style="margin-top:18px; width:100%; justify-content:center;">
+                <i class="fa-solid fa-play"></i> COMEÇAR A CORRER
+              </button>
+
+              <div class="js-aviso-esteira hidden"></div>
+            </div>
+
+            <div class="la-card">
+              <div class="la-card-head"><b>Minhas corridas</b></div>
+              <div class="js-esteira"></div>
+            </div>
+          </section>
+
+          <!-- ===== EVOLUÇÃO ===== -->
+          <section class="la-painel" id="painel-evolucao">
+            <div class="la-head">
+              <div class="la-eyebrow">Progresso</div>
+              <h1>Evolução</h1>
+              <p class="la-sub">Veja os dias que treinou, a agenda do mês e como seu corpo está respondendo.</p>
+            </div>
+
+            <div class="la-card">
+              <div class="cal-topo">
+                <button class="btn-mini js-mes-antes" type="button" aria-label="Mês anterior"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+                <b class="js-mes-nome">—</b>
+                <button class="btn-mini js-mes-depois" type="button" aria-label="Próximo mês"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+              </div>
+              <div class="cal-semana">
+                <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+              </div>
+              <div class="cal-grade js-calendario"></div>
+              <div class="cal-legenda">
+                <span><i class="pt" style="background:var(--la-accent-green)"></i> Treinou</span>
+                <span><i class="pt" style="background:rgba(255,255,255,.12)"></i> Não treinou</span>
+                <span><i class="pt" style="background:var(--la-red)"></i> Hoje</span>
+              </div>
+              <div class="cal-resumo js-cal-resumo"></div>
+            </div>
+
+            <div class="la-2col" style="margin-top:16px;">
+              <div class="la-card">
+                <div class="la-card-head"><b>Curva de peso</b></div>
+                <canvas class="js-grafico-evolucao" height="190"></canvas>
+              </div>
+              <div class="la-card">
+                <div class="la-card-head"><b>Último registro</b></div>
+                <div class="js-legenda-grafico"></div>
+                <button class="btn-mini js-add-medida" style="margin-top:14px;">+ Registrar medida</button>
+              </div>
+            </div>
+
+            <div class="la-2col" style="margin-top:16px;">
+              <div class="la-card">
+                <div class="la-card-head"><b>Minhas medidas</b></div>
+                <div class="js-lista-medidas"></div>
+              </div>
+              <div class="la-card">
+                <div class="la-card-head"><b>Agenda da semana</b></div>
+                <div class="js-agenda"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== LOJA ===== -->
+          <section class="la-painel" id="painel-loja">
+            <div class="la-head">
+              <div class="la-eyebrow">Produtos</div>
+              <h1>Loja da academia</h1>
+              <p class="la-sub">Escolha, adicione ao carrinho e pague na recepção ao retirar.</p>
+            </div>
+
+            <div class="loja-barra">
+              <input class="form-input" id="busca-produto" placeholder="Buscar produto...">
+              <select class="form-input" id="filtro-categoria">
+                <option value="">Todas as categorias</option>
+              </select>
+              <button class="btn-carrinho js-abrir-carrinho">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Carrinho <span class="carrinho-conta js-carrinho-conta">0</span>
+              </button>
+            </div>
+
+            <div class="grade-loja js-loja"></div>
+          </section>
+
+          <!-- ===== CARRINHO ===== -->
+          <section class="la-painel" id="painel-carrinho">
+            <div class="la-head">
+              <div class="la-eyebrow">Pedido</div>
+              <h1>Meu carrinho</h1>
+              <p class="la-sub">Confira os itens e escolha como vai pagar.</p>
+            </div>
+            <div class="la-card">
+              <div class="js-carrinho-lista"></div>
+              <div class="carrinho-total js-carrinho-total"></div>
+              <div class="carrinho-pagamento">
+                <label class="form-label">Como vai pagar</label>
+                <select class="form-input" id="forma-pagamento">
+                  <option value="recepcao">Pagar na recepção ao retirar</option>
+                  <option value="pix">Pix</option>
+                  <option value="cartao">Cartão na recepção</option>
+                </select>
+                <button class="btn-primary js-fechar-compra" style="margin-top:14px;">
+                  <i class="fa-solid fa-check"></i> Fechar pedido
+                </button>
+              </div>
+              <div class="js-aviso-compra hidden"></div>
+            </div>
+            <div class="la-card">
+              <div class="la-card-head"><b>Meus pedidos</b></div>
+              <div class="js-meus-pedidos"></div>
+            </div>
+          </section>
+
+          <!-- ===== PERFIL ===== -->
+          <!-- ===== MENSAGENS ===== -->
+          <section class="la-painel" id="painel-mensagens">
+            <div class="la-head">
+              <div class="la-eyebrow">Contato</div>
+              <h1>Mensagens</h1>
+              <p class="la-sub">Fale com a recepção, participe do grupo ou converse em particular com um amigo.</p>
+            </div>
+
+            <div class="abas-msg">
+              <button class="aba-msg ativa js-aba-msg" data-t="grupo" type="button">
+                <i class="fa-solid fa-users"></i> Grupo da academia
+                <span class="la-nav-badge js-badge-grupo hidden">0</span></button>
+              <button class="aba-msg js-aba-msg" data-t="recepcao" type="button">
+                <i class="fa-solid fa-headset"></i> Recepção</button>
+              <button class="aba-msg js-aba-msg" data-t="amigos" type="button">
+                <i class="fa-solid fa-user-group"></i> Amigos
+                <span class="la-nav-badge js-badge-pedido hidden">0</span></button>
+            </div>
+
+            <!-- ===== ABERTURA: o chat nasce bloqueado ===== -->
+            <div class="js-chat-bloqueado hidden">
+              <div class="la-card chat-trancado">
+                <i class="fa-solid fa-lock"></i>
+                <b>O chat está bloqueado</b>
+                <p class="js-motivo-bloqueio">O chat abre quando você adicionar um amigo pela matrícula.</p>
+
+                <div class="add-amigo">
+                  <input class="form-input" id="add-matricula" placeholder="Matrícula ou CPF do colega">
+                  <button class="btn-primary" id="add-amigo-btn" type="button">
+                    <i class="fa-solid fa-user-plus"></i> Adicionar</button>
+                </div>
+                <div class="js-aviso-amigo hidden"></div>
+                <p class="nota-bloco">
+                  A pessoa recebe um pedido e precisa aceitar. Só depois disso vocês podem conversar.
+                </p>
+              </div>
+
+              <div class="la-card">
+                <div class="la-card-head"><b>Pedidos que chegaram para você</b></div>
+                <div class="js-pedidos-recebidos"></div>
+              </div>
+            </div>
+
+            <!-- ===== GRUPO ===== -->
+            <!-- ===== GRUPO (chat com a lista de pessoas) ===== -->
+            <div class="js-painel-grupo hidden">
+              <div class="chat-sala">
+
+                <!-- coluna de pessoas -->
+                <aside class="chat-pessoas">
+                  <div class="chat-pessoas-topo">
+                    <b>Quem está na sala</b>
+                    <span class="js-grupo-conta">0</span>
+                  </div>
+                  <div class="js-grupo-pessoas"></div>
+                </aside>
+
+                <!-- a conversa -->
+                <div class="chat-conversa">
+                  <div class="conversa-topo">
+                    <div class="conversa-quem">
+                      <div class="conversa-av" style="background:var(--la-accent-green); color:#071b0f">LA</div>
+                      <div>
+                        <b>Grupo da L.A Fitness</b>
+                        <span class="conversa-status js-grupo-status"><i></i> Aberto para todos</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="conversa-corpo js-grupo" id="grupo-corpo">
+                    <p class="vazio">Nenhuma mensagem ainda. Seja o primeiro a falar.</p>
+                  </div>
+
+                  <form class="conversa-form" id="form-grupo">
+                    <button aria-label="Mandar vídeo ou foto" class="btn-anexo js-anexo-grupo" type="button" title="Mandar vídeo ou foto">
+                      <i class="fa-solid fa-paperclip"></i></button>
+                    <input type="file" id="arquivo-grupo" accept="video/*,image/*" hidden>
+                    <button aria-label="Emoji e figurinhas" class="btn-anexo js-emoji-btn" data-alvo="grupo-texto" type="button" title="Emoji e figurinhas">
+                      <i class="fa-solid fa-face-smile"></i></button>
+                    <input class="form-input" id="grupo-texto" placeholder="Fale de treino, música, o dia a dia..." autocomplete="off">
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                  </form>
+                  <div class="emoji-painel js-emoji-painel hidden" data-dono="grupo-texto"></div>
+                  <div class="anexo-nome js-anexo-nome hidden"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== RECEPCAO ===== -->
+            <div class="js-painel-recepcao hidden">
+              <div class="la-card conversa-card">
+                <div class="conversa-topo">
+                  <div class="conversa-quem">
+                    <div class="conversa-av">LA</div>
+                    <div>
+                      <b>Recepção L.A Fitness</b>
+                      <span class="conversa-status"><i></i> Assunto de conta, plano e pagamento</span>
+                    </div>
+                  </div>
+                  <button class="btn-mini js-msg-zap"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                </div>
+                <div class="conversa-corpo js-conversa" id="conversa-corpo">
+                  <p class="vazio">Nenhuma mensagem ainda. Escreva a primeira.</p>
+                </div>
+                <form class="conversa-form" id="form-mensagem">
+                  <button aria-label="Emoji e figurinhas" class="btn-anexo js-emoji-btn" data-alvo="msg-texto" type="button" title="Emoji e figurinhas">
+                    <i class="fa-solid fa-face-smile"></i></button>
+                  <input class="form-input" id="msg-texto" placeholder="Escreva sua mensagem..." autocomplete="off">
+                  <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                </form>
+                <div class="emoji-painel js-emoji-painel hidden" data-dono="msg-texto"></div>
+                <div class="conversa-rapidas">
+                  <button class="pilula-acao js-msg-pronta" data-t="Quero trancar meu plano por um mês.">Trancar plano</button>
+                  <button class="pilula-acao js-msg-pronta" data-t="Preciso da segunda via do meu recibo.">Segunda via</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== AMIGOS ===== -->
+            <!-- ===== AMIGOS (privado, com a lista de contatos) ===== -->
+            <div class="js-painel-amigos hidden">
+              <div class="chat-sala">
+
+                <aside class="chat-pessoas">
+                  <div class="chat-pessoas-topo">
+                    <b>Meus contatos</b>
+                    <button class="btn-mini" id="abrir-add-amigo" type="button" title="Adicionar contato">
+                      <i class="fa-solid fa-user-plus"></i></button>
+                  </div>
+                  <div class="js-meus-amigos"></div>
+                  <div class="add-amigo hidden js-add-amigo-caixa" style="padding:10px;">
+                    <input class="form-input" id="add-matricula2" placeholder="Matrícula ou CPF" style="margin-bottom:8px;">
+                    <button class="btn-primary" id="add-amigo-btn2" type="button" style="width:100%;justify-content:center;">Adicionar</button>
+                  </div>
+                  <div class="js-aviso-amigo hidden" style="padding:10px;"></div>
+                </aside>
+
+                <div class="chat-conversa">
+                  <div class="la-card conversa-card">
+                    <div class="conversa-topo">
+                      <div class="conversa-quem">
+                        <div class="conversa-av js-amigo-av">?</div>
+                        <div>
+                          <b class="js-amigo-nome">Escolha um contato</b>
+                          <span class="conversa-status"><i></i> Conversa particular</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="conversa-corpo js-particular" id="particular-corpo">
+                      <p class="vazio">Escolha um contato ao lado para conversar.</p>
+                    </div>
+                    <form class="conversa-form" id="form-particular">
+                      <button aria-label="Mandar vídeo ou foto" class="btn-anexo js-anexo-particular" type="button" title="Mandar vídeo ou foto">
+                        <i class="fa-solid fa-paperclip"></i></button>
+                      <input type="file" id="arquivo-particular" accept="video/*,image/*" hidden>
+                      <button aria-label="Emoji e figurinhas" class="btn-anexo js-emoji-btn" data-alvo="particular-texto" type="button" title="Emoji e figurinhas">
+                        <i class="fa-solid fa-face-smile"></i></button>
+                      <input class="form-input" id="particular-texto" placeholder="Escreva para o seu contato..." autocomplete="off">
+                      <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                    </form>
+                    <div class="emoji-painel js-emoji-painel hidden" data-dono="particular-texto"></div>
+                    <div class="anexo-nome js-anexo-nome2 hidden"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- ===== MENSALIDADE ===== -->
+          <section class="la-painel" id="painel-mensalidade">
+            <div class="la-head">
+              <div class="la-eyebrow">Financeiro</div>
+              <h1>Minha mensalidade</h1>
+              <p class="la-sub">Veja o vencimento, registre o pagamento e acompanhe o histórico.</p>
+            </div>
+
+            <div class="la-card">
+              <div class="js-mensalidade"></div>
+            </div>
+
+            <div class="la-card">
+              <div class="la-card-head"><b>Como pagar</b></div>
+              <div class="formas-pagamento">
+                <div class="forma-pag">
+                  <i class="fa-brands fa-pix"></i>
+                  <div><b>Pix</b><span>Chave: (61) 9 9266-3142</span></div>
+                </div>
+                <div class="forma-pag">
+                  <i class="fa-solid fa-money-bill"></i>
+                  <div><b>Dinheiro ou cartão</b><span>Direto na recepção</span></div>
+                </div>
+                <div class="forma-pag">
+                  <i class="fa-solid fa-check-to-slot"></i>
+                  <div><b>Wellhub / Gympass</b><span>Apresente o app na catraca</span></div>
+                </div>
+              </div>
+              <p class="nota-bloco" style="margin-top:14px;">
+                Ao registrar o pagamento, a recepção confirma e o mês fica marcado como pago.
+              </p>
+            </div>
+
+            <div class="la-card">
+              <div class="la-card-head"><b>Histórico</b></div>
+              <div class="js-historico-pag"></div>
+            </div>
+          </section>
+
+          <section class="la-painel" id="painel-perfil">
+            <div class="la-head"><div class="la-eyebrow">Conta</div><h1>Meu perfil</h1></div>
+
+            <div class="la-card perfil-cabeca">
+              <div class="perfil-foto-palco">
+                <div class="perfil-foto js-perfil-foto">LA</div>
+                <label class="perfil-trocar">
+                  <i class="fa-solid fa-camera"></i> Trocar foto
+                  <input type="file" id="input-foto" accept="image/*" hidden>
+                </label>
+              </div>
+              <div class="perfil-quem">
+                <b class="js-aluno-nome">Aluno</b>
+                <span class="js-aluno-matricula">—</span>
+                <span class="perfil-status"><i></i> Ativo na academia</span>
+              </div>
+            </div>
+
+            <div class="la-2col">
+              <div class="la-card">
+                <div class="la-card-head"><b>Meus dados</b></div>
+                <form id="form-perfil" class="grade-form">
+                  <div>
+                    <label class="form-label">Nome completo</label>
+                    <input class="form-input" id="perf-nome">
+                  </div>
+                  <div>
+                    <label class="form-label">Telefone / WhatsApp</label>
+                    <input class="form-input" id="perf-telefone" placeholder="(61) 90000-0000">
+                  </div>
+                  <div>
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" id="perf-email" type="email">
+                  </div>
+                  <div>
+                    <label class="form-label">Objetivo</label>
+                    <input class="form-input" id="perf-objetivo" placeholder="Hipertrofia, emagrecimento...">
+                  </div>
+                  <div class="acoes-form">
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar dados</button>
+                  </div>
+                </form>
+                <div class="js-aviso-perfil hidden"></div>
+              </div>
+
+              <div class="la-card">
+                <div class="la-card-head"><b>Meu plano</b></div>
+                <div class="js-plano"></div>
+              </div>
+            </div>
+
+            <div class="la-2col" style="margin-top:16px;">
+              <div class="la-card">
+                <div class="la-card-head"><b>Segurança</b></div>
+                <form id="form-senha" class="grade-form">
+                  <div>
+                    <label class="form-label">Senha atual</label>
+                    <input class="form-input" id="senha-atual" type="password">
+                  </div>
+                  <div>
+                    <label class="form-label">Nova senha</label>
+                    <input class="form-input" id="senha-nova" type="password" placeholder="mínimo 4 caracteres">
+                  </div>
+                  <div class="acoes-form">
+                    <button type="submit" class="btn-secondary"><i class="fa-solid fa-key"></i> Trocar senha</button>
+                  </div>
+                </form>
+                <div class="js-aviso-senha hidden"></div>
+              </div>
+
+              <div class="la-card">
+                <div class="la-card-head"><b>Recados da academia</b></div>
+                <div class="js-lista-avisos"></div>
+              </div>
+            </div>
+
+            <button class="btn-sair js-sair-aluno" style="margin-top:20px;">
+              <i class="fa-solid fa-right-from-bracket"></i> SAIR DA CONTA
+            </button>
+          </section>
+
+        </main>
       </div>
     </div>
   </div>
 
-  <!-- TELA 5: FICHA DE TREINO DETALHADA -->
-  <div id="view-app-workout" class="view-screen">
-    <div class="app-viewport">
-      <div class="app-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <i class="fa-solid fa-arrow-left" style="cursor:pointer;" onclick="switchView('app-dash')"></i>
-          <h4 style="font-size:1rem;">Treino A - Peito e Tríceps</h4>
-        </div>
-        <span style="font-size:0.8rem; color:var(--la-red); font-weight:700;">3/4 Concluído</span>
-      </div>
+  <!-- ================= TELA 6: FICHA DE TREINO ================= -->
 
-      <div class="app-content">
-        <!-- Exercício 1 -->
-        <div class="exercise-item">
-          <div class="exercise-header">
-            <h5 style="font-size:0.95rem;">1. Supino Reto com Barra</h5>
-            <span style="font-size:0.75rem; color:var(--la-text-muted);">Descanso: 60s</span>
-          </div>
-          <div class="set-row">
-            <span>Série 1 • 12 Reps • 30kg</span>
-            <div class="set-check done" onclick="toggleSet(this)"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="set-row">
-            <span>Série 2 • 10 Reps • 35kg</span>
-            <div class="set-check done" onclick="toggleSet(this)"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="set-row">
-            <span>Série 3 • 8 Reps • 40kg</span>
-            <div class="set-check" onclick="toggleSet(this)"><i class="fa-solid fa-check"></i></div>
-          </div>
-        </div>
+  <!-- ================= GALERIA: NOSSA ESTRUTURA ================= -->
+  <div id="view-galeria" class="view-screen">
+    <section class="secao-galeria" data-secao="galeria">
+      <div class="container">
+        <span class="etiqueta-secao">Nossa estrutura</span>
+        <h2>Conheça a L.A Fitness</h2>
+        <p class="subtitulo-secao">Equipamentos completos, espaço amplo e acompanhamento de verdade — em Cidade Ocidental - GO.</p>
 
-        <!-- Exercício 2 -->
-        <div class="exercise-item">
-          <div class="exercise-header">
-            <h5 style="font-size:0.95rem;">2. Tríceps Pulley na Corda</h5>
-            <span style="font-size:0.75rem; color:var(--la-text-muted);">Descanso: 45s</span>
-          </div>
-          <div class="set-row">
-            <span>Série 1 • 15 Reps • 25kg</span>
-            <div class="set-check" onclick="toggleSet(this)"><i class="fa-solid fa-check"></i></div>
-          </div>
-          <div class="set-row">
-            <span>Série 2 • 12 Reps • 30kg</span>
-            <div class="set-check" onclick="toggleSet(this)"><i class="fa-solid fa-check"></i></div>
-          </div>
+        <div class="grade-galeria">
+          <figure class="g-item g-grande"><img src="img/fachada-logo.jpg" alt="Sala de musculação da L.A Fitness" loading="lazy"><figcaption>Musculação</figcaption></figure>
+          <figure class="g-item"><img src="img/musculacao.jpg" alt="Equipamentos de musculação" loading="lazy"><figcaption>Equipamentos</figcaption></figure>
+          <figure class="g-item"><img src="img/halteres-estante.jpg" alt="Estante de halteres" loading="lazy"><figcaption>Peso livre</figcaption></figure>
+          <figure class="g-item"><img src="img/cordas-cintos.jpg" alt="Cordas e cintos de treino" loading="lazy"><figcaption>Acessórios</figcaption></figure>
+          <figure class="g-item g-largo"><div class="foto-vazia"><i class="fa-solid fa-image"></i><span>Espaço da foto — troque pelo painel</span></div><figcaption>Ginástica infantil</figcaption></figure>
+          <figure class="g-item"><div class="foto-vazia"><i class="fa-solid fa-image"></i><span>Espaço da foto — troque pelo painel</span></div><figcaption>Treino orientado</figcaption></figure>
         </div>
       </div>
-
-      <div class="app-bottom-nav">
-        <a class="nav-item-app" onclick="switchView('app-dash')">
-          <i class="fa-solid fa-house"></i>
-          <span>Início</span>
-        </a>
-        <a class="nav-item-app active" onclick="switchView('app-workout')">
-          <i class="fa-solid fa-dumbbell"></i>
-          <span>Ficha</span>
-        </a>
-        <a class="nav-item-app" onclick="switchView('login')">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
-        </a>
-      </div>
-    </div>
+    </section>
   </div>
 
-  <!-- ==========================================
-       6. MARCA REGISTRADA: CHATBOT FLUTUANTE (L.A BOT)
-       ========================================== -->
+
+  <!-- ================= RODAPÉ ================= -->
+  <footer class="rodape">
+    <div class="rodape-conteudo">
+      <div>
+        <div class="logo-container" style="margin-bottom:10px;">
+          <img class="logo-img logo-img-mini" src="img/logo.png" alt="L.A Fitness" data-fallbacks="img/logo-la.png" style="height:34px;">
+          <div class="logo-text" style="font-size:1.6rem;">FITNESS<span>.</span></div>
+        </div>
+        <p style="color:var(--la-text-muted); font-size:0.85rem; max-width:34ch; line-height:1.6;">
+          Musculação, aulas coletivas e ficha digital em Cidade Ocidental - GO.
+        </p>
+      </div>
+      <div class="rodape-links">
+        <b>Navegar</b>
+        <a data-view="landing">Início</a>
+        <a data-view="planos">Planos</a>
+        <a data-view="login">Área do Aluno</a>
+      </div>
+      <div class="rodape-links">
+        <b>Contato</b>
+        <a class="js-zap-contato"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+        <a class="js-ver-privacidade">Privacidade</a>
+      </div>
+    </div>
+    <p class="rodape-fim">© <span class="js-ano"></span> L.A Fitness — Cidade Ocidental, GO</p>
+    <p class="rodape-credito">
+      Desenvolvido por <b>Rodrigo Nunes</b>
+    </p>
+  <p class="credito-midia">Demonstrações de exercícios: <a href="https://github.com/hasaneyldrm/exercises-dataset" target="_blank" rel="noopener">Exercises Dataset</a> (MIT) — mídia © <a href="https://gymvisual.com/" target="_blank" rel="noopener">Gym visual</a></p>
+  </footer>
+
+
+  <!-- ================= SEQUÊNCIA DE TREINO ================= -->
+  <div id="tela-treino" class="tela-cheia">
+    <div class="js-treino-sequencia"></div>
+  </div>
+
+  <!-- ================= L.A BOT ================= -->
   <div class="chatbot-widget">
-    <div class="chatbot-trigger" onclick="toggleChatbot()">
-      <i class="fa-solid fa-comments"></i>
+    <div class="chatbot-trigger" title="Fale com o L.A Bot">
+      <span class="chatbot-anel" aria-hidden="true"></span>
+      <img class="chatbot-logo" src="img/logo.png" alt="L.A Bot"
+           data-fallbacks="img/logo-la.png">
+      <span class="chatbot-selo" aria-hidden="true"></span>
     </div>
 
     <div class="chatbot-window" id="chatWindow">
@@ -299,49 +1064,1775 @@
           <div class="bot-avatar"><i class="fa-solid fa-robot"></i></div>
           <div>
             <h5 style="font-size:0.9rem;">L.A Fitness Bot</h5>
-            <span style="font-size:0.7rem; color:var(--la-accent-green);">● Online 24h</span>
+            <span style="font-size:0.7rem; color:var(--la-accent-green);">● Online</span>
           </div>
         </div>
         <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleChatbot()"></i>
       </div>
 
       <div class="chat-body" id="chatBody">
-        <div class="msg-bubble msg-bot">
-          Olá! Bem-vindo à <strong>L.A Fitness</strong> em Cidade Ocidental! Como posso te ajudar hoje?
-          <div class="chat-quick-actions">
-            <button class="quick-btn" onclick="sendQuickMsg('Horários')">Horários</button>
-            <button class="quick-btn" onclick="sendQuickMsg('Endereço')">Endereço</button>
-            <button class="quick-btn" onclick="sendQuickMsg('Planos')">Planos</button>
-            <button class="quick-btn" onclick="sendQuickMsg('Atendente')">Falar na Recepção</button>
-          </div>
+        <div class="chat-quick-actions" style="margin-top:0;">
+          <button class="quick-btn js-bot-quick" data-msg="Horários">Horários</button>
+          <button class="quick-btn js-bot-quick" data-msg="Planos">Planos</button>
+          <button class="quick-btn js-bot-quick" data-msg="Endereço">Endereço</button>
+          <button class="quick-btn js-bot-quick" data-msg="Quero fazer minha matrícula">Matrícula</button>
+          <button class="quick-btn js-bot-quick" data-msg="Aula experimental">Aula experimental</button>
+          <button class="quick-btn js-bot-quick" data-msg="Atendente">Falar na recepção</button>
         </div>
       </div>
 
       <div class="chat-footer">
-        <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua dúvida ou comando..." onkeypress="handleChatKey(event)">
-        <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua dúvida...">
+        <button class="chat-send-btn" onclick="sendChatMessage()" aria-label="Enviar mensagem"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL ADMIN OCULTO -->
-  <div class="modal-overlay" id="modalAdmin">
-    <div class="modal-admin">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h3 style="font-size:1.4rem; color:var(--la-red);"><i class="fa-solid fa-gears"></i> PAINEL ADMINISTRATIVO L.A FITNESS</h3>
-        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:1.2rem;" onclick="closeAdminModal()"></i>
-      </div>
-      <p style="color:var(--la-text-muted); font-size:0.85rem; margin-bottom:20px;">
-        Acesso restrito para gestão de alunos, fichas de treino, fotos e configurações do site.
-      </p>
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
-        <button class="btn-secondary" style="justify-content:center;" onclick="alert('Módulo de Cadastro de Alunos')"><i class="fa-solid fa-user-plus"></i> Cadastrar Aluno</button>
-        <button class="btn-secondary" style="justify-content:center;" onclick="alert('Módulo de Fichas de Treino')"><i class="fa-solid fa-file-pen"></i> Montar Ficha</button>
-        <button class="btn-secondary" style="justify-content:center;" onclick="alert('Gestão do WhatsApp e Bot')"><i class="fa-solid fa-sliders"></i> Ajustar L.A Bot</button>
-      </div>
-    </div>
-  </div>
+  <script src="js/dados.js"></script>
+  <script src="js/bot.js"></script>
+  <script src="js/dataset.js"></script>
+  <script src="js/treinos.js"></script>
+  <script src="js/modelos-treino.js"></script>
+  <script src="js/aluno.js"></script>
+  <script src="js/entrada.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/splash.js"></script>
+  <script src="js/aluno-extra.js"></script>
+  <script src="js/loja.js"></script>
+  <script src="js/financeiro.js"></script>
+  <script src="js/conversas.js"></script>
+  <script src="js/mural.js"></script>
+  <script src="js/app-nav.js"></script>
+  <script src="js/emojis.js"></script>
+  <script>
+    /* liga os cliques que não passam por data-view */
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.js-zap-experimental, .js-zap-contato').forEach(function (b) {
+        b.addEventListener('click', function () {
+          LAWhatsApp.abrir(b.classList.contains('js-zap-experimental')
+            ? 'Olá! Gostaria de agendar uma aula experimental na L.A Fitness.'
+            : 'Olá! Vim pelo site da L.A Fitness e gostaria de falar com a recepção.');
+        });
+      });
+      document.querySelectorAll('.js-ver-privacidade').forEach(function (b) {
+        b.addEventListener('click', function () { window.location.href = 'privacidade.html'; });
+      });
+      document.querySelectorAll('.js-ano').forEach(function (e) { e.textContent = new Date().getFullYear(); });
+    });
+  </script>
 
-  <script src="js/app.js"></script>
+  <!-- ============ TELA DE ABERTURA — efeitos e trava ============ -->
+  <style>
+    /* o que depende do body fica aqui; o visual esta no style.css */
+    body.travado { overflow: hidden; }
+  </style>
+  <script>
+  (function () {
+    'use strict';
+    var splashEl = document.getElementById('splash-la');
+    var btn = document.getElementById('btn-iniciar');
+    if (!splashEl) return;
+
+    /* guarda: se o navegador nao tiver matchMedia, seguimos com o efeito ligado.
+       Sem isso a abertura quebrava e o aluno ficava preso na tela de entrada. */
+    function pedeMenosMovimento() {
+      try {
+        return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      } catch (e) { return false; }
+    }
+
+    document.body.classList.add('travado');
+
+    /* ============ 1. REVELACAO EM SEQUENCIA ============ */
+    splashEl.querySelectorAll('[data-reveal]').forEach(function (b, i) {
+      b.style.opacity = '0';
+      b.style.transition = 'opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1)';
+      var de = b.classList.contains('la-faixa-1') ? 'translateX(-80px)'
+             : b.classList.contains('la-faixa-2') ? 'translateX(80px)'
+             : 'translateY(30px)';
+      b.style.transform = de;
+      setTimeout(function () {
+        b.style.opacity = '1';
+        b.style.transform = 'translate(0,0)';
+      }, 160 * i + 200);
+    });
+
+    /* ============ 2. LOGO: parallax com o mouse ============ */
+    var logo = splashEl.querySelector('.la-logo-img');
+    var halo = splashEl.querySelector('.la-logo-halo');
+    var g1 = splashEl.querySelector('.la-glow-1');
+    var g2 = splashEl.querySelector('.la-glow-2');
+    var alvo = { x: 0, y: 0 }, atual = { x: 0, y: 0 };
+
+    splashEl.addEventListener('mousemove', function (e) {
+      alvo.x = (e.clientX / window.innerWidth - 0.5);
+      alvo.y = (e.clientY / window.innerHeight - 0.5);
+    });
+
+    /* suaviza o movimento quadro a quadro */
+    function seguirMouse() {
+      atual.x += (alvo.x - atual.x) * 0.08;
+      atual.y += (alvo.y - atual.y) * 0.08;
+      var tx = atual.x * 26, ty = atual.y * 18;
+      if (logo) logo.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,0) scale(1.01)';
+      if (halo) halo.style.transform = 'translate3d(' + (tx * 1.5) + 'px,' + (ty * 1.5) + 'px,0)';
+      if (g1) g1.style.transform = 'translate(' + (atual.x * -70) + 'px,' + (atual.y * -70) + 'px)';
+      if (g2) g2.style.transform = 'translate(' + (atual.x * 60) + 'px,' + (atual.y * 60) + 'px)';
+      requestAnimationFrame(seguirMouse);
+    }
+    if (!pedeMenosMovimento()) {
+      requestAnimationFrame(seguirMouse);
+    }
+
+    /* ============ 3. PARTICULAS DE BRASA ============ */
+    (function particulas() {
+      var cv = document.getElementById('la-particulas');
+      if (!cv || pedeMenosMovimento()) return;
+      var cx = cv.getContext('2d');
+      var lista = [], rodando = true;
+
+      function medir() {
+        cv.width = splashEl.offsetWidth;
+        cv.height = splashEl.offsetHeight;
+      }
+      medir();
+      window.addEventListener('resize', medir);
+
+      function nova() {
+        return {
+          x: Math.random() * cv.width,
+          y: cv.height + Math.random() * 120,
+          r: Math.random() * 1.8 + 0.5,
+          vy: Math.random() * 0.7 + 0.25,
+          vx: (Math.random() - 0.5) * 0.3,
+          a: Math.random() * 0.5 + 0.12
+        };
+      }
+      for (var i = 0; i < 55; i++) lista.push(nova());
+
+      function desenhar() {
+        if (!rodando) return;
+        cx.clearRect(0, 0, cv.width, cv.height);
+        for (var i = 0; i < lista.length; i++) {
+          var p = lista[i];
+          p.y -= p.vy;
+          p.x += p.vx;
+          if (p.y < -20) lista[i] = nova();
+          var cor = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
+          cor.addColorStop(0, 'rgba(229,9,20,' + p.a + ')');
+          cor.addColorStop(1, 'rgba(229,9,20,0)');
+          cx.fillStyle = cor;
+          cx.beginPath();
+          cx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2);
+          cx.fill();
+        }
+        requestAnimationFrame(desenhar);
+      }
+      desenhar();
+      splashEl._pararParticulas = function () { rodando = false; };
+    })();
+
+    /* ============ 4. SAIDA — nao sai sozinha, e libera o clique ============ */
+    var saiu = false;
+    function sair() {
+      if (saiu) return;
+      saiu = true;
+
+      /* libera o clique IMEDIATAMENTE */
+      splashEl.style.pointerEvents = 'none';
+      splashEl.classList.add('saindo');
+      document.body.classList.remove('travado');
+
+      if (splashEl._pararParticulas) splashEl._pararParticulas();
+
+      var tela = document.getElementById('view-splash');
+      if (tela) tela.classList.add('active');
+
+      /* remove do documento: nao sobra camada cobrindo a tela */
+      setTimeout(function () {
+        if (splashEl.parentNode) splashEl.parentNode.removeChild(splashEl);
+      }, 560);
+    }
+
+    if (btn) btn.addEventListener('click', function (e) { e.stopPropagation(); sair(); });
+    splashEl.addEventListener('click', sair);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') sair();
+    });
+  })();
+  </script>
+  <script>
+  /* liga as telas novas (mensagens e mensalidade) quando o app do aluno abre */
+  (function () {
+    var original = (typeof LAAluno !== 'undefined' && LAAluno.iniciar)
+      ? LAAluno.iniciar.bind(LAAluno) : null;
+    if (original && typeof LAAlunoExtra !== 'undefined') {
+      LAAluno.iniciar = function (alunoDoLogin) {
+        original(alunoDoLogin);
+        var quem = alunoDoLogin || (typeof laAlunoLogado === 'function' ? laAlunoLogado() : null);
+        try { LAAlunoExtra.iniciar(quem); } catch (e) { console.warn('Extras do aluno:', e); }
+        try { if (typeof LALoja !== 'undefined') LALoja.iniciar(quem); } catch (e) { console.warn('Loja do aluno:', e); }
+        try { if (typeof LAEsteira !== 'undefined') LAEsteira.iniciar(quem); } catch (e) { console.warn('Esteira:', e); }
+        try { if (typeof LACalendario !== 'undefined') LACalendario.iniciar(quem); } catch (e) { console.warn('Calendario:', e); }
+        try { if (typeof LAPerfil !== 'undefined') LAPerfil.iniciar(quem); } catch (e) { console.warn('Perfil:', e); }
+        try { if (typeof LAMural !== 'undefined') LAMural.iniciar(quem); } catch (e) { console.warn('Mural:', e); }
+      };
+    }
+  })();
+  </script>
+  <script>
+/* ==========================================================================
+   LOJA DO ALUNO — grade, carrinho e pedido
+   Le os produtos que a academia cadastrou no painel.
+   ========================================================================== */
+
+const LALoja = {
+
+  aluno: null,
+
+  iniciar(aluno) {
+    this.aluno = aluno || (typeof laAlunoLogado === 'function' ? laAlunoLogado() : null);
+    if (!this.aluno) return;
+    this.ligar();
+    this.pintar();
+    this.pintarCarrinho();
+    this.pintarPedidos();
+    this.atualizarBadge();
+  },
+
+  ligar() {
+    const busca = document.getElementById('busca-produto');
+    if (busca && !busca._ligado) {
+      busca._ligado = true;
+      busca.addEventListener('input', () => this.pintar());
+    }
+    const cat = document.getElementById('filtro-categoria');
+    if (cat && !cat._ligado) {
+      cat._ligado = true;
+      cat.addEventListener('change', () => this.pintar());
+    }
+    const abrir = document.querySelector('.js-abrir-carrinho');
+    if (abrir && !abrir._ligado) {
+      abrir._ligado = true;
+      abrir.addEventListener('click', () => {
+        const b = document.querySelector('[data-painel="carrinho"]');
+        if (b) b.click();
+      });
+    }
+    const fechar = document.querySelector('.js-fechar-compra');
+    if (fechar && !fechar._ligado) {
+      fechar._ligado = true;
+      fechar.addEventListener('click', () => this.fecharPedido());
+    }
+  },
+
+  /* ---------- grade de produtos ---------- */
+  pintar() {
+    const casa = document.querySelector('.js-loja');
+    if (!casa) return;
+
+    const busca = document.getElementById('busca-produto');
+    const cat = document.getElementById('filtro-categoria');
+    const termo = busca ? busca.value.toLowerCase().trim() : '';
+    const escolhida = cat ? cat.value : '';
+
+    /* categorias a partir dos produtos reais */
+    if (cat && !cat._pintado) {
+      cat._pintado = true;
+      const cats = {};
+      laProdutosVisiveis().forEach(function (p) { if (p.categoria) cats[p.categoria] = 1; });
+      Object.keys(cats).sort().forEach(function (c) {
+        const o = document.createElement('option');
+        o.value = c; o.textContent = c;
+        cat.appendChild(o);
+      });
+    }
+
+    let lista = laProdutosVisiveis();
+    if (escolhida) lista = lista.filter(function (p) { return p.categoria === escolhida; });
+    if (termo) lista = lista.filter(function (p) {
+      return String(p.nome).toLowerCase().includes(termo) ||
+             String(p.categoria || '').toLowerCase().includes(termo);
+    });
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum produto encontrado.</p>';
+      return;
+    }
+
+    const eu = this;
+    casa.innerHTML = lista.map(function (p) {
+      const semEstoque = p.estoque != null && p.estoque <= 0;
+      const foto = p.foto
+        ? '<img class="loja-foto" src="' + laEscapar(p.foto) + '" alt="' + laEscapar(p.nome) + '" onerror="this.style.display=\'none\'">'
+        : '<div class="icone-loja"><i class="fa-solid ' + laEscapar(p.icone || 'fa-box') + '"></i></div>';
+      const estoque = p.estoque == null ? ''
+        : (semEstoque ? '<span class="loja-esgotado">Esgotado</span>'
+                      : '<span class="loja-estoque">' + p.estoque + ' em estoque</span>');
+
+      return '<div class="item-loja' + (semEstoque ? ' esgotado' : '') + '">' +
+               foto +
+               '<div class="info-loja">' +
+                 '<b>' + laEscapar(p.nome) + '</b>' +
+                 '<span>' + laEscapar(p.categoria || '') + '</span>' +
+                 '<strong>R$ ' + Number(p.preco || 0).toFixed(2).replace('.', ',') + '</strong>' +
+                 estoque +
+               '</div>' +
+               '<button class="btn-reservar js-add-carrinho" data-id="' + p.id + '"' +
+                 (semEstoque ? ' disabled' : '') + '>' +
+                 (semEstoque ? 'Sem estoque' : '<i class="fa-solid fa-cart-plus"></i> Adicionar') +
+               '</button>' +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('.js-add-carrinho').forEach(function (b) {
+      b.addEventListener('click', function () {
+        const r = laAdicionarAoCarrinho(eu.aluno.id, b.getAttribute('data-id'), 1);
+        if (!r.ok) { alert(r.erro); return; }
+        b.textContent = 'No carrinho ✓';
+        b.disabled = true;
+        b.classList.add('reservado');
+        eu.pintarCarrinho();
+        eu.atualizarBadge();
+      });
+    });
+  },
+
+  /* ---------- carrinho ---------- */
+  pintarCarrinho() {
+    const casa = document.querySelector('.js-carrinho-lista');
+    if (!casa) return;
+
+    const itens = laCarrinhoDoAluno(this.aluno.id);
+    if (!itens.length) {
+      casa.innerHTML = '<p class="vazio">Seu carrinho está vazio.</p>';
+    } else {
+      casa.innerHTML = itens.map(function (i) {
+        const p = laBuscarProduto(i.produtoId);
+        if (!p) return '';
+        const sub = p.preco * i.quantidade;
+        return '<div class="linha-carrinho">' +
+                 '<div><b>' + laEscapar(p.nome) + '</b>' +
+                 '<span>' + i.quantidade + ' x R$ ' + p.preco.toFixed(2).replace('.', ',') + '</span></div>' +
+                 '<span class="valor-pag">R$ ' + sub.toFixed(2).replace('.', ',') + '</span>' +
+                 '<button class="btn-mini js-tirar" data-id="' + i.produtoId + '">Tirar</button>' +
+               '</div>';
+      }).join('');
+
+      casa.querySelectorAll('.js-tirar').forEach((b) => {
+        b.addEventListener('click', () => {
+          laRemoverDoCarrinho(this.aluno.id, b.getAttribute('data-id'));
+          this.pintarCarrinho();
+          this.pintar();
+          this.atualizarBadge();
+        });
+      });
+    }
+
+    const total = document.querySelector('.js-carrinho-total');
+    if (total) {
+      const v = laTotalDoCarrinho(this.aluno.id);
+      total.innerHTML = 'Total: <b>R$ ' + v.toFixed(2).replace('.', ',') + '</b>';
+    }
+  },
+
+  atualizarBadge() {
+    const b = document.querySelector('.js-badge-carrinho');
+    if (!b) return;
+    const n = laCarrinhoDoAluno(this.aluno.id).reduce(function (s, i) { return s + i.quantidade; }, 0);
+    b.textContent = n;
+    b.classList.toggle('hidden', n === 0);
+  },
+
+  fecharPedido() {
+    const sel = document.getElementById('forma-pagamento');
+    const aviso = document.querySelector('.js-aviso-compra');
+    const forma = sel ? sel.value : 'recepcao';
+
+    const r = laFecharCompra(this.aluno.id, forma);
+    if (!r.ok) {
+      if (aviso) {
+        aviso.textContent = r.erro;
+        aviso.classList.remove('hidden');
+        setTimeout(function () { aviso.classList.add('hidden'); }, 4000);
+      }
+      return;
+    }
+
+    if (typeof laEnviarMensagem === 'function') {
+      laEnviarMensagem(this.aluno.id,
+        'Fiz um pedido na loja: ' + r.compra.itens.map(function (i) {
+          return i.quantidade + 'x ' + i.nome;
+        }).join(', ') + '. Total R$ ' + r.compra.total.toFixed(2).replace('.', ',') + '.', 'aluno');
+    }
+
+    if (aviso) {
+      aviso.textContent = 'Pedido registrado! Pague na recepção ao retirar.';
+      aviso.classList.remove('hidden');
+      setTimeout(function () { aviso.classList.add('hidden'); }, 5000);
+    }
+
+    this.pintar();
+    this.pintarCarrinho();
+    this.pintarPedidos();
+    this.atualizarBadge();
+  },
+
+  pintarPedidos() {
+    const casa = document.querySelector('.js-meus-pedidos');
+    if (!casa) return;
+    const lista = laComprasDoAluno(this.aluno.id);
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum pedido ainda.</p>';
+      return;
+    }
+    const rotulos = { aguardando: 'Aguardando pagamento', pago: 'Pago', entregue: 'Entregue', cancelado: 'Cancelado' };
+    casa.innerHTML = lista.map(function (c) {
+      const cor = c.status === 'entregue' || c.status === 'pago' ? 'var(--la-accent-green)'
+                : c.status === 'cancelado' ? 'var(--la-red)' : '#ffb020';
+      return '<div class="linha-pedido">' +
+               '<div><b>Pedido de ' + new Date(c.quando).toLocaleDateString('pt-BR') + '</b>' +
+               '<span>' + (c.itens || []).map(function (i) { return i.quantidade + 'x ' + i.nome; }).join(', ') + '</span></div>' +
+               '<span class="valor-pag">R$ ' + Number(c.total).toFixed(2).replace('.', ',') + '</span>' +
+               '<span class="pilula-status" style="color:' + cor + '; border-color:' + cor + '">' +
+                 (rotulos[c.status] || c.status) + '</span>' +
+             '</div>';
+    }).join('');
+  }
+};
+  </script>
+  <script>
+/* ==========================================================================
+   ESTEIRA — timer com tempo definido e alarme no fim
+   ========================================================================== */
+
+const LAEsteira = {
+
+  aluno: null,
+  total: 0,          /* segundos marcados */
+  restante: 0,
+  rodando: false,
+  intervalo: null,
+  audioCtx: null,
+
+  iniciar(aluno) {
+    this.aluno = aluno || (typeof laAlunoLogado === 'function' ? laAlunoLogado() : null);
+    if (!this.aluno) return;
+    this.ligar();
+    this.pintarHistorico();
+  },
+
+  ligar() {
+    document.querySelectorAll('.js-tempo').forEach((b) => {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.js-tempo').forEach(function (x) { x.classList.remove('ativo'); });
+        b.classList.add('ativo');
+        this.total = Number(b.getAttribute('data-min')) * 60;
+        const livre = document.querySelector('.js-tempo-livre');
+        if (livre) livre.value = '';
+      });
+    });
+
+    const livre = document.querySelector('.js-tempo-livre');
+    if (livre && !livre._ligado) {
+      livre._ligado = true;
+      livre.addEventListener('input', () => {
+        document.querySelectorAll('.js-tempo').forEach(function (x) { x.classList.remove('ativo'); });
+        const m = parseInt(livre.value, 10);
+        this.total = (m > 0 ? Math.min(m, 180) : 0) * 60;
+      });
+    }
+
+    const comecar = document.querySelector('.js-comecar-corrida');
+    if (comecar && !comecar._ligado) {
+      comecar._ligado = true;
+      comecar.addEventListener('click', () => this.comecar());
+    }
+
+    const pausar = document.querySelector('.js-pausar-corrida');
+    if (pausar && !pausar._ligado) {
+      pausar._ligado = true;
+      pausar.addEventListener('click', () => this.pausarTardio(pausar));
+    }
+
+    const parar = document.querySelector('.js-parar-corrida');
+    if (parar && !parar._ligado) {
+      parar._ligado = true;
+      parar.addEventListener('click', () => this.encerrar(true));
+    }
+  },
+
+  doisDig(n) { return String(n).padStart(2, '0'); },
+
+  formata(seg) {
+    const m = Math.floor(seg / 60), s = seg % 60;
+    return this.doisDig(m) + ':' + this.doisDig(s);
+  },
+
+  /* prepara o audio na primeira interacao (exigencia dos navegadores) */
+  garantirAudio() {
+    try {
+      if (!this.audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) this.audioCtx = new AC();
+      }
+      if (this.audioCtx && this.audioCtx.state === 'suspended') this.audioCtx.resume();
+    } catch (e) {}
+  },
+
+  /* alarme: tres bipes */
+  alarme() {
+    try {
+      this.garantirAudio();
+      if (!this.audioCtx) return;
+      const ctx = this.audioCtx;
+      [0, 0.45, 0.9].forEach((atraso) => {
+        const osc = ctx.createOscillator();
+        const vol = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 880;
+        vol.gain.setValueAtTime(0.0001, ctx.currentTime + atraso);
+        vol.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + atraso + 0.02);
+        vol.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + atraso + 0.36);
+        osc.connect(vol); vol.connect(ctx.destination);
+        osc.start(ctx.currentTime + atraso);
+        osc.stop(ctx.currentTime + atraso + 0.4);
+      });
+    } catch (e) { console.warn('Alarme:', e); }
+    if (navigator.vibrate) { try { navigator.vibrate([300, 150, 300]); } catch (e) {} }
+  },
+
+  comecar() {
+    if (!this.total) {
+      this.avisar('Escolha o tempo que você vai correr.');
+      return;
+    }
+    this.garantirAudio();
+    this.restante = this.total;
+    this.rodando = true;
+
+    const escolha = document.querySelector('.js-esteira-escolha');
+    const palco = document.querySelector('.js-crono-palco');
+    const botao = document.querySelector('.js-comecar-corrida');
+    if (escolha) escolha.classList.add('hidden');
+    if (palco) palco.classList.remove('hidden');
+    if (botao) botao.classList.add('hidden');
+
+    this.pintarCrono();
+
+    if (this.intervalo) clearInterval(this.intervalo);
+    this.intervalo = setInterval(() => {
+      if (!this.rodando) return;
+      this.restante--;
+      this.pintarCrono();
+      if (this.restante <= 0) this.terminar();
+    }, 1000);
+  },
+
+  pintarCrono() {
+    const grande = document.querySelector('.js-crono');
+    const total = document.querySelector('.js-crono-total');
+    const resta = document.querySelector('.js-crono-resta');
+    const barra = document.querySelector('.js-crono-barra');
+
+    const passado = this.total - this.restante;
+    if (grande) grande.textContent = this.formata(Math.max(0, this.restante));
+    if (total) total.textContent = this.formata(passado);
+    if (resta) resta.textContent = this.formata(Math.max(0, this.restante));
+    if (barra) barra.style.width = (this.total ? Math.min(100, (passado / this.total) * 100) : 0) + '%';
+  },
+
+  pausarTardio(botao) {
+    this.rodando = !this.rodando;
+    botao.innerHTML = this.rodando
+      ? '<i class="fa-solid fa-pause"></i> Pausar'
+      : '<i class="fa-solid fa-play"></i> Continuar';
+  },
+
+  terminar() {
+    this.rodando = false;
+    if (this.intervalo) clearInterval(this.intervalo);
+    this.alarme();
+    this.avisar('🏁 Tempo concluído! Você correu ' + Math.round(this.total / 60) + ' minutos. Bom treino!');
+
+    if (typeof laSalvarCorrida === 'function') {
+      laSalvarCorrida(this.aluno.id, this.total, this.total / 3600 * 8);
+    }
+    this.pintarHistorico();
+    setTimeout(() => this.reiniciar(), 6000);
+  },
+
+  encerrar(perguntar) {
+    if (perguntar && !confirm('Encerrar a corrida agora?')) return;
+    if (this.intervalo) clearInterval(this.intervalo);
+    this.rodando = false;
+    this.reiniciar();
+  },
+
+  reiniciar() {
+    const escolha = document.querySelector('.js-esteira-escolha');
+    const palco = document.querySelector('.js-crono-palco');
+    const botao = document.querySelector('.js-comecar-corrida');
+    if (escolha) escolha.classList.remove('hidden');
+    if (palco) palco.classList.add('hidden');
+    if (botao) botao.classList.remove('hidden');
+    document.querySelectorAll('.js-tempo').forEach(function (x) { x.classList.remove('ativo'); });
+    const livre = document.querySelector('.js-tempo-livre'); if (livre) livre.value = '';
+    this.total = 0; this.restante = 0;
+  },
+
+  pintarHistorico() {
+    const casa = document.querySelector('.js-esteira');
+    if (!casa || !this.aluno) return;
+    const lista = (typeof laCorridas === 'function') ? laCorridas(this.aluno.id) : [];
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhuma corrida registrada ainda.</p>';
+      return;
+    }
+    casa.innerHTML = lista.slice().reverse().slice(0, 10).map(function (c) {
+      const d = new Date(c.quando);
+      return '<div class="linha-corrida">' +
+               '<span>' + d.toLocaleDateString('pt-BR') + '</span>' +
+               '<b>' + (typeof laDuracao === 'function' ? laDuracao(c.segundos) : c.segundos + 's') + '</b>' +
+               '<span>' + (c.distancia ? Number(c.distancia).toFixed(2).replace('.', ',') + ' km' : '—') + '</span>' +
+             '</div>';
+    }).join('');
+  },
+
+  avisar(txt) {
+    const a = document.querySelector('.js-aviso-esteira');
+    if (!a) return;
+    a.textContent = txt;
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 6000);
+  }
+};
+
+/* ==========================================================================
+   CALENDARIO DE PROGRESSO
+   ========================================================================== */
+
+const LACalendario = {
+
+  aluno: null,
+  mes: null,
+
+  iniciar(aluno) {
+    this.aluno = aluno || (typeof laAlunoLogado === 'function' ? laAlunoLogado() : null);
+    if (!this.aluno) return;
+    this.mes = new Date();
+    this.mes.setDate(1);
+    this.ligar();
+    this.pintar();
+  },
+
+  ligar() {
+    const antes = document.querySelector('.js-mes-antes');
+    if (antes && !antes._ligado) {
+      antes._ligado = true;
+      antes.addEventListener('click', () => {
+        this.mes.setMonth(this.mes.getMonth() - 1);
+        this.pintar();
+      });
+    }
+    const depois = document.querySelector('.js-mes-depois');
+    if (depois && !depois._ligado) {
+      depois._ligado = true;
+      depois.addEventListener('click', () => {
+        this.mes.setMonth(this.mes.getMonth() + 1);
+        this.pintar();
+      });
+    }
+  },
+
+  pintar() {
+    const casa = document.querySelector('.js-calendario');
+    if (!casa || !this.aluno) return;
+
+    const meses = ['janeiro','fevereiro','março','abril','maio','junho',
+                   'julho','agosto','setembro','outubro','novembro','dezembro'];
+    const nome = document.querySelector('.js-mes-nome');
+    if (nome) nome.textContent = meses[this.mes.getMonth()] + ' de ' + this.mes.getFullYear();
+
+    /* historico do aluno */
+    const hist = (typeof laHistoricoExecucao === 'function')
+      ? laHistoricoExecucao(this.aluno.id, 400) : [];
+    const treinados = {};
+    hist.forEach(function (h) {
+      if (h.exercicios > 0) treinados[h.dia] = h.exercicios;
+    });
+    const corridas = (typeof laCorridas === 'function') ? laCorridas(this.aluno.id) : [];
+    corridas.forEach(function (c) {
+      const d = String(c.quando || '').slice(0, 10);
+      if (d) treinados[d] = (treinados[d] || 0);
+    });
+
+    /* monta a grade */
+    const ano = this.mes.getFullYear(), mes = this.mes.getMonth();
+    const primeiroDia = new Date(ano, mes, 1).getDay();
+    const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+    const hojeISO = new Date().toISOString().slice(0, 10);
+
+    let html = '';
+    for (let i = 0; i < primeiroDia; i++) html += '<div class="cal-dia vazio"></div>';
+
+    let treinou = 0, naoTreinou = 0;
+    for (let d = 1; d <= diasNoMes; d++) {
+      const iso = ano + '-' + String(mes + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      const fez = treinados[iso];
+      const ehHoje = iso === hojeISO;
+      const futuro = iso > hojeISO;
+      if (!futuro) { if (fez) treinou++; else naoTreinou++; }
+
+      let classe = 'cal-dia';
+      if (fez) classe += ' treinou';
+      if (ehHoje) classe += ' hoje';
+      if (futuro) classe += ' futuro';
+
+      html += '<div class="' + classe + '" title="' + iso + '">' + d +
+                (fez ? '<span class="cal-marca"></span>' : '') + '</div>';
+    }
+    casa.innerHTML = html;
+
+    const total = treinou + naoTreinou;
+    const pct = total ? Math.round((treinou / total) * 100) : 0;
+    const res = document.querySelector('.js-cal-resumo');
+    if (res) {
+      res.innerHTML = '<b>' + treinou + '</b> dia(s) treinado(s) neste mês · ' +
+        '<b>' + pct + '%</b> dos dias corridos' +
+        (corridas.length ? ' · <b>' + corridas.length + '</b> corrida(s) na esteira' : '');
+    }
+  }
+};
+
+/* ==========================================================================
+   PERFIL — foto, dados e senha
+   ========================================================================== */
+
+const LAPerfil = {
+
+  aluno: null,
+
+  iniciar(aluno) {
+    this.aluno = aluno || (typeof laAlunoLogado === 'function' ? laAlunoLogado() : null);
+    if (!this.aluno) return;
+    this.ligar();
+    this.pintar();
+  },
+
+  ligar() {
+    const input = document.getElementById('input-foto');
+    if (input && !input._ligado) {
+      input._ligado = true;
+      input.addEventListener('change', () => {
+        const f = input.files && input.files[0];
+        if (!f) return;
+        const leitor = new FileReader();
+        leitor.onload = () => {
+          if (typeof laAtualizarAluno === 'function') {
+            laAtualizarAluno(this.aluno.id, { foto: leitor.result });
+            this.aluno = laBuscarAluno(this.aluno.id);
+            this.pintar();
+            this.avisar('foto', 'Foto atualizada!');
+          }
+        };
+        leitor.readAsDataURL(f);
+      });
+    }
+
+    const form = document.getElementById('form-perfil');
+    if (form && !form._ligado) {
+      form._ligado = true;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const v = function (id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+        if (typeof laAtualizarAluno === 'function') {
+          laAtualizarAluno(this.aluno.id, {
+            nome: v('perf-nome') || this.aluno.nome,
+            telefone: v('perf-telefone'),
+            email: v('perf-email'),
+            objetivo: v('perf-objetivo')
+          });
+        }
+        this.aluno = laBuscarAluno(this.aluno.id);
+        this.pintar();
+        this.avisar('perfil', 'Dados salvos!');
+      });
+    }
+
+    const senha = document.getElementById('form-senha');
+    if (senha && !senha._ligado) {
+      senha._ligado = true;
+      senha.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const atual = document.getElementById('senha-atual');
+        const nova = document.getElementById('senha-nova');
+        if (!atual || atual.value !== this.aluno.senha) { this.avisar('senha', 'A senha atual está errada.'); return; }
+        if (!nova || nova.value.length < 4) { this.avisar('senha', 'A nova senha precisa de 4 caracteres ou mais.'); return; }
+        if (typeof laAtualizarAluno === 'function') laAtualizarAluno(this.aluno.id, { senha: nova.value });
+        this.aluno = laBuscarAluno(this.aluno.id);
+        atual.value = ''; nova.value = '';
+        this.avisar('senha', 'Senha trocada com sucesso!');
+      });
+    }
+  },
+
+  pintar() {
+    const a = this.aluno;
+    const foto = document.querySelector('.js-perfil-foto');
+    if (foto) {
+      if (a.foto) {
+        foto.innerHTML = '<img src="' + a.foto + '" alt="Foto do aluno">';
+        foto.classList.add('tem-foto');
+      } else {
+        foto.textContent = (typeof laIniciais === 'function') ? laIniciais(a.nome) : 'LA';
+        foto.classList.remove('tem-foto');
+      }
+    }
+    const campo = function (id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; };
+    campo('perf-nome', a.nome);
+    campo('perf-telefone', a.telefone);
+    campo('perf-email', a.email);
+    campo('perf-objetivo', a.objetivo);
+  },
+
+  avisar(tipo, txt) {
+    const a = document.querySelector('.js-aviso-' + tipo);
+    if (!a) return;
+    a.textContent = txt;
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 4000);
+  }
+};
+
+const LAMural = {
+
+  aluno: null,
+
+  iniciar(aluno) {
+    this.aluno = aluno || (typeof laAlunoLogado === 'function' ? laAlunoLogado() : null);
+    if (!this.aluno) return;
+    this.ligar();
+    this.pintar();
+  },
+
+  ligar() {
+    document.querySelectorAll('.js-aba-msg').forEach((b) => {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.js-aba-msg').forEach(function (x) { x.classList.remove('ativa'); });
+        b.classList.add('ativa');
+        const qual = b.getAttribute('data-t');
+        const rec = document.querySelector('.js-painel-recepcao');
+        const mur = document.querySelector('.js-painel-mural');
+        if (rec) rec.classList.toggle('hidden', qual !== 'recepcao');
+        if (mur) mur.classList.toggle('hidden', qual !== 'mural');
+      });
+    });
+
+    const form = document.getElementById('form-mural');
+    if (form && !form._ligado) {
+      form._ligado = true;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!laMuralAberto()) {
+          this.avisar('O mural está fechado pela academia. Volte mais tarde.');
+          return;
+        }
+        const campo = document.getElementById('mural-texto');
+        if (!campo || !campo.value.trim()) return;
+        laPostarNoMural(this.aluno.id, campo.value);
+        campo.value = '';
+        this.pintar();
+      });
+    }
+  },
+
+  pintar() {
+    const casa = document.querySelector('.js-mural');
+    if (!casa) return;
+    const aberto = laMuralAberto();
+    const lista = laLerMural();
+    const form = document.getElementById('form-mural');
+
+    const status = document.querySelector('.js-mural-status');
+    if (status) {
+      status.innerHTML = aberto
+        ? '<i></i> Aberto para o pessoal da academia'
+        : '<i style="background:var(--la-red)"></i> Fechado pela academia';
+    }
+    if (form) form.classList.toggle('hidden', !aberto);
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum recado ainda. Seja o primeiro a escrever.</p>';
+      return;
+    }
+
+    casa.innerHTML = lista.slice().reverse().map(function (p) {
+      const da = p.de === 'academia';
+      const iniciais = p.autor ? p.autor.split(' ').map(function (x) { return x[0]; }).slice(0, 2).join('') : 'LA';
+      return '<div class="post-mural' + (da ? ' da-academia' : '') + '">' +
+               '<div class="post-av">' +
+                 (p.foto ? '<img src="' + p.foto + '" alt="">' : iniciais) +
+               '</div>' +
+               '<div class="post-corpo">' +
+                 '<div class="post-topo"><b>' + laEscapar(p.autor) + '</b>' +
+                   (da ? '<span class="post-selo">Academia</span>' : '') +
+                   '<span class="post-hora">' + new Date(p.quando).toLocaleString('pt-BR') + '</span>' +
+                 '</div>' +
+                 '<p>' + laEscapar(p.texto) + '</p>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+    casa.scrollTop = 0;
+  },
+
+  avisar(txt) {
+    const a = document.querySelector('.js-aviso-mural');
+    if (!a) return;
+    a.textContent = txt;
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 4000);
+  }
+};
+  </script>
+  <script>
+/* ==========================================================================
+   CONVERSAS DO ALUNO — grupo, recepção e amigos
+   O chat nasce BLOQUEADO: abre quando ele adiciona um amigo pela matrícula
+   e o outro aceita o pedido. Igual WhatsApp.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  var aluno = null;
+  var amigoAberto = null;
+  var anexoGrupo = null;
+  var anexoParticular = null;
+
+  function q(s) { return document.querySelector(s); }
+  function el(id) { return document.getElementById(id); }
+
+  function atual() {
+    if (aluno) return aluno;
+    try { aluno = (typeof laAlunoLogado === 'function') ? laAlunoLogado() : null; } catch (e) { aluno = null; }
+    return aluno;
+  }
+
+  function avisar(sel, txt, cor) {
+    var a = q(sel);
+    if (!a) return;
+    a.textContent = txt;
+    a.style.color = cor || 'var(--la-accent-green)';
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 4500);
+  }
+
+  /* ---------------- BLOQUEIO ---------------- */
+  function pintarBloqueio() {
+    var eu = atual();
+    if (!eu) return;
+
+    var r = (typeof laChatLiberado === 'function') ? laChatLiberado(eu.id) : { liberado: true, motivo: '' };
+
+    var trancado = q('.js-chat-bloqueado');
+    if (trancado) trancado.classList.toggle('hidden', r.liberado);
+
+    var motivo = q('.js-motivo-bloqueio');
+    if (motivo && r.motivo) motivo.textContent = r.motivo;
+
+    /* as abas de conversa so abrem quando liberado */
+    ['grupo', 'recepcao', 'amigos'].forEach(function (t) {
+      var painel = q('.js-painel-' + t);
+      var botao = q('.js-aba-msg[data-t="' + t + '"]');
+      if (botao) {
+        botao.disabled = !r.liberado;
+        botao.style.opacity = r.liberado ? '1' : '.45';
+      }
+      if (painel && !r.liberado) painel.classList.add('hidden');
+    });
+
+    if (r.liberado) {
+      var ativa = q('.js-aba-msg.ativa');
+      var qual = ativa ? ativa.getAttribute('data-t') : 'grupo';
+      mostrarAba(qual);
+    }
+
+    pintarPedidos();
+    return r.liberado;
+  }
+
+  function mostrarAba(qual) {
+    ['grupo', 'recepcao', 'amigos'].forEach(function (t) {
+      var p = q('.js-painel-' + t);
+      if (p) p.classList.toggle('hidden', t !== qual);
+    });
+    if (qual === 'grupo')    { pintarGrupo(); marcarGrupoLido(); }
+    if (qual === 'recepcao') { pintarRecepcao(); }
+    if (qual === 'amigos')   { pintarAmigos(); pintarParticular(); }
+  }
+
+  /* ---------------- GRUPO ---------------- */
+  /* quem aparece na lista de pessoas da sala */
+  function pintarPessoas() {
+    var casa = q('.js-grupo-pessoas');
+    var conta = q('.js-grupo-conta');
+    if (!casa) return;
+    var eu = atual();
+    if (!eu) return;
+
+    var lista = [];
+    try { lista = (typeof laListarAlunos === 'function') ? laListarAlunos() : []; } catch (e) { lista = []; }
+
+    var alunos = lista.filter(function (a) { return a && a.ativo !== false; });
+
+    if (conta) conta.textContent = alunos.length + 1;   /* + a academia */
+
+    var linha = function (nome, foto, euSou, academia) {
+      var ini = String(nome || 'AL').split(' ').map(function (x) { return x[0]; })
+        .slice(0, 2).join('').toUpperCase();
+      return '<div class="chat-pessoa' + (euSou ? ' eu' : '') + '">' +
+               '<span class="cp-av">' +
+                 (foto ? '<img src="' + laEscapar(foto) + '" alt="">' : laEscapar(ini)) +
+               '</span>' +
+               '<b>' + laEscapar(nome) + '</b>' +
+               (euSou ? '<span class="cp-eu">você</span>' : '') +
+               (academia ? '<span class="cp-academia">academia</span>' : '') +
+             '</div>';
+    };
+
+    casa.innerHTML =
+      linha('L.A Fitness', '', false, true) +
+      alunos.map(function (a) {
+        return linha(a.nome, a.foto, String(a.id) === String(eu.id), false);
+      }).join('');
+  }
+
+  function pintarGrupo() {
+    var casa = q('.js-grupo');
+    if (!casa) return;
+    var eu = atual();
+    if (!eu) return;
+
+    pintarPessoas();
+
+    var aberto = (typeof laGrupoAberto === 'function') ? laGrupoAberto() : true;
+    var st = q('.js-grupo-status');
+    if (st) {
+      st.innerHTML = aberto
+        ? '<i></i> Aberto para todos'
+        : '<i style="background:var(--la-red)"></i> Fechado pela academia';
+    }
+    var form = el('form-grupo');
+    if (form) form.classList.toggle('hidden', !aberto);
+
+    var lista = (typeof laGrupoListar === 'function') ? laGrupoListar() : [];
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhuma mensagem ainda. Seja o primeiro a falar.</p>';
+      return;
+    }
+    casa.innerHTML = lista.map(function (m) {
+      return (typeof laConvBolhaHTML === 'function') ? laConvBolhaHTML(m, eu.id, 'grupo') : '';
+    }).join('');
+    casa.scrollTop = casa.scrollHeight;
+
+    var b = q('.js-badge-grupo');
+    if (b) b.classList.add('hidden');
+  }
+
+  function marcarGrupoLido() {
+    if (typeof laGrupoMarcarLidas === 'function') laGrupoMarcarLidas();
+  }
+
+  /* ---------------- RECEPCAO ---------------- */
+  function pintarRecepcao() {
+    var casa = q('.js-conversa');
+    if (!casa) return;
+    var eu = atual();
+    if (!eu) return;
+    var lista = (typeof laListarMensagens === 'function') ? laListarMensagens(eu.id) : [];
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhuma mensagem ainda. Escreva a primeira.</p>';
+      return;
+    }
+    casa.innerHTML = lista.map(function (m) {
+      return (typeof laConvBolhaHTML === 'function')
+        ? laConvBolhaHTML({ deId: m.de === 'aluno' ? eu.id : 'academia', de: m.de,
+                            autor: m.de === 'aluno' ? eu.nome : 'L.A Fitness',
+                            foto: m.foto, texto: m.texto, quando: m.quando }, eu.id, 'privado')
+        : '';
+    }).join('');
+    casa.scrollTop = casa.scrollHeight;
+  }
+
+  /* ---------------- AMIGOS ---------------- */
+  function pintarAmigos() {
+    var casa = q('.js-meus-amigos');
+    if (!casa) return;
+    var eu = atual();
+    if (!eu) return;
+
+    var lista = (typeof laMeusAmigos === 'function') ? laMeusAmigos(eu.id) : [];
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Você ainda não tem amigos aqui. Adicione alguém pela matrícula.</p>';
+      return;
+    }
+
+    casa.innerHTML = lista.map(function (a) {
+      var iniciais = String(a.nome).split(' ').map(function (x) { return x[0]; }).slice(0, 2).join('').toUpperCase();
+      return '<button type="button" class="colega-item' + (amigoAberto === a.id ? ' ativo' : '') +
+               ' js-abrir-amigo" data-id="' + a.id + '">' +
+               '<span class="colega-av">' +
+                 (a.foto ? '<img src="' + laEscapar(a.foto) + '" alt="">' : laEscapar(iniciais)) +
+               '</span>' +
+               '<b>' + laEscapar(a.nome.split(' ')[0]) + '</b>' +
+             '</button>';
+    }).join('');
+
+    casa.querySelectorAll('.js-abrir-amigo').forEach(function (b) {
+      b.addEventListener('click', function () {
+        amigoAberto = b.getAttribute('data-id');
+        if (typeof laParticularMarcarLidas === 'function') laParticularMarcarLidas(eu.id, amigoAberto);
+        pintarAmigos();
+        pintarParticular();
+      });
+    });
+  }
+
+  function pintarParticular() {
+    var casa = q('.js-particular');
+    var nomeEl = q('.js-amigo-nome');
+    var av = q('.js-amigo-av');
+    if (!casa) return;
+    var eu = atual();
+    if (!eu) return;
+
+    if (!amigoAberto) {
+      casa.innerHTML = '<p class="vazio">Escolha um amigo acima para conversar.</p>';
+      if (nomeEl) nomeEl.textContent = 'Escolha um amigo';
+      if (av) av.textContent = '?';
+      return;
+    }
+
+    var amigo = (typeof laBuscarAluno === 'function') ? laBuscarAluno(amigoAberto) : null;
+    if (nomeEl) nomeEl.textContent = amigo ? amigo.nome : 'Amigo';
+    if (av) av.textContent = amigo ? laIniciais(amigo.nome) : '?';
+
+    var lista = (typeof laParticularListar === 'function') ? laParticularListar(eu.id, amigoAberto) : [];
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhuma mensagem ainda. Diga um oi.</p>';
+      return;
+    }
+    casa.innerHTML = lista.map(function (m) {
+      return (typeof laConvBolhaHTML === 'function') ? laConvBolhaHTML(m, eu.id, 'privado') : '';
+    }).join('');
+    casa.scrollTop = casa.scrollHeight;
+  }
+
+  /* ---------------- PEDIDOS ---------------- */
+  function pintarPedidos() {
+    var casa = q('.js-pedidos-recebidos');
+    var eu = atual();
+    if (!casa || !eu) return;
+
+    var lista = (typeof laConvitesRecebidos === 'function') ? laConvitesRecebidos(eu.id) : [];
+    var b = q('.js-badge-pedido');
+    if (b) { b.textContent = lista.length; b.classList.toggle('hidden', lista.length === 0); }
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum pedido no momento.</p>';
+      return;
+    }
+
+    casa.innerHTML = lista.map(function (c) {
+      return '<div class="pedido-amigo">' +
+               '<div><b>' + laEscapar(c.deNome) + '</b><span>quer ser seu amigo</span></div>' +
+               '<div class="pedido-acoes">' +
+                 '<button class="btn-mini js-aceitar" type="button" data-id="' + c.id + '">Aceitar</button>' +
+                 '<button class="btn-mini js-recusar" type="button" data-id="' + c.id + '">Recusar</button>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('.js-aceitar').forEach(function (bt) {
+      bt.addEventListener('click', function () {
+        if (typeof laAceitarConvite === 'function') laAceitarConvite(bt.getAttribute('data-id'));
+        avisar('.js-aviso-amigo', 'Pedido aceito! Agora vocês podem conversar.');
+        pintarBloqueio();
+        pintarAmigos();
+      });
+    });
+    casa.querySelectorAll('.js-recusar').forEach(function (bt) {
+      bt.addEventListener('click', function () {
+        if (typeof laRecusarConvite === 'function') laRecusarConvite(bt.getAttribute('data-id'));
+        avisar('.js-aviso-amigo', 'Pedido recusado.', '#ffb020');
+        pintarBloqueio();
+      });
+    });
+  }
+
+  function pedirAmizade(campoId) {
+    var eu = atual();
+    var campo = el(campoId);
+    if (!eu || !campo) return;
+    var termo = campo.value.trim();
+    if (!termo) { avisar('.js-aviso-amigo', 'Escreva a matrícula ou o CPF.', '#ffb020'); return; }
+
+    var r = laConvidarAmigo(eu.id, termo);
+    if (!r.ok) { avisar('.js-aviso-amigo', r.erro, '#ffb020'); return; }
+
+    campo.value = '';
+    avisar('.js-aviso-amigo', 'Pedido enviado para ' + r.outro.nome + '. Agora ele precisa aceitar.');
+    pintarPedidos();
+  }
+
+  /* ---------------- MIDIA ---------------- */
+  function ligarAnexo(idBotao, idInput, destino, rotulo) {
+    var botao = q(idBotao);
+    var input = el(idInput);
+    var nome = q(rotulo);
+    if (!botao || !input) return;
+
+    botao.addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () {
+      var f = input.files && input.files[0];
+      if (!f) return;
+      laConvLerMidia(f, function (m) {
+        if (!m || m.erro) { avisar('.js-aviso-amigo', m ? m.erro : 'Não consegui ler.', '#ffb020'); return; }
+        destino(m);
+        input.value = '';
+        if (nome) { nome.textContent = m.tipo === 'video' ? 'vídeo anexado' : 'imagem anexada'; nome.classList.remove('hidden'); }
+      });
+    });
+  }
+
+  /* ---------------- LIGAR ---------------- */
+  function ligar() {
+    document.querySelectorAll('.js-aba-msg').forEach(function (b) {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', function () {
+        document.querySelectorAll('.js-aba-msg').forEach(function (x) { x.classList.remove('ativa'); });
+        b.classList.add('ativa');
+        mostrarAba(b.getAttribute('data-t'));
+      });
+    });
+
+    var fg = el('form-grupo');
+    if (fg && !fg._ligado) {
+      fg._ligado = true;
+      fg.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var eu = atual(); var campo = el('grupo-texto');
+        if (!eu || !campo || (!campo.value.trim() && !anexoGrupo)) return;
+        laGrupoEnviar(eu.id, campo.value, 'aluno', anexoGrupo);
+        campo.value = ''; anexoGrupo = null;
+        var n = q('.js-anexo-nome'); if (n) n.classList.add('hidden');
+        pintarGrupo();
+      });
+    }
+
+    var fp = el('form-particular');
+    if (fp && !fp._ligado) {
+      fp._ligado = true;
+      fp.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var eu = atual(); var campo = el('particular-texto');
+        if (!eu || !amigoAberto || !campo || (!campo.value.trim() && !anexoParticular)) return;
+        laParticularEnviar(eu.id, amigoAberto, campo.value, anexoParticular);
+        campo.value = ''; anexoParticular = null;
+        var n = q('.js-anexo-nome2'); if (n) n.classList.add('hidden');
+        pintarParticular();
+      });
+    }
+
+    var fm = el('form-mensagem');
+    if (fm && !fm._ligado) {
+      fm._ligado = true;
+      fm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var eu = atual(); var campo = el('msg-texto');
+        if (!eu || !campo || !campo.value.trim()) return;
+        laEnviarMensagem(eu.id, campo.value, 'aluno');
+        campo.value = '';
+        pintarRecepcao();
+      });
+    }
+
+    ligarAnexo('.js-anexo-grupo', 'arquivo-grupo', function (m) { anexoGrupo = m; }, '.js-anexo-nome');
+    ligarAnexo('.js-anexo-particular', 'arquivo-particular', function (m) { anexoParticular = m; }, '.js-anexo-nome2');
+
+    var b1 = el('add-amigo-btn');
+    if (b1 && !b1._ligado) { b1._ligado = true; b1.addEventListener('click', function () { pedirAmizade('add-matricula'); }); }
+    var b2 = el('add-amigo-btn2');
+    if (b2 && !b2._ligado) { b2._ligado = true; b2.addEventListener('click', function () { pedirAmizade('add-matricula2'); }); }
+
+    var abrir = el('abrir-add-amigo');
+    if (abrir && !abrir._ligado) {
+      abrir._ligado = true;
+      abrir.addEventListener('click', function () {
+        var cx = q('.js-add-amigo-caixa');
+        if (cx) cx.classList.toggle('hidden');
+      });
+    }
+
+    pintarBloqueio();
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-painel="mensagens"]') : null;
+    if (b) setTimeout(ligar, 40);
+  }, true);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ligar);
+  } else {
+    ligar();
+  }
+
+  window.LAAlunoChat = { ligar: ligar, grupo: pintarGrupo, amigos: pintarAmigos, pedidos: pintarPedidos };
+})();
+</script>
+
+  <script>
+
+  /* ==========================================================================
+     SINO DE NOTIFICAÇÕES
+     Le as novidades que o site ja registra e mostra numa lista.
+     Aluno: mensagem da academia, grupo, convite, treino liberado, cobranca, mural
+     Admin: mensagem nova, pedido de cadastro, aluno em risco
+     ========================================================================== */
+  (function () {
+    function q(sel, raiz) { return (raiz || document).querySelector(sel); }
+    function seguro(fn, padrao) { try { return fn(); } catch (e) { return padrao; } }
+
+    /* ---------- monta a lista do ALUNO ---------- */
+    function novidadesAluno() {
+      var eu = seguro(function () { return laAlunoLogado(); }, null);
+      if (!eu) return [];
+      var itens = [];
+
+      /* mensagens nao lidas da academia */
+      var naoLidas = seguro(function () { return laNaoLidasDoAluno(eu.id); }, 0);
+      if (naoLidas) itens.push({ icone: 'fa-envelope', tipo: 'ok',
+        titulo: naoLidas + (naoLidas === 1 ? ' mensagem nova' : ' mensagens novas'),
+        texto: 'A academia respondeu você.', ir: 'mensagens' });
+
+      /* mensagens no grupo */
+      var grupo = seguro(function () { return laGrupoListar(); }, []);
+      var doGrupo = grupo.filter(function (m) { return m && m.de !== 'eu' && !m.lida; }).length;
+      if (doGrupo) itens.push({ icone: 'fa-comments', tipo: 'ok',
+        titulo: doGrupo + ' no bate-papo do grupo', texto: 'Veja o que o pessoal escreveu.', ir: 'mensagens' });
+
+      /* convites de amizade */
+      var convites = seguro(function () { return laConvitesRecebidos(eu.id); }, []);
+      if (convites && convites.length) itens.push({ icone: 'fa-user-plus', tipo: 'ok',
+        titulo: convites.length + (convites.length === 1 ? ' convite de amizade' : ' convites de amizade'),
+        texto: 'Alguém quer falar com você no chat.', ir: 'mensagens' });
+
+      /* treino liberado */
+      var treino = seguro(function () { return laTreinoLiberado(eu.id); }, null);
+      if (treino) itens.push({ icone: 'fa-dumbbell', tipo: 'destaque',
+        titulo: 'Seu treino está liberado', texto: 'A academia montou a sua ficha.', ir: 'treino' });
+
+      /* cobranca em aberto */
+      var cobrancas = seguro(function () { return laCobrancasDoAluno(eu.id); }, []);
+      var abertas = (cobrancas || []).filter(function (c) { return c && !c.pago; });
+      if (abertas.length) itens.push({ icone: 'fa-credit-card', tipo: 'alerta',
+        titulo: abertas.length === 1 ? 'Você tem 1 cobrança em aberto' : 'Você tem ' + abertas.length + ' cobranças em aberto',
+        texto: 'Confira na sua mensalidade.', ir: 'mensalidade' });
+
+      /* mural */
+      var mural = seguro(function () { return laLerMural(); }, []);
+      if (mural && mural.length) itens.push({ icone: 'fa-bullhorn', tipo: 'ok',
+        titulo: 'Recado novo no mural', texto: 'A academia publicou um aviso.', ir: 'painel' });
+
+      return itens;
+    }
+
+    /* ---------- monta a lista do ADMIN ---------- */
+    function novidadesAdmin() {
+      var itens = [];
+
+      var convs = seguro(function () { return laConversasComNovidade(); }, []);
+      var naoLidas = (convs || []).reduce(function (s, c) { return s + (c.naoLidas || 0); }, 0);
+      if (naoLidas) itens.push({ icone: 'fa-envelope', tipo: 'ok',
+        titulo: naoLidas + (naoLidas === 1 ? ' mensagem de aluno' : ' mensagens de alunos'),
+        texto: 'Responda pelo bate-papo.', ir: 'mensagens' });
+
+      /* pedidos de cadastro que vieram do site */
+      var pend = [];
+      try { pend = JSON.parse(localStorage.getItem('la_pendentes') || '[]'); } catch (e) {}
+      if (pend && pend.length) itens.push({ icone: 'fa-user-clock', tipo: 'destaque',
+        titulo: pend.length + (pend.length === 1 ? ' pedido de cadastro' : ' pedidos de cadastro'),
+        texto: 'Alguém se cadastrou pelo site e aguarda liberação.', ir: 'alunos' });
+
+      /* alunos com pagamento atrasado */
+      var risco = seguro(function () { return laAlunosEmRisco(); }, []);
+      if (risco && risco.length) itens.push({ icone: 'fa-triangle-exclamation', tipo: 'alerta',
+        titulo: risco.length + (risco.length === 1 ? ' aluno com pagamento atrasado' : ' alunos com pagamento atrasado'),
+        texto: 'Veja em Pagamentos.', ir: 'pagamentos' });
+
+      return itens;
+    }
+
+    /* ---------- desenha o sino ---------- */
+    function montar(casa, lista, ir) {
+      var total = lista.length;
+      casa.innerHTML =
+        '<button class="sino-btn js-sino-abrir" type="button" aria-label="Notificações">' +
+          '<i class="fa-solid fa-bell"></i>' +
+          (total ? '<span class="sino-conta">' + (total > 9 ? '9+' : total) + '</span>' : '') +
+        '</button>' +
+        '<div class="sino-painel hidden js-sino-painel">' +
+          '<div class="sino-topo"><b>Notificações</b>' +
+            (total ? '<span>' + total + '</span>' : '') + '</div>' +
+          (total
+            ? lista.map(function (n) {
+                return '<button class="sino-item" type="button" data-ir="' + n.ir + '">' +
+                         '<i class="fa-solid ' + n.icone + ' sino-icone ' + (n.tipo || '') + '"></i>' +
+                         '<span class="sino-txt"><b>' + laEscapar(n.titulo) + '</b>' +
+                         '<small>' + laEscapar(n.texto) + '</small></span>' +
+                       '</button>';
+              }).join('')
+            : '<p class="sino-vazio">Nada novo por aqui.</p>') +
+        '</div>';
+    }
+
+    function ligar(casa) {
+      var abrir = q('.js-sino-abrir', casa);
+      var painel = q('.js-sino-painel', casa);
+      if (abrir && !abrir._ligado) {
+        abrir._ligado = true;
+        abrir.addEventListener('click', function (e) {
+          e.stopPropagation();
+          painel.classList.toggle('hidden');
+        });
+      }
+      casa.querySelectorAll('.sino-item').forEach(function (b) {
+        if (b._ligado) return; b._ligado = true;
+        b.addEventListener('click', function () {
+          var ir = b.getAttribute('data-ir');
+          painel.classList.add('hidden');
+          var alvo = document.querySelector('[data-painel="' + ir + '"], [data-aba-admin="' + ir + '"]');
+          if (alvo) alvo.click();
+        });
+      });
+    }
+
+    function pintar() {
+      /* aluno */
+      var casaA = q('.js-sino-aluno');
+      if (casaA) { montar(casaA, novidadesAluno()); ligar(casaA); }
+      /* admin */
+      var casaB = q('.js-sino-admin');
+      if (casaB) { montar(casaB, novidadesAdmin()); ligar(casaB); }
+    }
+
+    /* fecha ao clicar fora */
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.js-sino-painel').forEach(function (p) {
+        if (!e.target.closest || !e.target.closest('.js-sino-aluno, .js-sino-admin')) p.classList.add('hidden');
+      });
+    });
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pintar);
+    else pintar();
+    setInterval(pintar, 8000);
+
+    window.LASino = { pintar: pintar };
+  })();
+  </script>
+
+  <script>
+  /* ============ APP: faixa e botao de baixar ============ */
+  (function () {
+    var eventoInstalar = null;
+
+    /* a faixa que aparece embaixo, convidando */
+    function faixa() {
+      var f = document.getElementById('faixa-app');
+      if (f) return f;
+      f = document.createElement('div');
+      f.id = 'faixa-app';
+      f.className = 'faixa-app hidden';
+      f.innerHTML =
+        '<div class="faixa-app-txt">' +
+          '<b>Instalar o app da L.A Fitness</b>' +
+          '<span>Fica na tela do celular, abre direto e funciona sem internet.</span>' +
+        '</div>' +
+        '<div class="faixa-app-botoes">' +
+          '<button class="btn-primary js-confirmar-app" type="button">' +
+            '<i class="fa-solid fa-download"></i> Baixar agora</button>' +
+          '<button class="btn-mini js-dispensar-app" type="button">Agora não</button>' +
+        '</div>';
+      document.body.appendChild(f);
+      return f;
+    }
+
+    function mostrarFaixa() {
+      var f = faixa();
+      if (localStorage.getItem('la_app_dispensado') === '1') return;
+      f.classList.remove('hidden');
+    }
+    function esconderFaixa() {
+      var f = document.getElementById('faixa-app');
+      if (f) f.classList.add('hidden');
+    }
+
+    /* o navegador avisa quando o app pode ser instalado */
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      eventoInstalar = e;
+      var b = document.querySelector('.js-baixar-app');
+      if (b) b.hidden = false;
+      setTimeout(mostrarFaixa, 2500);
+    });
+
+    /* clicou em baixar (na faixa ou no menu) */
+    document.addEventListener('click', function (e) {
+      var alvo = e.target.closest ? e.target.closest('.js-confirmar-app, .js-baixar-app') : null;
+      if (alvo && eventoInstalar) {
+        esconderFaixa();
+        eventoInstalar.prompt();
+        eventoInstalar.userChoice.then(function () { eventoInstalar = null; });
+        return;
+      }
+      var nao = e.target.closest ? e.target.closest('.js-dispensar-app') : null;
+      if (nao) {
+        localStorage.setItem('la_app_dispensado', '1');
+        esconderFaixa();
+      }
+    });
+
+    /* ja instalado: nao mostra nada */
+    window.addEventListener('appinstalled', function () {
+      esconderFaixa();
+      var b = document.querySelector('.js-baixar-app');
+      if (b) b.hidden = true;
+    });
+
+    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+      localStorage.setItem('la_app_dispensado', '1');
+    }
+  })();
+
+  /* ============ PWA: registra o service worker ============ */
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        console.log('[PWA] pronto. O site funciona sem internet.');
+        reg.addEventListener('updatefound', function () {
+          console.log('[PWA] versao nova baixando...');
+        });
+      }).catch(function (e) {
+        console.warn('[PWA] nao registrou:', e && e.message);
+      });
+    });
+  }
+  </script>
+  <script>
+  /* mostrador de entrada do aluno: a matricula vira o codigo da catraca */
+  (function () {
+    function pintar() {
+      var eu = (typeof laAlunoLogado === 'function') ? laAlunoLogado() : null;
+      var casa = document.querySelector('.js-cat-aluno');
+      if (!casa || !eu) return;
+      var aberta = (typeof laCatracaAberta === 'function') ? laCatracaAberta() : true;
+      casa.innerHTML =
+        '<div class="entrada-aluno">' +
+          '<span class="entrada-rotulo">Seu código de entrada</span>' +
+          '<b class="entrada-codigo">' + laEscapar(eu.matricula || '—') + '</b>' +
+          '<span class="entrada-dica">' + (aberta
+            ? 'Mostre este número na catraca ao chegar.'
+            : 'A catraca está fechada. Fale com a recepção.') + '</span>' +
+        '</div>';
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pintar);
+    else pintar();
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.js-qrcode') : null;
+      if (b) setTimeout(pintar, 50);
+    }, true);
+  })();
+  </script>
+  <script>
+
+  /* ==========================================================================
+     ACESSIBILIDADE — botão flutuante + Libras (VLibras)
+     Ajustes: tamanho da letra, contraste, espaço entre linhas,
+     links destacados, esconder imagens e leitura em voz alta.
+     ========================================================================== */
+  (function () {
+    var CHAVE = 'la_acesso';
+
+    function lerPrefs() {
+      try { return JSON.parse(localStorage.getItem(CHAVE) || '{}'); } catch (e) { return {}; }
+    }
+    function gravarPrefs(p) {
+      try { localStorage.setItem(CHAVE, JSON.stringify(p)); } catch (e) {}
+    }
+
+    /* aplica no <html> o que o usuario escolheu */
+    function aplicar(p) {
+      var h = document.documentElement;
+      h.classList.toggle('a-fonte-1', p.fonte === 1);
+      h.classList.toggle('a-fonte-2', p.fonte === 2);
+      h.classList.toggle('a-fonte-3', p.fonte === 3);
+      h.classList.toggle('a-contraste', !!p.contraste);
+      h.classList.toggle('a-espaco', !!p.espaco);
+      h.classList.toggle('a-links', !!p.links);
+      h.classList.toggle('a-sem-imagem', !!p.semImagem);
+      h.classList.toggle('a-guia', !!p.guia);
+    }
+
+    /* ---------- a barra ---------- */
+    var botoes = [
+      { k: 'fonte',       icone: 'fa-magnifying-glass-plus', rot: 'Aumentar a letra' },
+      { k: 'contraste',   icone: 'fa-circle-half-stroke',    rot: 'Alto contraste' },
+      { k: 'espaco',      icone: 'fa-text-height',           rot: 'Espaço entre linhas' },
+      { k: 'links',       icone: 'fa-link',                  rot: 'Destacar links' },
+      { k: 'semImagem',   icone: 'fa-image',                 rot: 'Esconder imagens' },
+      { k: 'guia',        icone: 'fa-crosshairs',            rot: 'Guia de leitura' },
+      { k: 'ler',         icone: 'fa-volume-high',           rot: 'Ler a página em voz alta' },
+      { k: 'libras',      icone: 'fa-hands',                 rot: 'Libras' },
+      { k: 'reset',       icone: 'fa-rotate-left',           rot: 'Voltar ao normal' }
+    ];
+
+    function montar() {
+      if (document.querySelector('.a-barra')) return;
+      var caixa = document.createElement('div');
+      caixa.className = 'a-caixa';
+      caixa.innerHTML =
+        '<button class="a-abrir js-a-abrir" type="button" aria-label="Acessibilidade" title="Acessibilidade">' +
+          '<i class="fa-solid fa-universal-access"></i>' +
+        '</button>' +
+        '<div class="a-barra hidden js-a-barra" role="group" aria-label="Ferramentas de acessibilidade">' +
+          '<b class="a-titulo">Acessibilidade</b>' +
+          botoes.map(function (b) {
+            return '<button class="a-btn js-a-btn" type="button" data-k="' + b.k + '" ' +
+                     'aria-label="' + b.rot + '" title="' + b.rot + '">' +
+                     '<i class="fa-solid ' + b.icone + '"></i></button>';
+          }).join('') +
+        '</div>';
+      document.body.appendChild(caixa);
+    }
+
+    function ligar() {
+      var abrir = document.querySelector('.js-a-abrir');
+      var barra = document.querySelector('.js-a-barra');
+      if (abrir && !abrir._ligado) {
+        abrir._ligado = true;
+        abrir.addEventListener('click', function () { barra.classList.toggle('hidden'); });
+      }
+
+      document.querySelectorAll('.js-a-btn').forEach(function (b) {
+        if (b._ligado) return; b._ligado = true;
+        b.addEventListener('click', function () {
+          var k = b.getAttribute('data-k');
+          var p = lerPrefs();
+
+          if (k === 'reset') {
+            gravarPrefs({});
+            aplicar({});
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            b.classList.remove('on');
+            document.querySelectorAll('.js-a-btn').forEach(function (x) { x.classList.remove('on'); });
+            return;
+          }
+
+          if (k === 'ler') {
+            if (!('speechSynthesis' in window)) return;
+            if (window.speechSynthesis.speaking) {
+              window.speechSynthesis.cancel();
+              b.classList.remove('on');
+              return;
+            }
+            var texto = (document.querySelector('main') || document.body).innerText.slice(0, 3000);
+            var fala = new SpeechSynthesisUtterance(texto);
+            fala.lang = 'pt-BR';
+            fala.rate = 1;
+            fala.onend = function () { b.classList.remove('on'); };
+            window.speechSynthesis.speak(fala);
+            b.classList.add('on');
+            return;
+          }
+
+          if (k === 'libras') {
+            var v = document.querySelector('[vw]') || document.querySelector('.vw-plugin-wrapper');
+            if (v) {
+              v.classList.toggle('vw-plugin-hidden');
+              b.classList.toggle('on');
+            } else {
+              alert('O tradutor de Libras está carregando. Se não aparecer, verifique a internet.');
+            }
+            return;
+          }
+
+          if (k === 'fonte') {
+            p.fonte = ((p.fonte || 0) + 1) % 4;
+            marcarFonte(p.fonte, b);
+          } else {
+            p[k] = !p[k];
+            b.classList.toggle('on', !!p[k]);
+          }
+
+          gravarPrefs(p);
+          aplicar(p);
+        });
+      });
+
+      /* marca o estado que ja estava salvo */
+      var p = lerPrefs();
+      if (p.fonte) {
+        var bf = document.querySelector('.js-a-btn[data-k="fonte"]');
+        if (bf) marcarFonte(p.fonte, bf);
+      }
+      ['contraste', 'espaco', 'links', 'semImagem', 'guia'].forEach(function (k) {
+        var bb = document.querySelector('.js-a-btn[data-k="' + k + '"]');
+        if (bb && p[k]) bb.classList.add('on');
+      });
+    }
+
+    function marcarFonte(nivel, botao) {
+      botao.classList.toggle('on', nivel > 0);
+      botao.setAttribute('title', 'Tamanho da letra: ' + (nivel === 0 ? 'normal' : nivel + ' de 3'));
+    }
+
+    /* ---------- VLibras (tradutor oficial de Libras) ---------- */
+    function libras() {
+      if (document.querySelector('[vw]')) return;
+      var d = document.createElement('div');
+      d.setAttribute('vw', '');
+      d.className = 'enabled';
+      d.innerHTML =
+        '<div vw-access-button class="active"></div>' +
+        '<div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>';
+      document.body.appendChild(d);
+
+      var s = document.createElement('script');
+      s.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
+      s.onload = function () {
+        try { new window.VLibras.Widget('https://vlibras.gov.br/app'); } catch (e) {}
+      };
+      document.body.appendChild(s);
+    }
+
+    function iniciar() {
+      aplicar(lerPrefs());
+      montar();
+      ligar();
+      libras();
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
+    else iniciar();
+  })();
+  </script>
 </body>
 </html>

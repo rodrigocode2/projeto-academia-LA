@@ -1,0 +1,75 @@
+/* ==========================================================================
+   L.A FITNESS — tela de abertura
+   Sai sozinha depois do tempo, e também com clique, tecla ou toque.
+
+   TEMPO PADRÃO: 3 segundos — é o certo para o site no ar, onde ninguém
+   quer esperar para ver o conteúdo.
+
+   PARA APRESENTAÇÃO: abra com ?abertura=30 na URL.
+     index.html?abertura=30   → segura 30 segundos
+     index.html?abertura=10   → segura 10 segundos
+   Sem o parâmetro, usa os 3 segundos do dia a dia.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  const PADRAO = 3000;   /* site no ar */
+  const MINIMO = 1;      /* segundos */
+  const MAXIMO = 300;    /* 5 minutos, teto de segurança */
+
+  /* ---------- tempo vindo da URL ---------- */
+  function tempoPedido() {
+    try {
+      const v = new URLSearchParams(window.location.search).get('abertura');
+      if (!v) return PADRAO;
+      const s = parseFloat(v);
+      if (isNaN(s)) return PADRAO;
+      const limitado = Math.min(Math.max(s, MINIMO), MAXIMO);
+      return limitado * 1000;
+    } catch (e) {
+      return PADRAO;
+    }
+  }
+
+  function sair() {
+    const t = document.getElementById('splash-la');
+    if (!t || t.classList.contains('saiu')) return;
+    t.classList.add('saiu');
+    document.body.classList.remove('travado');
+    setTimeout(function () {
+      if (t && t.parentNode) t.parentNode.removeChild(t);
+    }, 800);
+  }
+
+  function iniciar() {
+    const t = document.getElementById('splash-la');
+    if (!t) return;
+
+    /* trava a rolagem enquanto a abertura está na tela */
+    document.body.classList.add('travado');
+    t.style.display = 'flex';
+
+    const tempo = tempoPedido();
+    const timer = setTimeout(sair, tempo);
+
+    /* clicar, teclar ou tocar pula na hora */
+    ['click', 'keydown', 'touchstart'].forEach(function (ev) {
+      document.addEventListener(ev, function () {
+        clearTimeout(timer);
+        sair();
+      }, { once: true, passive: true });
+    });
+
+    /* limpa o parâmetro da URL para não repetir ao recarregar */
+    if (window.location.search.indexOf('abertura=') !== -1) {
+      try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
+})();

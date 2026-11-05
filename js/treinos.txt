@@ -1,0 +1,466 @@
+/* ==========================================================================
+   L.A FITNESS — exercícios, fichas, agenda e vínculo ao aluno
+   Camada isolada: o resto do site não sabe onde os dados moram.
+   Hoje: localStorage. Depois: trocar as funções por chamadas ao Supabase.
+
+   TRÊS ORIGENS DE TREINO:
+     1. montado pelo personal/professor  — ficha presa a um aluno
+     2. montado pela dona da academia    — ficha padrão, liberada para todos
+     3. treinos prontos do sistema       — já vêm no código, ninguém precisa montar
+   ========================================================================== */
+
+const LA_EXERCICIOS = 'la_exercicios';
+const LA_FICHAS     = 'la_fichas';
+const LA_AGENDA     = 'la_agenda';
+
+/* ==========================================================================
+   1. BANCO DE EXERCÍCIOS
+   Cada exercício tem nome, grupo muscular, equipamento, instruções e vídeo.
+   O vídeo pode ser link do YouTube (abre embutido) ou outro link qualquer.
+   ========================================================================== */
+
+function laListarExercicios() {
+  try {
+    const bruto = localStorage.getItem(LA_EXERCICIOS);
+    const lista = bruto ? JSON.parse(bruto) : null;
+    return Array.isArray(lista) && lista.length ? lista : laExerciciosPadrao();
+  } catch (e) { return laExerciciosPadrao(); }
+}
+
+function laSalvarExercicios(lista) {
+  try { localStorage.setItem(LA_EXERCICIOS, JSON.stringify(lista)); return true; }
+  catch (e) { return false; }
+}
+
+function laCriarExercicio(dados) {
+  const lista = laListarExercicios();
+  const ex = {
+    id: 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+    nome: dados.nome || 'Exercício',
+    grupo: dados.grupo || 'Geral',
+    equipamento: dados.equipamento || '',
+    instrucoes: dados.instrucoes || '',
+    video: dados.video || '',
+    criadoEm: new Date().toISOString()
+  };
+  lista.push(ex);
+  laSalvarExercicios(lista);
+  return ex;
+}
+
+function laAtualizarExercicio(id, mudancas) {
+  const lista = laListarExercicios();
+  const i = lista.findIndex(function (e) { return e.id === id; });
+  if (i === -1) return false;
+  lista[i] = Object.assign({}, lista[i], mudancas);
+  laSalvarExercicios(lista);
+  return lista[i];
+}
+
+function laExcluirExercicio(id) {
+  laSalvarExercicios(laListarExercicios().filter(function (e) { return e.id !== id; }));
+  return true;
+}
+
+function laBuscarExercicio(id) {
+  return laListarExercicios().find(function (e) { return e.id === id; }) || null;
+}
+
+/* ---------- vídeo: monta o link certo para cada serviço ---------- */
+
+function laVideoInfo(url) {
+  const u = String(url || '').trim();
+  if (!u) return { tipo: 'nenhum', embed: '', link: '' };
+
+  /* YouTube — aceita watch?v=, youtu.be/ e shorts/ */
+  let m = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/);
+  if (m) {
+    return {
+      tipo: 'youtube',
+      id: m[1],
+      embed: 'https://www.youtube.com/embed/' + m[1],
+      thumb: 'https://img.youtube.com/vi/' + m[1] + '/hqdefault.jpg',
+      link: u
+    };
+  }
+
+  /* Instagram — não permite embutir; abre em nova aba */
+  if (/instagram\.com/i.test(u)) {
+    return { tipo: 'instagram', embed: '', link: u };
+  }
+
+  return { tipo: 'outro', embed: '', link: u };
+}
+
+/* ==========================================================================
+   2. BANCO DE EXERCÍCIOS PADRÃO
+   Já vem no sistema. A academia edita ou apaga se quiser.
+   Os vídeos apontam para buscas no YouTube — abrem o exercício certo,
+   sem risco de link quebrado nem de vídeo de terceiro sair do ar.
+   ========================================================================== */
+
+function laBuscaVideo(termo) {
+  return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(termo + ' execução correta');
+}
+
+function laExerciciosPadrao() {
+  const base = [
+    ['Supino reto com barra',      'Peito',      'Barra e banco'],
+    ['Supino inclinado com halteres','Peito',    'Halteres e banco'],
+    ['Crucifixo na máquina',       'Peito',      'Máquina'],
+    ['Puxada frontal',             'Costas',     'Polia alta'],
+    ['Remada curvada',             'Costas',     'Barra'],
+    ['Remada baixa',               'Costas',     'Polia baixa'],
+    ['Rosca direta',               'Bíceps',     'Barra'],
+    ['Rosca alternada',            'Bíceps',     'Halteres'],
+    ['Tríceps pulley na corda',    'Tríceps',    'Polia'],
+    ['Tríceps testa',              'Tríceps',    'Barra'],
+    ['Desenvolvimento com halteres','Ombros',    'Halteres'],
+    ['Elevação lateral',           'Ombros',     'Halteres'],
+    ['Agachamento livre',          'Pernas',     'Barra'],
+    ['Leg press',                  'Pernas',     'Máquina'],
+    ['Cadeira extensora',          'Pernas',     'Máquina'],
+    ['Mesa flexora',               'Pernas',     'Máquina'],
+    ['Panturrilha em pé',          'Panturrilha','Máquina'],
+    ['Abdominal na polia',         'Abdômen',    'Polia'],
+    ['Prancha',                    'Abdômen',    'Peso do corpo'],
+    ['Abdominal crunch',           'Abdômen',    'Peso do corpo']
+  ];
+
+  return base.map(function (b, i) {
+    return {
+      id: 'pad' + (i + 1),
+      nome: b[0],
+      grupo: b[1],
+      equipamento: b[2],
+      instrucoes: 'Mantenha a postura alinhada e controle o movimento na descida.',
+      video: laBuscaVideo(b[0]),
+      padrao: true
+    };
+  });
+}
+
+/* ==========================================================================
+   3. FICHAS DE TREINO
+   Uma ficha é um conjunto de treinos (A, B, C), e cada treino tem exercícios
+   com séries, repetições, carga e descanso.
+   ========================================================================== */
+
+function laListarFichas() {
+  try {
+    const bruto = localStorage.getItem(LA_FICHAS);
+    const lista = bruto ? JSON.parse(bruto) : null;
+    return Array.isArray(lista) && lista.length ? lista : laFichasPadrao();
+  } catch (e) { return laFichasPadrao(); }
+}
+
+function laSalvarFichas(lista) {
+  try { localStorage.setItem(LA_FICHAS, JSON.stringify(lista)); return true; }
+  catch (e) { return false; }
+}
+
+function laBuscarFicha(id) {
+  return laListarFichas().find(function (f) { return f.id === id; }) || null;
+}
+
+function laCriarFicha(dados) {
+  const lista = laListarFichas();
+  const ficha = {
+    id: 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+    nome: dados.nome || 'Nova ficha',
+    objetivo: dados.objetivo || '',
+    nivel: dados.nivel || 'Todos os níveis',
+    autoria: dados.autoria || 'academia',   /* personal | dona | academia | padrao */
+    autor: dados.autor || '',
+    padrao: dados.padrao === true,          /* liberada para todos os alunos */
+    criadoEm: new Date().toISOString(),
+    treinos: dados.treinos || []
+  };
+  lista.push(ficha);
+  laSalvarFichas(lista);
+  return ficha;
+}
+
+function laAtualizarFicha(id, mudancas) {
+  const lista = laListarFichas();
+  const i = lista.findIndex(function (f) { return f.id === id; });
+  if (i === -1) return false;
+  lista[i] = Object.assign({}, lista[i], mudancas);
+  laSalvarFichas(lista);
+  return lista[i];
+}
+
+function laExcluirFicha(id) {
+  laSalvarFichas(laListarFichas().filter(function (f) { return f.id !== id; }));
+  return true;
+}
+
+/* ---------- as três fichas prontas do sistema ---------- */
+
+function laFichasPadrao() {
+  const ex = laExerciciosPadrao();
+  const achar = function (nome) {
+    const e = ex.find(function (x) { return x.nome === nome; });
+    return e ? e.id : '';
+  };
+
+  const serie = function (reps, carga, descanso) {
+    return { reps: reps, carga: carga, descanso: descanso, feito: false };
+  };
+
+  const item = function (nome, descanso, series) {
+    return {
+      exercicioId: achar(nome),
+      nome: nome,
+      descanso: descanso,
+      series: series
+    };
+  };
+
+  return [
+    {
+      id: 'pronto1',
+      nome: 'Hipertrofia ABC',
+      objetivo: 'Ganho de massa muscular',
+      nivel: 'Intermediário',
+      autoria: 'padrao',
+      autor: 'L.A Fitness',
+      padrao: true,
+      treinos: [
+        { letra: 'A', nome: 'Peito, Tríceps & Ombros', exercicios: [
+          item('Supino reto com barra',       '60s', [serie('12','', '')].concat([])),
+          item('Supino inclinado com halteres','60s', []),
+          item('Crucifixo na máquina',         '45s', []),
+          item('Tríceps pulley na corda',      '45s', []),
+          item('Elevação lateral',             '45s', [])
+        ]},
+        { letra: 'B', nome: 'Costas, Bíceps & Abdômen', exercicios: [
+          item('Puxada frontal',   '60s', []),
+          item('Remada curvada',   '60s', []),
+          item('Remada baixa',     '45s', []),
+          item('Rosca direta',     '45s', []),
+          item('Abdominal na polia','45s', [])
+        ]},
+        { letra: 'C', nome: 'Pernas', exercicios: [
+          item('Agachamento livre',  '90s', []),
+          item('Leg press',          '60s', []),
+          item('Cadeira extensora',  '45s', []),
+          item('Mesa flexora',       '45s', []),
+          item('Panturrilha em pé',  '30s', [])
+        ]}
+      ]
+    },
+    {
+      id: 'pronto2',
+      nome: 'Emagrecimento',
+      objetivo: 'Perder gordura e ganhar condicionamento',
+      nivel: 'Todos os níveis',
+      autoria: 'padrao',
+      autor: 'L.A Fitness',
+      padrao: true,
+      treinos: [
+        { letra: 'A', nome: 'Circuito completo', exercicios: [
+          item('Agachamento livre',   '30s', []),
+          item('Supino reto com barra','30s', []),
+          item('Remada baixa',        '30s', []),
+          item('Prancha',             '30s', []),
+          item('Abdominal crunch',    '30s', [])
+        ]}
+      ]
+    },
+    {
+      id: 'pronto3',
+      nome: 'Iniciante',
+      objetivo: 'Adaptação e técnica',
+      nivel: 'Iniciante',
+      autoria: 'padrao',
+      autor: 'L.A Fitness',
+      padrao: true,
+      treinos: [
+        { letra: 'A', nome: 'Corpo inteiro — primeiras semanas', exercicios: [
+          item('Supino reto com barra', '90s', []),
+          item('Puxada frontal',        '90s', []),
+          item('Agachamento livre',     '90s', []),
+          item('Elevação lateral',      '60s', []),
+          item('Prancha',               '60s', [])
+        ]}
+      ]
+    }
+  ];
+}
+
+/* ==========================================================================
+   4. VÍNCULO: QUAL FICHA O ALUNO USA
+   O aluno pode ter a ficha dele (montada pelo personal), a ficha padrão da
+   academia, ou escolher uma ficha pronta.
+   ========================================================================== */
+
+const LA_FICHA_ALUNO = 'la_ficha_aluno';
+
+function laVincularFicha(alunoId, fichaId, origem) {
+  try {
+    const bruto = localStorage.getItem(LA_FICHA_ALUNO);
+    const mapa = bruto ? JSON.parse(bruto) : {};
+    mapa[alunoId] = { fichaId: fichaId, origem: origem || 'academia', desde: new Date().toISOString() };
+    localStorage.setItem(LA_FICHA_ALUNO, JSON.stringify(mapa));
+    return true;
+  } catch (e) { return false; }
+}
+
+function laFichaDoAluno(alunoId) {
+  try {
+    const bruto = localStorage.getItem(LA_FICHA_ALUNO);
+    const mapa = bruto ? JSON.parse(bruto) : {};
+    const registro = mapa[alunoId];
+    if (registro) {
+      const f = laBuscarFicha(registro.fichaId);
+      if (f) return { ficha: f, origem: registro.origem };
+    }
+  } catch (e) {}
+
+  /* sem vínculo: usa a ficha padrão da academia ou a primeira pronta */
+  const fichas = laListarFichas();
+  const padrao = fichas.find(function (f) { return f.padrao; });
+  if (padrao) return { ficha: padrao, origem: 'academia' };
+
+  return fichas.length ? { ficha: fichas[0], origem: 'padrao' } : null;
+}
+
+function laDesvincularFicha(alunoId) {
+  try {
+    const bruto = localStorage.getItem(LA_FICHA_ALUNO);
+    const mapa = bruto ? JSON.parse(bruto) : {};
+    delete mapa[alunoId];
+    localStorage.setItem(LA_FICHA_ALUNO, JSON.stringify(mapa));
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ==========================================================================
+   5. AGENDA — quais treinos o aluno faz em cada dia
+   ========================================================================== */
+
+function laAgendaDoAluno(alunoId) {
+  try {
+    const bruto = localStorage.getItem(LA_AGENDA);
+    const mapa = bruto ? JSON.parse(bruto) : {};
+    if (mapa[alunoId]) return mapa[alunoId];
+  } catch (e) {}
+
+  /* agenda padrão: distribui os treinos da ficha ao longo da semana */
+  const vinculo = laFichaDoAluno(alunoId);
+  if (!vinculo) return [];
+
+  const dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+  const treinos = vinculo.ficha.treinos || [];
+  const agenda = [];
+
+  treinos.forEach(function (t, i) {
+    agenda.push({
+      dia: dias[i % dias.length],
+      letra: t.letra,
+      nome: t.nome,
+      treinoId: t.letra
+    });
+  });
+
+  return agenda;
+}
+
+function laSalvarAgenda(alunoId, agenda) {
+  try {
+    const bruto = localStorage.getItem(LA_AGENDA);
+    const mapa = bruto ? JSON.parse(bruto) : {};
+    mapa[alunoId] = agenda;
+    localStorage.setItem(LA_AGENDA, JSON.stringify(mapa));
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ---------- treino de hoje ---------- */
+
+function laTreinoDeHoje(alunoId) {
+  const agenda = laAgendaDoAluno(alunoId);
+  if (!agenda.length) return null;
+
+  const nomes = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  const hoje = nomes[new Date().getDay()];
+  const deHoje = agenda.find(function (a) { return a.dia === hoje; });
+
+  /* domingo ou dia sem treino marcado: devolve o primeiro da lista */
+  if (deHoje) return deHoje;
+  return agenda[0];
+}
+
+/* ==========================================================================
+   6. PROGRESSO DO TREINO — o que o aluno já fez
+   ========================================================================== */
+
+function laProgressoAluno(alunoId) {
+  try {
+    const bruto = localStorage.getItem('la_progresso_' + alunoId);
+    return bruto ? JSON.parse(bruto) : {};
+  } catch (e) { return {}; }
+}
+
+function laMarcarSerie(alunoId, treinoLetra, exIndex, serieIndex, feito) {
+  try {
+    const chave = 'la_progresso_' + alunoId;
+    const p = laProgressoAluno(alunoId);
+    const k = treinoLetra + '|' + exIndex + '|' + serieIndex;
+    if (feito) p[k] = true;
+    else delete p[k];
+    localStorage.setItem(chave, JSON.stringify(p));
+    return true;
+  } catch (e) { return false; }
+}
+
+function laProgressoDoTreino(alunoId, treino) {
+  const p = laProgressoAluno(alunoId);
+  let total = 0, feitas = 0;
+
+  (treino.exercicios || []).forEach(function (ex, i) {
+    const nSeries = ex.series && ex.series.length ? ex.series.length : 3;
+    for (let s = 0; s < nSeries; s++) {
+      total++;
+      if (p[treino.letra + '|' + i + '|' + s]) feitas++;
+    }
+  });
+
+  return { feitas: feitas, total: total, pct: total ? Math.round((feitas / total) * 100) : 0 };
+}
+
+/* ==========================================================================
+   7. TREINOS CONCLUÍDOS — o que já foi feito na semana
+   ========================================================================== */
+
+function laRegistrarTreinoFeito(alunoId, treinoLetra) {
+  try {
+    const chave = 'la_treinos_feitos_' + alunoId;
+    const bruto = localStorage.getItem(chave);
+    const lista = bruto ? JSON.parse(bruto) : [];
+    lista.push({ letra: treinoLetra, quando: new Date().toISOString() });
+    localStorage.setItem(chave, JSON.stringify(lista.slice(-200)));
+    return true;
+  } catch (e) { return false; }
+}
+
+function laTreinosFeitos(alunoId) {
+  try {
+    const bruto = localStorage.getItem('la_treinos_feitos_' + alunoId);
+    return bruto ? JSON.parse(bruto) : [];
+  } catch (e) { return []; }
+}
+
+function laTreinosFeitosNaSemana(alunoId) {
+  const lista = laTreinosFeitos(alunoId);
+  const agora = new Date();
+  const diaSemana = agora.getDay() === 0 ? 7 : agora.getDay();
+  const segunda = new Date(agora);
+  segunda.setDate(agora.getDate() - (diaSemana - 1));
+  segunda.setHours(0, 0, 0, 0);
+
+  return lista.filter(function (t) {
+    return new Date(t.quando) >= segunda;
+  });
+}

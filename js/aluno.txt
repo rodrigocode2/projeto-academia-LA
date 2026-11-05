@@ -1,0 +1,527 @@
+/* ==========================================================================
+   L.A FITNESS — área do aluno
+   Agenda de treinos, iniciar treino, vídeos e progresso.
+   Depende de: js/treinos.js e js/dados.js (carregados antes)
+   ========================================================================== */
+
+const LAAluno = {
+
+  aluno: null,
+  iniciado: false,
+  indiceAtual: 0,
+
+  iniciar(alunoDoLogin) {
+    this.aluno = alunoDoLogin || laAlunoLogado();
+    if (!this.aluno) return;
+
+    this.pintarCabecalho();
+    this.pintarInicio();
+    this.pintarAgenda();
+    this.pintarListaTreinos();
+
+    /* cartões de conteúdo */
+    laPintarHistorico(this.aluno.id);
+    laPintarResumo(this.aluno.id);
+    laPintarMedidas(this.aluno.id);
+    laPintarAvisos();
+
+    /* painel: quem manda agora é o console (shell.js) */
+    if (typeof LAShell !== 'undefined' && LAShell.iniciar) {
+      LAShell.iniciar(this.aluno);
+      const pn = document.querySelector('.js-primeiro-nome');
+      if (pn) pn.textContent = this.aluno.nome.split(' ')[0];
+    } else {
+      if (typeof laPintarPlano === 'function') laPintarPlano(this.aluno.id);
+      if (typeof laPintarLoja === 'function') laPintarLoja(this.aluno.id);
+      if (typeof laDesenharGrafico === 'function') laDesenharGrafico(this.aluno.id);
+    }
+
+    /* status do aluno no cabeçalho */
+    const st = document.querySelector('.js-aluno-status');
+    if (st) {
+      const pendente = this.aluno.pendente || this.aluno.ativo === false;
+      st.innerHTML = pendente
+        ? '<i class="fa-solid fa-clock" style="color:#ffb020"></i> Aguardando liberação'
+        : '<i class="fa-solid fa-circle" style="color:var(--la-accent-green)"></i> Ativo';
+    }
+
+    this.ligarBotoes();
+    this.ligarMedidas();
+  },
+
+  /* registrar medida */
+  ligarMedidas() {
+    const b = document.querySelector('.js-add-medida');
+    if (!b || b._ligado) return;
+    b._ligado = true;
+    const eu = this;
+
+    b.addEventListener('click', function () {
+      const peso = prompt('Seu peso atual (kg):', '');
+      if (peso === null || peso.trim() === '') return;
+      const cintura = prompt('Cintura (cm) — deixe vazio se não quiser:', '') || '';
+      laSalvarMedida(eu.aluno.id, peso.trim(), String(cintura).trim());
+      laPintarMedidas(eu.aluno.id);
+      laPintarResumo(eu.aluno.id);
+      if (typeof laDesenharGrafico === 'function') laDesenharGrafico(eu.aluno.id);
+    });
+  },
+
+  /* a lista de todos os treinos da ficha — substitui a antiga do site.js */
+  pintarListaTreinos() {
+    const casa = document.querySelector('.js-lista-treinos');
+    if (!casa) return;
+
+    const vinculo = laFichaDoAluno(this.aluno.id);
+    if (!vinculo || !vinculo.ficha.treinos || !vinculo.ficha.treinos.length) {
+      casa.innerHTML = '<p class="vazio">Sua ficha ainda não foi montada. Fale com um professor da L.A.</p>';
+      return;
+    }
+
+    const eu = this;
+    casa.innerHTML = vinculo.ficha.treinos.map(function (t) {
+      const total = (t.exercicios || []).reduce(function (a, e) {
+        return a + (e.series && e.series.length ? e.series.length : 3);
+      }, 0);
+      const p = laProgressoDoTreino(eu.aluno.id, t);
+
+      return '<div class="workout-card-select" data-letra="' + t.letra + '">' +
+               '<div>' +
+                 '<span class="etiqueta-treino">TREINO ' + laEscapar(t.letra) + '</span>' +
+                 '<h4 style="margin-top:5px; font-size:1rem;">' + laEscapar(t.nome) + '</h4>' +
+                 '<p style="font-size:0.8rem; color:var(--la-text-muted);">' +
+                   (t.exercicios || []).length + ' exercícios • ' + total + ' séries' +
+                   (p.pct > 0 ? ' • ' + p.pct + '% feito' : '') +
+                 '</p>' +
+               '</div>' +
+               '<i class="fa-solid fa-chevron-right" style="color:var(--la-red)"></i>' +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('[data-letra]').forEach(function (card) {
+      card.addEventListener('click', function () {
+        const letra = card.getAttribute('data-letra');
+        const t = (laFichaDoAluno(eu.aluno.id).ficha.treinos || []).find(function (x) {
+          return x.letra === letra;
+        });
+        if (t) eu.abrirTreino(t);
+      });
+    });
+  },
+
+  pintarCabecalho() {
+    const a = this.aluno;
+    const nome = document.querySelector('.js-aluno-nome');
+    const matr = document.querySelector('.js-aluno-matricula');
+    const av   = document.querySelector('.js-aluno-avatar');
+    if (nome) nome.textContent = a.nome;
+    if (matr) matr.textContent = 'Matrícula ' + a.matricula;
+    if (av)   av.textContent = laIniciais(a.nome);
+  },
+
+  /* ======================================================================
+     TELA INICIAL — treino de hoje + botão iniciar
+     ====================================================================== */
+  pintarInicio() {
+    const vinculo = laFichaDoAluno(this.aluno.id);
+    const casa = document.querySelector('.js-treino-hoje');
+    if (!casa) return;
+
+    if (!vinculo) {
+      casa.innerHTML = '<p class="vazio">Sua ficha ainda não foi liberada. Fale com a academia.</p>';
+      return;
+    }
+
+    const ficha = vinculo.ficha;
+    const hoje = laTreinoDeHoje(this.aluno.id);
+    const treino = hoje
+      ? (ficha.treinos || []).find(function (t) { return t.letra === hoje.letra; }) || ficha.treinos[0]
+      : ficha.treinos[0];
+
+    if (!treino) {
+      casa.innerHTML = '<p class="vazio">Esta ficha ainda não tem exercícios.</p>';
+      return;
+    }
+
+    const p = laProgressoDoTreino(this.aluno.id, treino);
+
+    casa.innerHTML =
+      '<div class="cartao-treino-hoje">' +
+        '<span class="etiqueta-treino">TREINO ' + laEscapar(treino.letra) + '</span>' +
+        '<h3>' + laEscapar(treino.nome) + '</h3>' +
+        '<p class="sub">' + treino.exercicios.length + ' exercícios · ' +
+          (hoje ? hoje.dia : 'hoje') + '</p>' +
+        '<div class="barra-progresso"><i style="width:' + p.pct + '%"></i></div>' +
+        '<p class="progresso-texto">' + p.feitas + ' de ' + p.total + ' séries concluídas</p>' +
+        '<button class="btn-primary js-iniciar" style="width:100%;justify-content:center;margin-top:14px;">' +
+          '<i class="fa-solid fa-play"></i> Iniciar Treino' +
+        '</button>' +
+      '</div>' +
+
+      '<div class="bloco-aviso">' +
+        '<i class="fa-solid fa-circle-info"></i>' +
+        '<div><b>Ficha: ' + laEscapar(ficha.nome) + '</b>' +
+        '<span>' + laEscapar(ficha.objetivo || '') +
+        (vinculo.origem === 'personal' ? ' · montada pelo seu professor' :
+         vinculo.origem === 'dona' ? ' · montada pela academia' : ' · treino padrão') +
+        '</span></div>' +
+      '</div>';
+
+    const b = casa.querySelector('.js-iniciar');
+    if (b) b.addEventListener('click', () => LAAluno.abrirTreino(treino));
+  },
+
+  /* ======================================================================
+     AGENDA — os treinos da semana
+     ====================================================================== */
+  pintarAgenda() {
+    const casa = document.querySelector('.js-agenda');
+    if (!casa) return;
+
+    const agenda = laAgendaDoAluno(this.aluno.id);
+    const feitos = laTreinosFeitosNaSemana(this.aluno.id);
+
+    if (!agenda.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum treino na agenda ainda.</p>';
+      return;
+    }
+
+    const nomesDia = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const hoje = nomesDia[new Date().getDay()];
+
+    casa.innerHTML = agenda.map(function (a) {
+      const feito = feitos.some(function (f) { return f.letra === a.letra; });
+      const ehHoje = a.dia === hoje;
+      return '<div class="linha-agenda' + (ehHoje ? ' hoje' : '') + '">' +
+               '<div class="dia">' + laEscapar(a.dia) + '</div>' +
+               '<div class="o-que">' +
+                 '<b>Treino ' + laEscapar(a.letra) + ' — ' + laEscapar(a.nome) + '</b>' +
+                 (ehHoje ? '<span class="marca-hoje">Hoje</span>' : '') +
+               '</div>' +
+               '<div class="status">' +
+                 (feito
+                   ? '<i class="fa-solid fa-circle-check" style="color:var(--la-accent-green)"></i>'
+                   : '<i class="fa-regular fa-circle" style="color:var(--la-border)"></i>') +
+               '</div>' +
+             '</div>';
+    }).join('');
+
+    const resumo = document.querySelector('.js-semana');
+    if (resumo) {
+      resumo.textContent = feitos.length + ' de ' + agenda.length + ' treinos feitos nesta semana';
+    }
+  },
+
+  ligarBotoes() {
+    document.querySelectorAll('.js-sair-aluno').forEach(function (b) {
+      b.addEventListener('click', function () {
+        laSairAluno();
+        LASite.irPara('login');
+      });
+    });
+  },
+
+  /* ======================================================================
+     INICIAR TREINO — abre a sequência, exercício por exercício
+     ====================================================================== */
+  abrirTreino(treino) {
+    this.treinoAtual = treino;
+    this.indiceAtual = 0;
+
+    const modal = document.getElementById('tela-treino');
+    if (!modal) return;
+
+    modal.classList.add('active');
+
+    /* baixa o dataset (só na primeira vez) e repinta quando chegar */
+    if (typeof laCarregarDataset === 'function' && !LA_DATASET) {
+      const eu = this;
+      laCarregarDataset()
+        .then(function () { eu.pintarExercicio(); })
+        .catch(function () { /* sem internet: segue com o que tem */ });
+    }
+    laRegistrarAcesso('treino', 'clique', { alvo: 'iniciar-treino', letra: treino.letra });
+    this.pintarExercicio();
+  },
+
+  pintarExercicio() {
+    const treino = this.treinoAtual;
+    const casa = document.querySelector('.js-treino-sequencia');
+    if (!casa || !treino) return;
+
+    const ex = treino.exercicios[this.indiceAtual];
+    if (!ex) return;
+
+    const total = treino.exercicios.length;
+    const p = laProgressoDoTreino(this.aluno.id, treino);
+
+    /* mídia: GIF animado do dataset; se não houver, cai para o vídeo/link */
+    const midia = (typeof laGifDoExercicio === 'function') ? laGifDoExercicio(ex) : null;
+    const video = laVideoInfo(ex.video);
+
+    let blocoVideo = '';
+    if (midia) {
+      blocoVideo =
+        '<div class="midia-exercicio">' +
+          '<img src="' + midia.gif + '" onerror="this.onerror=null;this.src=\'' + (midia.thumb||'') + '\'" ' +
+            'alt="Demonstração: ' + laEscapar(midia.nomeOriginal) + '" ' +
+            'loading="lazy" width="180" height="180">' +
+          '<div class="midia-info">' +
+            '<b>' + laEscapar(midia.nomeOriginal) + '</b>' +
+            '<span>' + laEscapar(midia.target || '') +
+              (midia.equipamento ? ' · ' + laEscapar(laEquipPT(midia.equipamento)) : '') +
+            '</span>' +
+            '<small class="midia-credito">' + laEscapar(midia.attribution) + '</small>' +
+          '</div>' +
+        '</div>' +
+        (midia.passos && midia.passos.length
+          ? '<ol class="passos-exercicio">' +
+              midia.passos.map(function (p) { return '<li>' + laEscapar(p) + '</li>'; }).join('') +
+            '</ol>'
+          : '');
+    } else if (video.tipo === 'youtube') {
+      blocoVideo = '<div class="video-caixa">' +
+                     '<iframe src="' + video.embed + '" title="' + laEscapar(ex.nome) + '" ' +
+                     'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+                     'allowfullscreen loading="lazy"></iframe>' +
+                   '</div>';
+    } else if (video.link) {
+      blocoVideo = '<a class="video-caixa video-link" href="' + laEscapar(video.link) + '" target="_blank" rel="noopener">' +
+                     '<i class="fa-solid fa-play"></i> Ver demonstração do exercício' +
+                   '</a>';
+    }
+
+    const nSeries = ex.series && ex.series.length ? ex.series.length : 3;
+    const progresso = laProgressoAluno(this.aluno.id);
+    let linhas = '';
+
+    for (let s = 0; s < nSeries; s++) {
+      const feito = !!progresso[treino.letra + '|' + this.indiceAtual + '|' + s];
+      const conf = (ex.series && ex.series[s]) || {};
+      linhas += '<tr class="' + (feito ? 'feita' : '') + '" data-serie="' + s + '">' +
+                  '<td class="num">' + (s + 1) + '</td>' +
+                  '<td>' + laEscapar(conf.reps || '12') + '</td>' +
+                  '<td>' + laEscapar(conf.carga || '—') + '</td>' +
+                  '<td>' + laEscapar(ex.descanso || '60s') + '</td>' +
+                  '<td class="acao">' +
+                    '<button class="marcar' + (feito ? ' on' : '') + '" data-serie="' + s + '">' +
+                      '<i class="fa-solid fa-check"></i>' +
+                    '</button>' +
+                  '</td>' +
+                '</tr>';
+    }
+
+    casa.innerHTML =
+      '<div class="topo-sequencia">' +
+        '<button class="btn-voltar js-fechar-treino"><i class="fa-solid fa-xmark"></i></button>' +
+        '<div class="contador-ex">Exercício ' + (this.indiceAtual + 1) + ' de ' + total + '</div>' +
+        '<div class="pct-topo">' + p.pct + '%</div>' +
+      '</div>' +
+
+      '<div class="barra-progresso" style="margin:0 0 16px"><i style="width:' + p.pct + '%"></i></div>' +
+
+      blocoVideo +
+
+      '<h3 class="nome-exercicio">' + laEscapar(ex.nome) + '</h3>' +
+      '<p class="grupo-exercicio">' + laEscapar(laBuscarExercicio(ex.exercicioId) ? laBuscarExercicio(ex.exercicioId).grupo : '') + '</p>' +
+
+      '<table class="tabela-series">' +
+        '<thead><tr><th>Série</th><th>Reps</th><th>Carga</th><th>Descanso</th><th></th></tr></thead>' +
+        '<tbody>' + linhas + '</tbody>' +
+      '</table>' +
+
+      (ex.observacoes ? '<p class="obs-exercicio">' + laEscapar(ex.observacoes) + '</p>' : '') +
+
+      '<div class="navegacao-treino">' +
+        '<button class="btn-secondary js-anterior"' + (this.indiceAtual === 0 ? ' disabled' : '') + '>' +
+          '<i class="fa-solid fa-arrow-left"></i> Anterior' +
+        '</button>' +
+        (this.indiceAtual < total - 1
+          ? '<button class="btn-primary js-proximo">Próximo <i class="fa-solid fa-arrow-right"></i></button>'
+          : '<button class="btn-primary js-concluir"><i class="fa-solid fa-flag-checkered"></i> Concluir treino</button>') +
+      '</div>';
+
+    this.ligarSequencia();
+  },
+
+  ligarSequencia() {
+    const casa = document.querySelector('.js-treino-sequencia');
+    if (!casa) return;
+    const eu = this;
+    const treino = this.treinoAtual;
+
+    casa.querySelectorAll('.marcar').forEach(function (b) {
+      b.addEventListener('click', function () {
+        const s = +b.getAttribute('data-serie');
+        const estava = b.classList.contains('on');
+        laMarcarSerie(eu.aluno.id, treino.letra, eu.indiceAtual, s, !estava);
+        b.classList.toggle('on', !estava);
+        const linha = b.closest('tr');
+        if (linha) linha.classList.toggle('feita', !estava);
+
+        const p = laProgressoDoTreino(eu.aluno.id, treino);
+        const barra = casa.querySelector('.barra-progresso i');
+        if (barra) barra.style.width = p.pct + '%';
+        const pct = casa.querySelector('.pct-topo');
+        if (pct) pct.textContent = p.pct + '%';
+      });
+    });
+
+    const fechar = casa.querySelector('.js-fechar-treino');
+    if (fechar) fechar.addEventListener('click', function () {
+      document.getElementById('tela-treino').classList.remove('active');
+      LAAluno.pintarInicio();
+      LAAluno.pintarAgenda();
+    });
+
+    const anterior = casa.querySelector('.js-anterior');
+    if (anterior) anterior.addEventListener('click', function () {
+      if (eu.indiceAtual > 0) { eu.indiceAtual--; eu.pintarExercicio(); }
+    });
+
+    const proximo = casa.querySelector('.js-proximo');
+    if (proximo) proximo.addEventListener('click', function () {
+      eu.indiceAtual++;
+      eu.pintarExercicio();
+      casa.scrollTop = 0;
+    });
+
+    const concluir = casa.querySelector('.js-concluir');
+    if (concluir) concluir.addEventListener('click', function () {
+      laRegistrarTreinoFeito(eu.aluno.id, treino.letra);
+      casa.innerHTML =
+        '<div class="tela-concluido">' +
+          '<i class="fa-solid fa-circle-check"></i>' +
+          '<h3>Treino ' + laEscapar(treino.letra) + ' concluído!</h3>' +
+          '<p>Bom trabalho, ' + laEscapar(eu.aluno.nome.split(' ')[0]) + '. Seu progresso foi salvo.</p>' +
+          '<button class="btn-primary js-voltar-inicio" style="margin-top:20px">' +
+            '<i class="fa-solid fa-house"></i> Voltar ao início' +
+          '</button>' +
+        '</div>';
+      casa.querySelector('.js-voltar-inicio').addEventListener('click', function () {
+        document.getElementById('tela-treino').classList.remove('active');
+        LAAluno.pintarInicio();
+        LAAluno.pintarAgenda();
+      });
+    });
+  }
+};
+
+/* ==========================================================================
+   CONTEÚDO DA ÁREA DO ALUNO — histórico, progresso, medidas e recados
+   ========================================================================== */
+
+/* -------- últimos treinos concluídos -------- */
+function laPintarHistorico(alunoId) {
+  const casa = document.querySelector('.js-historico');
+  if (!casa) return;
+
+  const feitos = laTreinosFeitos(alunoId).slice().reverse().slice(0, 5);
+
+  if (!feitos.length) {
+    casa.innerHTML = '<p class="vazio">Você ainda não concluiu nenhum treino. ' +
+                     'Toque em "Iniciar Treino" para começar.</p>';
+    return;
+  }
+
+  const nomesDia = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const vinculo = laFichaDoAluno(alunoId);
+
+  casa.innerHTML = feitos.map(function (t) {
+    const d = new Date(t.quando);
+    const treino = vinculo ? (vinculo.ficha.treinos || []).find(function (x) { return x.letra === t.letra; }) : null;
+    const quando = d.getDate().toString().padStart(2, '0') + '/' +
+                   (d.getMonth() + 1).toString().padStart(2, '0');
+    return '<div class="item-historico">' +
+             '<i class="fa-solid fa-circle-check"></i>' +
+             '<b>Treino ' + laEscapar(t.letra) + (treino ? ' — ' + laEscapar(treino.nome) : '') + '</b>' +
+             '<span>' + nomesDia[d.getDay()] + ' ' + quando + '</span>' +
+           '</div>';
+  }).join('');
+}
+
+/* -------- resumo de progresso da semana -------- */
+function laPintarResumo(alunoId) {
+  const casa = document.querySelector('.js-resumo-progresso');
+  if (!casa) return;
+
+  const agenda = laAgendaDoAluno(alunoId);
+  const feitos = laTreinosFeitosNaSemana(alunoId);
+  const total = agenda.length || 1;
+  const pct = Math.min(100, Math.round((feitos.length / total) * 100));
+
+  const vinculo = laFichaDoAluno(alunoId);
+  let seriesFeitas = 0, seriesTotal = 0;
+  if (vinculo) {
+    (vinculo.ficha.treinos || []).forEach(function (t) {
+      const p = laProgressoDoTreino(alunoId, t);
+      seriesFeitas += p.feitas;
+      seriesTotal += p.total;
+    });
+  }
+
+  casa.innerHTML =
+    '<div class="medidor"><b>' + pct + '%</b><span>da semana</span></div>' +
+    '<div class="barra-progresso"><i style="width:' + pct + '%"></i></div>' +
+    '<p class="texto-suave">' + feitos.length + ' de ' + agenda.length + ' treinos concluídos</p>' +
+    '<p class="texto-suave">' + seriesFeitas + ' de ' + seriesTotal + ' séries marcadas na ficha</p>';
+}
+
+/* -------- medidas do aluno -------- */
+const LA_MEDIDAS = 'la_medidas_';
+
+function laListarMedidas(alunoId) {
+  try {
+    const bruto = localStorage.getItem(LA_MEDIDAS + alunoId);
+    return bruto ? JSON.parse(bruto) : [];
+  } catch (e) { return []; }
+}
+
+function laSalvarMedida(alunoId, peso, cintura) {
+  try {
+    const lista = laListarMedidas(alunoId);
+    lista.push({ peso: peso, cintura: cintura, quando: new Date().toISOString() });
+    localStorage.setItem(LA_MEDIDAS + alunoId, JSON.stringify(lista.slice(-24)));
+    return true;
+  } catch (e) { return false; }
+}
+
+function laPintarMedidas(alunoId) {
+  const casa = document.querySelector('.js-lista-medidas');
+  if (!casa) return;
+
+  const lista = laListarMedidas(alunoId).slice().reverse().slice(0, 4);
+  if (!lista.length) { casa.innerHTML = ''; return; }
+
+  casa.innerHTML = lista.map(function (m) {
+    const d = new Date(m.quando);
+    const data = d.getDate().toString().padStart(2, '0') + '/' + (d.getMonth() + 1).toString().padStart(2, '0');
+    return '<div class="linha-medida">' +
+             '<span>' + data + '</span>' +
+             '<b>' + (m.peso ? laEscapar(m.peso) + ' kg' : '—') +
+             (m.cintura ? ' · ' + laEscapar(m.cintura) + ' cm' : '') + '</b>' +
+           '</div>';
+  }).join('');
+}
+
+/* -------- recados da academia -------- */
+function laPintarAvisos() {
+  const casa = document.querySelector('.js-lista-avisos');
+  if (!casa) return;
+
+  const avisos = [
+    { t: 'Horário de funcionamento', m: 'Seg a Sex 6h às 22h · Sáb 8h às 12h' },
+    { t: 'Avaliação física', m: 'Agende na recepção. Refaça a cada 3 meses.' },
+    { t: 'Aceitamos Wellhub / Gympass', m: 'Apresente o app na catraca.' }
+  ];
+
+  const proprios = laListarAvisos ? laListarAvisos() : [];
+  const todos = proprios.length ? proprios : avisos;
+
+  casa.innerHTML = todos.map(function (a) {
+    return '<div class="item-aviso">' +
+             '<i class="fa-solid fa-bullhorn"></i>' +
+             '<div><b>' + laEscapar(a.t) + '</b><span>' + laEscapar(a.m) + '</span></div>' +
+           '</div>';
+  }).join('');
+}

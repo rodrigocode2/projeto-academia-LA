@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preparar o site — L.A FITNESS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: #0b0b0d; color: #f2f2f2; font-family: 'Montserrat', sans-serif; margin: 0; }
+    .caixa { max-width: 760px; margin: 0 auto; padding: 48px 22px 80px; }
+    h1 { font-family: 'Teko', sans-serif; font-size: clamp(2.4rem, 7vw, 4rem); text-transform: uppercase;
+         color: #e50914; margin: 0 0 6px; line-height: 1; }
+    p.sub { color: #9a9a9a; margin: 0 0 34px; }
+    .passo { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
+             border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; }
+    .passo b { display: block; margin-bottom: 6px; }
+    .passo span { color: #b9b9b9; font-size: .94rem; line-height: 1.5; }
+    code { background: #16161a; padding: 2px 7px; border-radius: 6px; color: #ff8a8a; font-size: .9em; }
+    .links { margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .links a { background: #e50914; color: #fff; text-decoration: none; padding: 12px 20px;
+               border-radius: 10px; font-weight: 600; }
+    .links a.sec { background: transparent; border: 1px solid rgba(255,255,255,.2); color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <div class="caixa">
+    <h1>Preparar o site</h1>
+    <p class="sub">L.A Fitness — Cidade Ocidental · GO</p>
+
+    <div class="passo">
+      <b>1. Abra o site</b>
+      <span>Use <code>index.html</code> para ver o site e <code>admin.html</code> para o painel da academia.</span>
+    </div>
+
+    <div class="passo">
+      <b>2. O catálogo de exercícios</b>
+      <span>Os desenhos dos exercícios vêm do arquivo <code>data/exercises.json</code> e dos GIFs na pasta
+      <code>videos/</code>. Se a lista aparecer vazia, confira se o arquivo está na pasta <code>data/</code>.</span>
+    </div>
+
+    <div class="passo">
+      <b>3. Abra por um servidor local</b>
+      <span>Se você abrir o site com duplo clique, o navegador bloqueia a leitura da pasta. Para ver
+      tudo funcionando — fotos, vídeos e o catálogo de exercícios — sirva a pasta por um endereço
+      local (por exemplo <code>http://localhost</code>) em vez de abrir o arquivo direto.</span>
+    </div>
+
+    <div class="passo">
+      <b>4. Entre no painel</b>
+      <span>No chat do L.A Bot, digite <code>/admin-academia-LA</code> e depois a senha da academia.</span>
+    </div>
+
+    <div class="links">
+      <a href="index.html">Abrir o site</a>
+      <a class="sec" href="admin.html">Abrir o painel</a>
+    </div>
+  </div>
+</body>
+</html>

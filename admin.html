@@ -1,0 +1,3573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Controle — L.A FITNESS</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,900&family=Teko:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="corpo-admin">
+
+  <!-- ================= TOPO ================= -->
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="ad-side">
+    <div class="ad-brand">
+      <img class="ad-mark-logo" src="img/logo.png" alt="L.A Fitness" data-fallbacks="img/logo-la.png">
+      <div class="ad-brand-txt"><b>FITNESS</b><span>Painel de controle</span></div>
+    </div>
+    <nav class="ad-nav">
+      <button class="ad-nav-item ativo" data-aba-admin="visao">
+        <i class="fa-solid fa-chart-line"></i> Visão geral</button>
+      <button class="ad-nav-item" data-aba-admin="alunos">
+        <i class="fa-solid fa-users"></i> Alunos</button>
+      <button class="ad-nav-item" data-aba-admin="montar">
+        <i class="fa-solid fa-dumbbell"></i> Treinos</button>
+      <button class="ad-nav-item" data-aba-admin="produtos">
+        <i class="fa-solid fa-boxes-stacked"></i> Produtos e vendas</button>
+      <button class="ad-nav-item" data-aba-admin="loja">
+        <i class="fa-solid fa-cart-shopping"></i> Loja e pedidos</button>
+      <button class="ad-nav-item" data-aba-admin="corridas">
+        <i class="fa-solid fa-person-running"></i> Corridas</button>
+      <button class="ad-nav-item" data-aba-admin="mensagens">
+        <i class="fa-solid fa-comments"></i> Mensagens
+        <span class="ad-nav-badge js-ad-badge hidden">0</span></button>
+      <button class="ad-nav-item" data-aba-admin="pagamentos">
+        <i class="fa-solid fa-money-check-dollar"></i> Pagamentos</button>
+      <button class="ad-nav-item" data-aba-admin="catraca">
+        <i class="fa-solid fa-door-open"></i> Catraca</button>
+      <button class="ad-nav-item" data-aba-admin="site">
+        <i class="fa-solid fa-pen-to-square"></i> Editar o site</button>
+    </nav>
+    <div class="ad-side-foot">
+      <a href="index.html" class="ad-btn-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ver o site</a>
+      <button class="ad-btn-sair js-admin-sair"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </div>
+  </aside>
+
+  <div class="ad-main">
+  <header class="ad-top">
+    <div class="ad-crumb"><span>L.A Fitness</span><i>›</i><b class="js-crumb">Visão geral</b></div>
+    <div class="ad-top-right">
+      <div class="sino js-sino-admin"></div>
+      <span class="ad-selo"><i class="fa-solid fa-key"></i> Administrador</span>
+    </div>
+  </header>
+  <main class="conteudo-admin">
+
+    <!-- ============ ABA 1: VISÃO GERAL ============ -->
+    <section id="painel-visao" class="painel-aba ativa">
+
+      <div class="tiles ad-kpis">
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-users"></i>
+          <b class="js-m-visitantes">0</b>
+          <span>Pessoas que acessaram</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-eye"></i>
+          <b class="js-m-visualizacoes">0</b>
+          <span>Seções vistas</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-calendar-day"></i>
+          <b class="js-m-hoje">0</b>
+          <span>Acessos hoje</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-brands fa-whatsapp"></i>
+          <b class="js-m-contatos">0</b>
+          <span>Cliques no WhatsApp</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-layer-group"></i>
+          <b class="js-m-sessoes">0</b>
+          <span>Sessões</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-ruler"></i>
+          <b class="js-m-media">0</b>
+          <span>Seções por visita</span>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-chart-column"></i> Acessos nos últimos 14 dias</h3>
+        <canvas class="js-m-grafico grafico-admin"></canvas>
+      </div>
+
+      <div class="duas-colunas">
+        <div class="bloco">
+          <h3><i class="fa-solid fa-fire"></i> Seções mais vistas</h3>
+          <div class="js-m-secoes"></div>
+        </div>
+        <div class="bloco">
+          <h3><i class="fa-solid fa-share-nodes"></i> De onde vieram</h3>
+          <div class="js-m-origem"></div>
+        </div>
+      </div>
+
+      <div class="duas-colunas">
+        <div class="bloco">
+          <h3><i class="fa-solid fa-mobile-screen"></i> Aparelho</h3>
+          <div class="js-m-aparelho"></div>
+        </div>
+        <div class="bloco">
+          <h3><i class="fa-solid fa-compass"></i> Navegador</h3>
+          <div class="js-m-navegador"></div>
+        </div>
+      </div>
+
+      <div class="duas-colunas">
+        <div class="bloco">
+          <h3><i class="fa-solid fa-hand-pointer"></i> Onde clicaram</h3>
+          <div class="js-m-cliques"></div>
+        </div>
+        <div class="bloco">
+          <h3><i class="fa-solid fa-heart-pulse"></i> Saúde do site</h3>
+          <div class="linha-metrica">
+            <span>Saíram na primeira tela</span>
+            <div class="barra-mini"><i style="width:0%"></i></div>
+            <b class="js-m-primeira">0</b>
+          </div>
+          <div class="linha-metrica">
+            <span>Exploraram 4+ seções</span>
+            <div class="barra-mini"><i style="width:0%"></i></div>
+            <b class="js-m-varias">0</b>
+          </div>
+          <p class="nota-rodape">
+            Estes números vêm do próprio navegador (localStorage). Ao ligar o Supabase,
+            eles passam a valer para todos os visitantes.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABA 2: ALUNOS ============ -->
+    <section id="painel-alunos" class="painel-aba">
+      <div class="bloco">
+        <h3><i class="fa-solid fa-user-plus"></i> Cadastrar aluno</h3>
+        <p class="nota-bloco">
+          O acesso é criado aqui e entregue ao aluno, como um crachá. Ele entra com o CPF ou a matrícula.
+        </p>
+
+        <div class="js-aviso-sucesso hidden"></div>
+        <div id="aluno-erro" class="aviso-erro hidden"></div>
+
+        <form id="form-novo-aluno" class="grade-form">
+          <div>
+            <label class="form-label">Nome completo *</label>
+            <input class="form-input" id="aluno-nome" placeholder="Como no documento" required>
+          </div>
+          <div>
+            <label class="form-label">CPF * (só números)</label>
+            <input class="form-input" id="aluno-cpf" placeholder="00000000000" maxlength="14" required>
+          </div>
+          <div>
+            <label class="form-label">Senha de acesso *</label>
+            <input class="form-input" id="aluno-senha" placeholder="Mínimo 4 caracteres" required>
+          </div>
+          <div>
+            <label class="form-label">Telefone</label>
+            <input class="form-input" id="aluno-telefone" placeholder="(61) 90000-0000">
+          </div>
+          <div>
+            <label class="form-label">E-mail</label>
+            <input class="form-input" id="aluno-email" type="email" placeholder="opcional">
+          </div>
+          <div>
+            <label class="form-label">Plano</label>
+            <select class="form-input" id="aluno-plano">
+              <option>Mensal</option>
+              <option selected>Recorrente</option>
+              <option>Wellhub / Gympass</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Objetivo</label>
+            <input class="form-input" id="aluno-objetivo" placeholder="Hipertrofia, emagrecimento...">
+          </div>
+          <div class="acoes-form">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Cadastrar</button>
+            <button type="button" class="btn-secondary js-semear"><i class="fa-solid fa-flask"></i> Criar exemplo</button>
+            <button type="button" class="btn-secondary js-enviar-link"><i class="fa-brands fa-whatsapp"></i> Enviar o link ao aluno</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-users"></i> Alunos cadastrados</h3>
+        <input class="form-input" id="busca-aluno" placeholder="Buscar por nome, matrícula ou CPF" style="margin-bottom:16px;">
+        <div class="js-tabela-alunos"></div>
+      </div>
+    </section>
+
+    <!-- ============ ABA 3: CONTEÚDO DO SITE ============ -->
+
+    <!-- ============ ABA 3: TREINOS ============ -->
+    <section id="painel-treinos" class="painel-aba">
+      <div class="duas-colunas">
+        <div class="bloco">
+          <h3><i class="fa-solid fa-file-pen"></i> Criar ficha</h3>
+          <p class="nota-bloco">
+            A ficha nasce vazia e depois recebe os exercícios. Use "Usar com um aluno"
+            para prender a ficha a alguém.
+          </p>
+          <form id="form-nova-ficha" class="grade-form">
+            <div>
+              <label class="form-label">Nome da ficha *</label>
+              <input class="form-input" id="ficha-nome" placeholder="Ex.: Hipertrofia — 3x semana" required>
+            </div>
+            <div>
+              <label class="form-label">Objetivo</label>
+              <input class="form-input" id="ficha-objetivo" placeholder="Hipertrofia, emagrecimento...">
+            </div>
+            <div>
+              <label class="form-label">Nível</label>
+              <select class="form-input" id="ficha-nivel">
+                <option>Iniciante</option>
+                <option selected>Intermediário</option>
+                <option>Avançado</option>
+                <option>Todos os níveis</option>
+              </select>
+            </div>
+            <div class="acoes-form">
+              <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Criar ficha</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="bloco">
+          <h3><i class="fa-solid fa-dumbbell"></i> Cadastrar exercício</h3>
+          <p class="nota-bloco">
+            Exercício solto entra no seu banco e pode ser usado em qualquer ficha.
+          </p>
+          <form id="form-novo-exercicio" class="grade-form">
+            <div>
+              <label class="form-label">Nome *</label>
+              <input class="form-input" id="ex-nome" placeholder="Ex.: Supino reto" required>
+            </div>
+            <div>
+              <label class="form-label">Grupo muscular</label>
+              <input class="form-input" id="ex-grupo" placeholder="Peito, costas, pernas...">
+            </div>
+            <div>
+              <label class="form-label">Equipamento</label>
+              <input class="form-input" id="ex-equipamento" placeholder="Barra, halteres, máquina...">
+            </div>
+            <div>
+              <label class="form-label">Vídeo (link opcional)</label>
+              <input class="form-input" id="ex-video" placeholder="YouTube ou link do GIF">
+            </div>
+            <div>
+              <label class="form-label">Instruções de execução</label>
+              <input class="form-input" id="ex-instrucoes" placeholder="Como executar, séries, cuidados...">
+            </div>
+            <div class="acoes-form">
+              <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Cadastrar exercício</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-layer-group"></i> Fichas cadastradas</h3>
+        <div class="js-lista-fichas"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-list-check"></i> Banco de exercícios</h3>
+        <input class="form-input" id="busca-exercicio" placeholder="Buscar por nome ou grupo muscular" style="margin-bottom:16px;">
+        <div class="js-tabela-exercicios"></div>
+      </div>
+    </section>
+
+    <!-- ============ ABA 4: LOJA E PEDIDOS ============ -->
+    <section id="painel-loja" class="painel-aba">
+      <div class="duas-colunas">
+        <div class="bloco">
+          <h3><i class="fa-solid fa-box-open"></i> Reservas feitas pelos alunos</h3>
+          <p class="nota-bloco">
+            O aluno reserva pelo site e paga na recepção ao retirar. Estas são as reservas registradas.
+          </p>
+          <div class="js-tabela-pedidos"></div>
+        </div>
+        <div class="bloco">
+          <h3><i class="fa-solid fa-tags"></i> Produtos da loja</h3>
+          <p class="nota-bloco">O que aparece na loja do aluno.</p>
+          <div class="js-lista-produtos"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABA 5: CORRIDAS ============ -->
+    <section id="painel-corridas" class="painel-aba">
+      <div class="tiles ad-kpis">
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-person-running"></i>
+          <b class="js-c-total">0</b>
+          <span>Corridas registradas</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-stopwatch"></i>
+          <b class="js-c-tempo">0</b>
+          <span>Tempo total na esteira</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-route"></i>
+          <b class="js-c-distancia">0</b>
+          <span>Distância total (km)</span>
+        </div>
+      </div>
+      <div class="bloco">
+        <h3><i class="fa-solid fa-list-ol"></i> Histórico de corridas</h3>
+        <div class="js-tabela-corridas"></div>
+      </div>
+    </section>
+
+
+    <!-- ============ ABA: MENSAGENS ============ -->
+    <section id="painel-mensagens" class="painel-aba">
+
+      <!-- controle do bate-papo da academia -->
+      <div class="bloco">
+        <h3><i class="fa-solid fa-comments"></i> Bate-papo da academia</h3>
+        <p class="nota-bloco">
+          O grupo onde todos conversam: alunos e academia. Você abre e fecha quando quiser.
+        </p>
+
+        <div class="mural-estado">
+          <span class="mural-selo js-grupo-selo">Aberto</span>
+          <div class="mural-botoes">
+            <button class="btn-primary" id="grupo-abrir" type="button">
+              <i class="fa-solid fa-lock-open"></i> Abrir o bate-papo</button>
+            <button class="btn-secondary" id="grupo-fechar" type="button">
+              <i class="fa-solid fa-lock"></i> Bloquear o bate-papo</button>
+          </div>
+        </div>
+        <div class="js-aviso-grupo hidden"></div>
+
+        <form class="conversa-form" id="form-post-grupo" style="margin-top:16px;">
+          <button aria-label="Emoji e figurinhas" class="btn-anexo js-emoji-btn" data-alvo="post-grupo-texto" type="button" title="Emoji e figurinhas">
+            <i class="fa-solid fa-face-smile"></i></button>
+          <input class="form-input" id="post-grupo-texto" placeholder="Falar como academia no grupo..." autocomplete="off">
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Publicar</button>
+        </form>
+        <div class="emoji-painel js-emoji-painel hidden" data-dono="post-grupo-texto"></div>
+
+        <div class="conversa-corpo js-grupo-admin" style="margin-top:14px; min-height:200px; max-height:340px;">
+          <p class="vazio">Nenhuma mensagem no grupo ainda.</p>
+        </div>
+      </div>
+
+      <div class="duas-colunas conversa-admin">
+        <div class="bloco">
+          <h3><i class="fa-solid fa-inbox"></i> Conversas</h3>
+          <p class="nota-bloco">Mensagens que os alunos mandaram pelo site.</p>
+          <div class="js-lista-conversas"></div>
+        </div>
+        <div class="bloco">
+          <h3><i class="fa-solid fa-comment-dots"></i> <span class="js-conversa-nome">Selecione uma conversa</span></h3>
+          <div class="js-conversa-admin"></div>
+          <form class="conversa-form" id="form-resposta-admin" style="display:none;">
+            <input class="form-input" id="resposta-admin" placeholder="Escreva a resposta..." autocomplete="off">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Responder</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABA: PAGAMENTOS ============ -->
+    <section id="painel-pagamentos" class="painel-aba">
+
+      <div class="tiles ad-kpis">
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-sack-dollar"></i>
+          <b class="js-fin-recebido">R$ 0</b>
+          <span>Recebido no mês</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-hourglass-half"></i>
+          <b class="js-fin-aberto">R$ 0</b>
+          <span>Em aberto</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <b class="js-fin-atraso">R$ 0</b>
+          <span>Em atraso</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-percent"></i>
+          <b class="js-fin-inadimplencia">0%</b>
+          <span>Inadimplência</span>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-rotate"></i> Cobranças do mês
+          <span class="pilula js-fin-competencia">—</span></h3>
+        <p class="nota-bloco">
+          O sistema gera a mensalidade de cada aluno no mês. Quem passar do vencimento
+          entra em atraso automaticamente e a catraca barra a entrada.
+        </p>
+        <div class="acoes-montagem">
+          <button class="btn-primary" id="fin-gerar" type="button">
+            <i class="fa-solid fa-plus"></i> Gerar cobranças do mês</button>
+          <button class="btn-secondary" id="fin-pix" type="button">
+            <i class="fa-brands fa-pix"></i> Ver chave PIX</button>
+        </div>
+        <div class="js-aviso-fin hidden"></div>
+        <div class="js-fin-lista" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-heart-crack"></i> Alunos em risco</h3>
+        <p class="nota-bloco">
+          Quem está devendo ou sumiu do treino. O mercado chama de "grupo de risco";
+          falar com eles antes de perder o aluno é o que segura a receita.
+        </p>
+        <div class="js-fin-risco"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-list-check"></i> Histórico de pagamentos</h3>
+        <div class="js-tabela-pagamentos"></div>
+      </div>
+    </section>
+
+    <!-- ============ ABA: FOTOS E VÍDEOS ============ -->
+
+    <!-- ============ ABA: CATRACA / ACESSO ============ -->
+    <section id="painel-catraca" class="painel-aba">
+      <div class="tiles ad-kpis">
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-door-open"></i>
+          <b class="js-cat-hoje">0</b>
+          <span>Entradas hoje</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-users"></i>
+          <b class="js-cat-dentro">0</b>
+          <span>Treinando agora</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-clock"></i>
+          <b class="js-cat-pico">—</b>
+          <span>Horário de pico</span>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-barcode"></i> Validar entrada</h3>
+        <p class="nota-bloco">
+          Digite a matrícula ou o CPF do aluno. O sistema confere se o cadastro está
+          ativo e se a mensalidade está em dia. Quem estiver devendo, não entra.
+        </p>
+        <div class="add-amigo">
+          <input class="form-input" id="cat-codigo" placeholder="Matrícula ou CPF" inputmode="numeric">
+          <button class="btn-primary" id="cat-validar" type="button">
+            <i class="fa-solid fa-check"></i> Validar</button>
+        </div>
+        <div class="js-cat-resultado"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-unlock"></i> Controle da catraca</h3>
+        <div class="mural-estado">
+          <span class="mural-selo js-cat-selo">Aberta</span>
+          <div class="mural-botoes">
+            <button class="btn-primary" id="cat-abrir" type="button">
+              <i class="fa-solid fa-lock-open"></i> Abrir a catraca</button>
+            <button class="btn-secondary" id="cat-fechar" type="button">
+              <i class="fa-solid fa-lock"></i> Fechar a catraca</button>
+          </div>
+        </div>
+        <div class="js-aviso-cat hidden"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-list-ol"></i> Últimas entradas</h3>
+        <div class="js-cat-lista"></div>
+      </div>
+    </section>
+
+
+
+
+    <!-- ============ ABA: MONTAR TREINO (modelos) ============ -->
+    <section id="painel-montar" class="painel-aba">
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-file-pen"></i> Montar um treino-modelo</h3>
+        <p class="nota-bloco">
+          Monte o treino uma vez e aplique em quantos alunos quiser.
+          Escolha a modalidade, adicione os exercícios e salve.
+        </p>
+
+        <div class="modalidade-escolha">
+          <button class="modalidade js-modal" data-modal="leve"     type="button">
+            <span class="mo-bola" style="background:#00e676"></span>
+            <b>Leve</b><small>Adaptação e cargas leves</small>
+          </button>
+          <button class="modalidade js-modal" data-modal="moderado" type="button">
+            <span class="mo-bola" style="background:#ffb020"></span>
+            <b>Moderado</b><small>Volume e intensidade médios</small>
+          </button>
+          <button class="modalidade js-modal" data-modal="pesado"   type="button">
+            <span class="mo-bola" style="background:#e50914"></span>
+            <b>Pesado</b><small>Alto volume e força</small>
+          </button>
+        </div>
+
+        <div class="grade-form montagem-topo">
+          <div>
+            <label class="form-label">Modalidade escolhida</label>
+            <input class="form-input" id="mont-modalidade" readonly value="moderado">
+          </div>
+          <div>
+            <label class="form-label">Nome do treino *</label>
+            <input class="form-input" id="mont-nome" placeholder="Ex.: Leve — Adaptação 3x semana">
+          </div>
+          <div>
+            <label class="form-label">Descrição</label>
+            <input class="form-input" id="mont-objetivo" placeholder="Para quem está começando">
+          </div>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-plus"></i> Adicionar exercício</h3>
+        <div class="grade-form">
+          <div>
+            <label class="form-label">Exercício</label>
+            <input class="form-input" id="mont-ex-nome" list="lista-exercicios" placeholder="Ex.: Supino reto">
+            <datalist id="lista-exercicios"></datalist>
+          </div>
+          <div>
+            <label class="form-label">Grupo muscular</label>
+            <input class="form-input" id="mont-ex-grupo" list="lista-grupos" placeholder="Peito, costas...">
+            <datalist id="lista-grupos"></datalist>
+          </div>
+          <div>
+            <label class="form-label">Treino (letra)</label>
+            <select class="form-input" id="mont-ex-letra">
+              <option selected>A</option><option>B</option><option>C</option><option>D</option><option>E</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Séries</label>
+            <input class="form-input" id="mont-ex-series" type="number" min="1" max="10" value="3">
+          </div>
+          <div>
+            <label class="form-label">Repetições</label>
+            <input class="form-input" id="mont-ex-reps" placeholder="12 ou 8-10" value="12">
+          </div>
+          <div>
+            <label class="form-label">Carga sugerida</label>
+            <input class="form-input" id="mont-ex-carga" placeholder="Ex.: 20kg ou livre">
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label class="form-label">Desenho do exercício (GIF)</label>
+            <div class="escolher-gif">
+              <div class="gif-previa js-gif-previa">
+                <i class="fa-solid fa-image"></i>
+                <span>nenhum escolhido</span>
+              </div>
+              <div class="gif-acoes">
+                <button class="btn-secondary" id="mont-escolher-gif" type="button">
+                  <i class="fa-solid fa-folder-open"></i> Escolher o desenho
+                </button>
+                <button class="btn-mini" id="mont-tirar-gif" type="button">Tirar</button>
+              </div>
+              <input type="hidden" id="mont-ex-gif">
+            </div>
+          </div>
+          <div class="acoes-form">
+            <button class="btn-primary" id="mont-adicionar" type="button">
+              <i class="fa-solid fa-plus"></i> Adicionar</button>
+          </div>
+        </div>
+        <div class="js-aviso-montagem hidden"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-list-check"></i> Treino em montagem
+          <span class="pilula js-mont-modal">moderado</span></h3>
+        <div class="js-montagem-lista"></div>
+        <div class="acoes-montagem">
+          <button class="btn-primary" id="mont-salvar" type="button">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar como modelo</button>
+          <button class="btn-secondary" id="mont-limpar" type="button">
+            <i class="fa-solid fa-trash"></i> Limpar</button>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-box-archive"></i> Modelos guardados</h3>
+        <div class="filtro-modelos">
+          <button class="pilula-acao js-filtro-modelo ativo" data-f="todos" type="button">Todos</button>
+          <button class="pilula-acao js-filtro-modelo" data-f="leve" type="button">Leve</button>
+          <button class="pilula-acao js-filtro-modelo" data-f="moderado" type="button">Moderado</button>
+          <button class="pilula-acao js-filtro-modelo" data-f="pesado" type="button">Pesado</button>
+        </div>
+        <div class="js-lista-modelos"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-user-check"></i> Liberar treino para o aluno</h3>
+        <p class="nota-bloco">
+          Só aparece na área do aluno o treino que você liberar aqui.
+        </p>
+        <div class="grade-form">
+          <div>
+            <label class="form-label">Aluno *</label>
+            <select class="form-input" id="lib-aluno"></select>
+          </div>
+          <div>
+            <label class="form-label">Treino-modelo *</label>
+            <select class="form-input" id="lib-modelo"></select>
+          </div>
+          <div class="acoes-form">
+            <button class="btn-primary" id="lib-liberar" type="button">
+              <i class="fa-solid fa-check"></i> Liberar treino</button>
+            <button class="btn-secondary" id="lib-bloquear" type="button">
+              <i class="fa-solid fa-ban"></i> Bloquear</button>
+          </div>
+        </div>
+        <div class="js-aviso-liberar hidden"></div>
+      </div>
+    </section>
+
+    <!-- ============ ABA: PRODUTOS E VENDAS ============ -->
+    <section id="painel-produtos" class="painel-aba">
+      <div class="tiles ad-kpis">
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <b class="js-pd-total">0</b>
+          <span>Produtos cadastrados</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-hourglass-half"></i>
+          <b class="js-pd-aguardando">0</b>
+          <span>Pedidos aguardando</span>
+        </div>
+        <div class="tile ad-kpi">
+          <i class="fa-solid fa-sack-dollar"></i>
+          <b class="js-pd-vendido">0</b>
+          <span>Total vendido</span>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-plus"></i> Cadastrar produto</h3>
+        <p class="nota-bloco">
+          O que você cadastrar aqui aparece na loja do aluno, na hora.
+          Deixe o estoque vazio para não controlar quantidade.
+        </p>
+        <form id="form-novo-produto" class="grade-form">
+          <div>
+            <label class="form-label">Nome *</label>
+            <input class="form-input" id="pd-nome" placeholder="Ex.: Whey Protein 900g" required>
+          </div>
+          <div>
+            <label class="form-label">Preço (R$) *</label>
+            <input class="form-input" id="pd-preco" type="number" step="0.01" min="0" placeholder="189.90" required>
+          </div>
+          <div>
+            <label class="form-label">Categoria</label>
+            <input class="form-input" id="pd-categoria" list="lista-categorias" placeholder="Suplemento">
+            <datalist id="lista-categorias">
+              <option>Suplemento</option><option>Vestuário</option><option>Acessório</option><option>Outros</option>
+            </datalist>
+          </div>
+          <div>
+            <label class="form-label">Estoque (vazio = sem controle)</label>
+            <input class="form-input" id="pd-estoque" type="number" min="0" placeholder="10">
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label class="form-label">Foto do produto</label>
+            <div class="escolher-gif">
+              <div class="gif-previa js-foto-previa" id="pd-foto-previa">
+                <i class="fa-solid fa-image"></i>
+                <span>sem foto</span>
+              </div>
+              <div class="gif-acoes">
+                <button class="btn-secondary" id="pd-escolher-foto" type="button">
+                  <i class="fa-solid fa-camera"></i> Carregar foto
+                </button>
+                <button class="btn-mini" id="pd-tirar-foto" type="button">Tirar</button>
+                <span class="dica-mini">JPG ou PNG. A foto fica guardada no aparelho.</span>
+              </div>
+              <input type="file" id="pd-foto-arquivo" accept="image/*" hidden>
+              <input type="hidden" id="pd-foto">
+            </div>
+          </div>
+          <div class="acoes-form">
+            <button type="submit" class="btn-primary" id="pd-salvar"><i class="fa-solid fa-check"></i> Cadastrar</button>
+            <button type="button" class="btn-secondary" id="pd-cancelar-edicao" style="display:none;">
+              <i class="fa-solid fa-xmark"></i> Cancelar edição</button>
+          </div>
+        </form>
+        <div class="js-aviso-produto hidden"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-tags"></i> Produtos</h3>
+        <div class="js-lista-produtos-admin"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-receipt"></i> Vendas</h3>
+        <div class="js-lista-vendas"></div>
+      </div>
+    </section>
+    <section id="painel-site" class="painel-aba">
+<div class="bloco">
+        <h3><i class="fa-solid fa-newspaper"></i> A seção Sobre</h3>
+        <p class="nota-bloco">
+          Mude os textos, troque as fotos e escolha como cada faixa aparece.
+          O desenho do site continua o mesmo — só o conteúdo muda.
+        </p>
+        <div class="js-editor-sobre"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-layer-group"></i> Blocos novos do site</h3>
+        <p class="nota-bloco">
+          Crie um espaço novo — como a Ginástica Artística. Dê um título, escolha
+          a foto, escreva o conteúdo e escolha o desenho.
+        </p>
+        <div class="js-editor-blocos"></div>
+        <button class="btn-secondary" id="add-bloco" type="button" style="margin-top:14px;">
+          <i class="fa-solid fa-plus"></i> Adicionar um bloco novo</button>
+        <div class="js-aviso-bloco hidden"></div>
+      </div>
+
+<div class="bloco">
+        <h3><i class="fa-solid fa-pen-to-square"></i> Textos e contato</h3>
+        <div class="grade-form">
+          <div>
+            <label class="form-label">Slogan da abertura</label>
+            <input class="form-input" id="site-slogan">
+          </div>
+          <div>
+            <label class="form-label">Telefone (WhatsApp, só números)</label>
+            <input class="form-input" id="site-telefone" placeholder="5561991719246">
+          </div>
+          <div>
+            <label class="form-label">Endereço</label>
+            <input class="form-input" id="site-endereco">
+          </div>
+          <div>
+            <label class="form-label">Horários</label>
+            <input class="form-input" id="site-horarios">
+          </div>
+          <div class="acoes-form">
+            <button class="btn-primary" id="salvar-site"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+            <button class="btn-secondary" id="restaurar-site"><i class="fa-solid fa-rotate-left"></i> Restaurar padrão</button>
+          </div>
+        </div>
+        <div class="js-aviso-site hidden"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-robot"></i> Roteiros do L.A Bot</h3>
+        <p class="nota-bloco">
+          Estas são as respostas que o bot dá sozinho. O que ele não souber, ele encaminha para o seu WhatsApp.
+        </p>
+        <div class="js-lista-roteiros"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-key"></i> Acesso ao painel</h3>
+        <p class="nota-bloco">
+          Para entrar aqui, o visitante digita <b>/admin-academia-LA</b> no chat do L.A Bot e depois a senha.
+        </p>
+        <div class="caixa-alerta">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <b>Atenção de segurança</b>
+            <span>
+              A senha fica dentro do arquivo JavaScript, então alguém com conhecimento técnico consegue lê-la.
+              Isso serve para o projeto e para o uso interno, mas em produção precisa de login no servidor.
+            </span>
+          </div>
+        </div>
+      </div>
+
+<div class="bloco">
+        <h3><i class="fa-solid fa-image"></i> Fotos da academia</h3>
+        <p class="nota-bloco">
+          Estas são as fotos que o site mostra. Coloque o link da imagem nova no campo e salve —
+          o site passa a usar a nova na hora, sem mexer em código.
+        </p>
+        <div class="js-editor-fotos"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-film"></i> Vídeos e GIFs dos exercícios</h3>
+        <p class="nota-bloco">
+          Troque o vídeo de cada exercício da ficha. Aceita link do YouTube, GIF ou arquivo da pasta videos/.
+        </p>
+        <div class="js-editor-videos"></div>
+      </div>
+
+      <div class="bloco">
+        <h3><i class="fa-solid fa-rotate-left"></i> Voltar ao padrão</h3>
+        <p class="nota-bloco">Desfaz todas as suas trocas de mídia e volta para as originais.</p>
+        <button class="btn-secondary" id="restaurar-midia">
+          <i class="fa-solid fa-arrow-rotate-left"></i> Restaurar mídia original
+        </button>
+        <div class="js-aviso-midia hidden"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+  <!-- ================= MODAL: FICHA DE TREINO ================= -->
+  <div class="modal-overlay" id="modal-ficha">
+    <div class="modal-admin">
+      <div class="topo-modal">
+        <h3><i class="fa-solid fa-file-pen"></i> Ficha de <span class="js-ficha-aluno"></span></h3>
+        <i class="fa-solid fa-xmark js-fechar-ficha" style="cursor:pointer; font-size:1.2rem;"></i>
+      </div>
+      <div class="js-ficha-conteudo"></div>
+      <div class="acoes-modal">
+        <button class="btn-secondary js-add-exercicio"><i class="fa-solid fa-plus"></i> Exercício</button>
+        <button class="btn-primary js-fechar-ficha"><i class="fa-solid fa-check"></i> Concluir</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/bot.js"></script>
+  <script src="js/treinos.js"></script>
+  <script src="js/modelos-treino.js"></script>
+  <script src="js/aluno-extra.js"></script>
+  <script src="js/loja.js"></script>
+  <script src="js/financeiro.js"></script>
+  <script src="js/conversas.js"></script>
+  <script src="js/mural.js"></script>
+  <script src="js/montar-treino.js"></script>
+  <script src="js/dataset.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app-admin.js"></script>
+  <script src="js/app-admin-msg.js"></script>
+  <script src="js/app-admin-fin.js"></script>
+  <script src="js/app-admin-catraca.js"></script>
+  <script src="js/emojis.js"></script>
+
+
+  <script>
+    /* aba de conteúdo: carrega, salva e restaura os textos do site */
+    document.addEventListener('DOMContentLoaded', function () {
+      const c = laGarantirConteudo();
+      const g = document.getElementById.bind(document);
+      g('site-slogan').value   = c.geral.slogan   || '';
+      g('site-telefone').value = c.geral.telefone || '';
+      g('site-endereco').value = c.geral.endereco || '';
+      g('site-horarios').value = c.geral.horarios || '';
+
+      /* roteiros em modo leitura */
+      const lista = document.querySelector('.js-lista-roteiros');
+      if (lista) {
+        lista.innerHTML = (c.roteiros || []).map(function (r) {
+          return '<div class="roteiro">' +
+                   '<div class="gatilhos">' + (r.gatilhos || []).map(function (x) {
+                     return '<span class="pilula">' + laEscapar(x) + '</span>';
+                   }).join('') + '</div>' +
+                   '<p>' + r.resposta + '</p>' +
+                 '</div>';
+        }).join('') || '<p class="vazio">Nenhum roteiro.</p>';
+      }
+
+      document.getElementById('salvar-site').addEventListener('click', function () {
+        c.geral.slogan   = g('site-slogan').value;
+        c.geral.telefone = g('site-telefone').value.replace(/\D/g, '');
+        c.geral.endereco = g('site-endereco').value;
+        c.geral.horarios = g('site-horarios').value;
+        laSalvarConteudo(c);
+        const aviso = document.querySelector('.js-aviso-site');
+        aviso.textContent = 'Conteúdo salvo. O site já mostra os novos textos.';
+        aviso.classList.remove('hidden');
+        setTimeout(function () { aviso.classList.add('hidden'); }, 4000);
+      });
+
+      document.getElementById('restaurar-site').addEventListener('click', function () {
+        if (!confirm('Restaurar todos os textos originais? O que você editou será perdido.')) return;
+        laSalvarConteudo(laPadrao());
+        location.reload();
+      });
+    });
+  </script>
+
+  <script>
+  /* ==========================================================================
+     ABAS TREINOS · LOJA · CORRIDAS
+     Preenche as tres telas que faltavam, usando as funcoes que ja existem
+     em treinos.js (fichas e exercicios) e shell.js (corridas e reservas).
+     Tudo dentro de guardas: se uma funcao faltar, a tela avisa em vez de quebrar.
+     ========================================================================== */
+  document.addEventListener('DOMContentLoaded', function () {
+
+    function casa(sel) { return document.querySelector(sel); }
+    function semDados(sel, msg) {
+      const el = casa(sel);
+      if (el) el.innerHTML = '<p class="vazio">' + (msg || 'Nada por aqui ainda.') + '</p>';
+    }
+    function quando(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('pt-BR') + ' ' +
+               d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      } catch (e) { return iso || '—'; }
+    }
+
+    /* ---------------- CORRIDAS ---------------- */
+    function pintarCorridas() {
+      const todas = [];
+      try {
+        (laListarAlunos() || []).forEach(function (a) {
+          if (typeof laCorridas !== 'function') return;
+          (laCorridas(a.id) || []).forEach(function (c) {
+            todas.push({ aluno: a.nome, segundos: c.segundos || 0,
+                         distancia: c.distancia || 0, quando: c.quando });
+          });
+        });
+      } catch (e) { console.warn('Corridas:', e); }
+
+      todas.sort(function (x, y) { return String(y.quando).localeCompare(String(x.quando)); });
+
+      const seg = todas.reduce(function (s, c) { return s + c.segundos; }, 0);
+      const km  = todas.reduce(function (s, c) { return s + c.distancia; }, 0);
+
+      const set = function (sel, v) { const el = casa(sel); if (el) el.textContent = v; };
+      set('.js-c-total', todas.length);
+      set('.js-c-tempo', typeof laDuracao === 'function' ? laDuracao(seg) : seg + 's');
+      set('.js-c-distancia', km.toFixed(2).replace('.', ','));
+
+      const el = casa('.js-tabela-corridas');
+      if (!el) return;
+      if (!todas.length) { semDados('.js-tabela-corridas', 'Nenhuma corrida registrada ainda.'); return; }
+      el.innerHTML = '<div class="tabela-simples">' +
+        '<div class="linha-cabeca"><span>Aluno</span><span>Tempo</span><span>Distância</span><span>Quando</span></div>' +
+        todas.map(function (c) {
+          return '<div class="linha-dado">' +
+                   '<span>' + laEscapar(c.aluno) + '</span>' +
+                   '<span>' + (typeof laDuracao === 'function' ? laDuracao(c.segundos) : c.segundos + 's') + '</span>' +
+                   '<span>' + (c.distancia ? c.distancia.toFixed(2).replace('.', ',') + ' km' : '—') + '</span>' +
+                   '<span>' + quando(c.quando) + '</span>' +
+                 '</div>';
+        }).join('') + '</div>';
+    }
+
+    /* ---------------- LOJA ---------------- */
+    function pintarLoja() {
+      let reservas = [];
+      try {
+        (laListarAlunos() || []).forEach(function (a) {
+          (a.pedidos || a.reservas || []).forEach(function (p) {
+            reservas.push({ aluno: a.nome, produto: p.produto || p.nome || '—',
+                            preco: p.preco || '—', quando: p.quando });
+          });
+        });
+      } catch (e) { console.warn('Loja:', e); }
+
+      const elRes = casa('.js-tabela-pedidos');
+      if (elRes) {
+        if (!reservas.length) {
+          elRes.innerHTML = '<p class="vazio">Nenhuma reserva registrada ainda.</p>';
+        } else {
+          elRes.innerHTML = '<div class="tabela-simples">' +
+            '<div class="linha-cabeca"><span>Aluno</span><span>Produto</span><span>Preço</span><span>Quando</span></div>' +
+            reservas.map(function (p) {
+              return '<div class="linha-dado">' +
+                       '<span>' + laEscapar(p.aluno) + '</span>' +
+                       '<span>' + laEscapar(p.produto) + '</span>' +
+                       '<span>' + laEscapar(String(p.preco)) + '</span>' +
+                       '<span>' + quando(p.quando) + '</span>' +
+                     '</div>';
+            }).join('') + '</div>';
+        }
+      }
+
+      /* produtos que aparecem na loja do aluno */
+      const PRODUTOS = [
+        { nome: 'Coqueteleira L.A',       preco: 'R$ 35,00' },
+        { nome: 'Camiseta L.A Fitness',   preco: 'R$ 79,90' },
+        { nome: 'Regata treino',          preco: 'R$ 69,90' },
+        { nome: 'Luva de musculação',     preco: 'R$ 59,90' },
+        { nome: 'Corda de pular',         preco: 'R$ 39,90' },
+        { nome: 'Elástico de resistência', preco: 'R$ 49,90' },
+        { nome: 'Cinto lombar',           preco: 'R$ 129,90' },
+        { nome: 'Whey protein (dose)',    preco: 'R$ 18,00' }
+      ];
+      const elProd = casa('.js-lista-produtos');
+      if (elProd) {
+        elProd.innerHTML = PRODUTOS.map(function (p) {
+          return '<div class="linha-produto">' +
+                   '<b>' + laEscapar(p.nome) + '</b>' +
+                   '<span class="preco-produto">' + p.preco + '</span>' +
+                 '</div>';
+        }).join('');
+      }
+    }
+
+    /* ---------------- TREINOS: o admin.js ja pinta fichas e exercicios ---------------- */
+    /* so precisa repintar quando a aba abre, porque o admin.js pinta no inicio */
+    function repintarTreinos() {
+      try {
+        if (typeof LAAdmin !== 'undefined' && LAAdmin.pintarFichas) LAAdmin.pintarFichas();
+        if (typeof LAAdmin !== 'undefined' && LAAdmin.pintarExercicios) LAAdmin.pintarExercicios();
+      } catch (e) { console.warn('Treinos:', e); }
+    }
+
+    /* ---------------- liga a repintura ao clique nas abas ---------------- */
+    document.querySelectorAll('[data-aba-admin]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        const qual = b.getAttribute('data-aba-admin');
+        if (qual === 'treinos') repintarTreinos();
+        if (qual === 'loja')    pintarLoja();
+        if (qual === 'corridas') pintarCorridas();
+      });
+    });
+
+    /* exposto para a navegacao unica alcancar estas funcoes */
+    window._admCorridas   = pintarCorridas;
+    window._admLoja       = pintarLoja;
+    window._admTreinos    = repintarTreinos;
+
+    /* primeira pintura */
+    pintarLoja();
+    pintarCorridas();
+    repintarTreinos();
+  });
+  </script>
+
+  <script>
+  /* ==========================================================================
+     PAINEL — MENSAGENS, PAGAMENTOS E EDITOR DE MIDIA
+     Usa as funcoes de aluno-extra.js (mensagens e pagamentos) e a camada de
+     conteudo do dados.js (textos e imagens do site).
+     ========================================================================== */
+  document.addEventListener('DOMContentLoaded', function () {
+
+    var alunoAberto = null;
+
+    function q(sel) { return document.querySelector(sel); }
+    function set(sel, v) { var e = q(sel); if (e) e.textContent = v; }
+
+    /* ---------------- MENSAGENS ---------------- */
+    function pintarConversas() {
+      var casa = q('.js-lista-conversas');
+      if (!casa) return;
+      var lista = (typeof laConversasComNovidade === 'function') ? laConversasComNovidade() : [];
+      var badge = q('.js-ad-badge');
+      var total = lista.reduce(function (s, c) { return s + (c.naoLidas || 0); }, 0);
+      if (badge) { badge.textContent = total; badge.classList.toggle('hidden', total === 0); }
+
+      if (!lista.length) {
+        casa.innerHTML = '<p class="vazio">Nenhuma conversa ainda.</p>';
+        return;
+      }
+      casa.innerHTML = lista.map(function (c) {
+        return '<button class="item-conversa js-abrir-conversa' +
+                 (alunoAberto === c.alunoId ? ' ativo' : '') + '" data-id="' + c.alunoId + '">' +
+                 '<div class="conv-topo"><b>' + laEscapar(c.aluno || 'Aluno') + '</b>' +
+                 (c.naoLidas ? '<span class="pilula nao-lida">' + c.naoLidas + ' nova(s)</span>' : '') +
+                 '</div>' +
+                 '<span class="conv-trecho">' + laEscapar(String(c.ultimoTexto || '').slice(0, 70)) + '</span>' +
+                 '<span class="conv-hora">' + (new Date(c.ultima)).toLocaleString('pt-BR') + '</span>' +
+               '</button>';
+      }).join('');
+
+      casa.querySelectorAll('.js-abrir-conversa').forEach(function (b) {
+        b.addEventListener('click', function () {
+          alunoAberto = b.getAttribute('data-id');
+          if (typeof laMarcarLidasDoAlunoNoPainel === 'function') laMarcarLidasDoAlunoNoPainel(alunoAberto);
+          pintarConversas();
+          pintarConversaAberta();
+        });
+      });
+    }
+
+    function pintarConversaAberta() {
+      var casa = q('.js-conversa-admin');
+      var form = document.getElementById('form-resposta-admin');
+      var nome = q('.js-conversa-nome');
+      if (!casa) return;
+
+      if (!alunoAberto) {
+        casa.innerHTML = '<p class="vazio">Escolha uma conversa à esquerda.</p>';
+        if (form) form.style.display = 'none';
+        if (nome) nome.textContent = 'Selecione uma conversa';
+        return;
+      }
+
+      var aluno = (typeof laBuscarAluno === 'function') ? laBuscarAluno(alunoAberto) : null;
+      if (nome) nome.textContent = aluno ? aluno.nome : 'Aluno';
+      if (form) form.style.display = 'flex';
+
+      var msgs = (typeof laListarMensagens === 'function') ? laListarMensagens(alunoAberto) : [];
+      if (!msgs.length) {
+        casa.innerHTML = '<p class="vazio">Nenhuma mensagem nesta conversa.</p>';
+        return;
+      }
+      casa.innerHTML = '<div class="conversa-corpo" id="conv-admin-corpo">' +
+        msgs.map(function (m) {
+          var doAluno = m.de === 'aluno';
+          return '<div class="bolha ' + (doAluno ? 'bolha-academia' : 'bolha-aluno') + '">' +
+                   '<div class="bolha-txt">' + laEscapar(m.texto) + '</div>' +
+                   '<span class="bolha-hora">' + (doAluno ? 'Aluno' : 'Academia') + ' · ' +
+                     (new Date(m.quando)).toLocaleString('pt-BR') + '</span>' +
+                 '</div>';
+        }).join('') + '</div>';
+      var corpo = document.getElementById('conv-admin-corpo');
+      if (corpo) corpo.scrollTop = corpo.scrollHeight;
+    }
+
+    var formResp = document.getElementById('form-resposta-admin');
+    if (formResp) {
+      formResp.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var campo = document.getElementById('resposta-admin');
+        if (!campo || !campo.value.trim() || !alunoAberto) return;
+        if (typeof laResponderMensagem === 'function') {
+          laResponderMensagem(alunoAberto, campo.value);
+        }
+        campo.value = '';
+        pintarConversas();
+        pintarConversaAberta();
+      });
+    }
+
+    /* ---------------- PAGAMENTOS ---------------- */
+    function pintarPagamentos() {
+      var casa = q('.js-tabela-pagamentos');
+      if (!casa) return;
+      var lista = (typeof laTodosPagamentos === 'function') ? laTodosPagamentos() : [];
+
+      var aguardando = lista.filter(function (p) { return p.status !== 'pago'; });
+      var pagos = lista.filter(function (p) { return p.status === 'pago'; });
+      var total = pagos.reduce(function (s, p) { return s + Number(p.valor || 0); }, 0);
+
+      set('.js-pg-aguardando', aguardando.length);
+      set('.js-pg-pagos', pagos.length);
+      set('.js-pg-total', 'R$ ' + total.toFixed(2).replace('.', ','));
+
+      if (!lista.length) {
+        casa.innerHTML = '<p class="vazio">Nenhum pagamento registrado ainda.</p>';
+        return;
+      }
+
+      casa.innerHTML = '<div class="tabela-simples">' +
+        '<div class="linha-cabeca"><span>Aluno</span><span>Mês</span><span>Valor</span><span>Situação</span></div>' +
+        lista.map(function (p) {
+          var pago = p.status === 'pago';
+          return '<div class="linha-dado">' +
+                   '<span>' + laEscapar(p.aluno || '—') + '</span>' +
+                   '<span>' + (typeof laNomeCompetencia === 'function' ? laNomeCompetencia(p.competencia) : p.competencia) + '</span>' +
+                   '<span>R$ ' + Number(p.valor || 0).toFixed(2).replace('.', ',') + '</span>' +
+                   '<span>' + (pago
+                     ? '<span class="pilula pago">Pago</span>'
+                     : '<button class="btn-mini js-confirmar-pg" data-id="' + p.id + '">Confirmar</button>') +
+                   '</span>' +
+                 '</div>';
+        }).join('') + '</div>';
+
+      casa.querySelectorAll('.js-confirmar-pg').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (typeof laConfirmarPagamento === 'function') {
+            laConfirmarPagamento(b.getAttribute('data-id'));
+          }
+          pintarPagamentos();
+        });
+      });
+    }
+
+    /* ---------------- EDITOR DE MIDIA ---------------- */
+    var FOTOS = [
+      { chave: 'fachada',   rotulo: 'Fachada / logo',        padrao: 'img/fachada-logo.jpg' },
+      { chave: 'musculacao', rotulo: 'Sala de musculação',   padrao: 'img/musculacao.jpg' },
+      { chave: 'halteres',  rotulo: 'Estante de halteres',   padrao: 'img/halteres-estante.jpg' },
+      { chave: 'cordas',    rotulo: 'Cordas e cintos',       padrao: 'img/cordas-cintos.jpg' },
+      { chave: 'ginastica', rotulo: 'Ginástica infantil',    padrao: '' },
+      { chave: 'costas',    rotulo: 'Treino de costas',      padrao: '' }
+    ];
+
+    function lerMidia() {
+      try {
+        var c = (typeof laGarantirConteudo === 'function') ? laGarantirConteudo() : {};
+        return (c.midia && typeof c.midia === 'object') ? c.midia : {};
+      } catch (e) { return {}; }
+    }
+
+    function salvarMidia(m) {
+      try {
+        var c = (typeof laGarantirConteudo === 'function') ? laGarantirConteudo() : {};
+        c.midia = m;
+        if (typeof laSalvarConteudo === 'function') laSalvarConteudo(c);
+        return true;
+      } catch (e) { return false; }
+    }
+
+    function pintarFotos() {
+      var casa = q('.js-editor-fotos');
+      if (!casa) return;
+      var m = lerMidia();
+      casa.innerHTML = FOTOS.map(function (f) {
+        var trocada = !!m[f.chave];
+        var atual = m[f.chave] || f.padrao;
+        return '<div class="editor-linha">' +
+                 '<img class="editor-thumb" src="' + laEscapar(atual) + '" alt="' + laEscapar(f.rotulo) + '" ' +
+                   'onerror="this.style.opacity=.25">' +
+                 '<div class="editor-campos">' +
+                   '<label class="form-label">' + laEscapar(f.rotulo) +
+                     (trocada ? ' <small class="troca-selo">trocada</small>' : '') + '</label>' +
+                   '<input class="form-input js-foto" data-chave="' + f.chave + '" value="' + laEscapar(atual) + '">' +
+                 '</div>' +
+                 '<div class="editor-acoes">' +
+                   '<button class="btn-secondary btn-mini js-carregar-foto" data-chave="' + f.chave + '">' +
+                     '<i class="fa-solid fa-camera"></i> Carregar</button>' +
+                   '<button class="btn-mini js-salvar-foto" data-chave="' + f.chave + '">Salvar</button>' +
+                   (trocada
+                     ? '<button class="btn-mini js-remover-foto" data-chave="' + f.chave + '">Voltar ao original</button>'
+                     : '') +
+                 '</div>' +
+                 '<input type="file" class="js-foto-arquivo" data-chave="' + f.chave + '" accept="image/*" hidden>' +
+               '</div>';
+      }).join('');
+
+      /* carregar foto do aparelho */
+      casa.querySelectorAll('.js-carregar-foto').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var chave = b.getAttribute('data-chave');
+          var arq = casa.querySelector('.js-foto-arquivo[data-chave="' + chave + '"]');
+          if (arq) arq.click();
+        });
+      });
+
+      casa.querySelectorAll('.js-foto-arquivo').forEach(function (arq) {
+        arq.addEventListener('change', function () {
+          var chave = arq.getAttribute('data-chave');
+          var f = arq.files && arq.files[0];
+          if (!f) return;
+          if (f.size > 2 * 1024 * 1024) {
+            avisarMidia('A imagem é grande (mais de 2MB). Escolha uma menor.');
+            return;
+          }
+          var leitor = new FileReader();
+          leitor.onload = function () {
+            var m2 = lerMidia();
+            m2[chave] = leitor.result;
+            salvarMidia(m2);
+            avisarMidia('Foto trocada! O site já está usando a nova.');
+            pintarFotos();
+          };
+          leitor.readAsDataURL(f);
+        });
+      });
+
+      /* voltar ao original */
+      casa.querySelectorAll('.js-remover-foto').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var chave = b.getAttribute('data-chave');
+          if (!confirm('Voltar esta foto para a original?')) return;
+          var m2 = lerMidia();
+          delete m2[chave];
+          salvarMidia(m2);
+          avisarMidia('Foto original de volta.');
+          pintarFotos();
+        });
+      });
+
+      casa.querySelectorAll('.js-salvar-foto').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var chave = b.getAttribute('data-chave');
+          var campo = casa.querySelector('.js-foto[data-chave="' + chave + '"]');
+          if (!campo) return;
+          var m2 = lerMidia();
+          m2[chave] = campo.value.trim() || FOTOS.filter(function (f) { return f.chave === chave; })[0].padrao;
+          salvarMidia(m2);
+          avisarMidia('Foto "' + chave + '" salva. O site já usa a nova.');
+          pintarFotos();
+          pintarVideos();
+        });
+      });
+    }
+
+    function pintarVideos() {
+      var casa = q('.js-editor-videos');
+      if (!casa) return;
+
+      var exs = (typeof laListarExercicios === 'function') ? laListarExercicios() : [];
+
+      /* em vez de despejar todos, mostra busca + os que a dona escolher */
+      casa.innerHTML =
+        '<div class="video-barra">' +
+          '<input class="form-input" id="busca-video" placeholder="Buscar o exercício para trocar o vídeo">' +
+          '<button class="btn-secondary" id="ver-trocados" type="button">' +
+            '<i class="fa-solid fa-list"></i> Ver só os que troquei</button>' +
+        '</div>' +
+        '<p class="nota-bloco js-video-conta"></p>' +
+        '<div class="js-video-lista"></div>';
+
+      var campo = document.getElementById('busca-video');
+      var botao = document.getElementById('ver-trocados');
+      var soTrocados = false;
+
+      function desenhar() {
+        var lista = document.querySelector('.js-video-lista');
+        var conta = document.querySelector('.js-video-conta');
+        if (!lista) return;
+
+        var m = lerMidia();
+        var termo = campo ? campo.value.toLowerCase().trim() : '';
+
+        var comTrocado = exs.filter(function (e) { return !!m['ex_' + e.id]; });
+
+        var mostrar = exs;
+        if (soTrocados) mostrar = comTrocados;
+        if (termo) {
+          mostrar = mostrar.filter(function (e) {
+            return String(e.nome || '').toLowerCase().indexOf(termo) !== -1 ||
+                   String(e.grupo || '').toLowerCase().indexOf(termo) !== -1;
+          });
+        }
+
+        if (conta) {
+          conta.textContent = exs.length
+            ? exs.length + ' exercícios no banco · ' + comTrocados.length + ' com vídeo trocado'
+            : 'Nenhum exercício cadastrado ainda.';
+        }
+
+        if (!mostrar.length) {
+          lista.innerHTML = '<p class="vazio">' +
+            (termo ? 'Nada encontrado para essa busca.'
+                   : (soTrocados ? 'Você ainda não trocou nenhum vídeo.' : 'Nenhum exercício cadastrado.')) +
+            '</p>';
+          return;
+        }
+
+        /* no máximo 30 por vez, para a tela não virar uma lista sem fim */
+        lista.innerHTML = mostrar.slice(0, 30).map(function (e) {
+          var atual = m['ex_' + e.id] || e.video || '';
+          return '<div class="editor-linha">' +
+                   (atual
+                     ? '<img class="editor-thumb" src="' + laEscapar(atual) + '" alt="" ' +
+                         'onerror="this.style.opacity=.2">'
+                     : '<div class="editor-thumb vazio-thumb"><i class="fa-solid fa-film"></i></div>') +
+                   '<div class="editor-campos">' +
+                     '<label class="form-label">' + laEscapar(e.nome) +
+                       (e.grupo ? ' · ' + laEscapar(e.grupo) : '') +
+                       (m['ex_' + e.id] ? ' <small class="troca-selo">trocado</small>' : '') + '</label>' +
+                     '<input class="form-input js-video-ex" data-id="' + laEscapar(e.id) + '" ' +
+                       'placeholder="videos/arquivo.gif ou link do YouTube" value="' + laEscapar(atual) + '">' +
+                   '</div>' +
+                   '<div class="editor-acoes">' +
+                     '<button class="btn-mini js-salvar-video" data-id="' + laEscapar(e.id) + '">Salvar</button>' +
+                     (m['ex_' + e.id]
+                       ? '<button class="btn-mini js-remover-video" data-id="' + laEscapar(e.id) + '">Voltar ao original</button>'
+                       : '') +
+                   '</div>' +
+                 '</div>';
+        }).join('') +
+        (mostrar.length > 30
+          ? '<p class="nota-bloco">Mostrando 30 de ' + mostrar.length + '. Use a busca para achar o resto.</p>'
+          : '');
+
+        /* salvar */
+        lista.querySelectorAll('.js-salvar-video').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var id = b.getAttribute('data-id');
+            var campoEx = lista.querySelector('.js-video-ex[data-id="' + id + '"]');
+            if (!campoEx) return;
+            var m2 = lerMidia();
+            m2['ex_' + id] = campoEx.value.trim();
+            salvarMidia(m2);
+            avisarMidia('Vídeo do exercício salvo.');
+            desenhar();
+          });
+        });
+
+        /* voltar ao original */
+        lista.querySelectorAll('.js-remover-video').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var id = b.getAttribute('data-id');
+            var m2 = lerMidia();
+            delete m2['ex_' + id];
+            salvarMidia(m2);
+            avisarMidia('Vídeo original de volta.');
+            desenhar();
+          });
+        });
+      }
+
+      if (campo) campo.addEventListener('input', desenhar);
+      if (botao) {
+        botao.addEventListener('click', function () {
+          soTrocados = !soTrocados;
+          botao.innerHTML = soTrocados
+            ? '<i class="fa-solid fa-list"></i> Ver todos'
+            : '<i class="fa-solid fa-list"></i> Ver só os que troquei';
+          desenhar();
+        });
+      }
+
+      desenhar();
+    }
+
+    function avisarMidia(txt) {
+      var a = q('.js-aviso-midia');
+      if (!a) return;
+      a.textContent = txt;
+      a.classList.remove('hidden');
+      setTimeout(function () { a.classList.add('hidden'); }, 3500);
+    }
+
+    var rest = document.getElementById('restaurar-midia');
+    if (rest) {
+      rest.addEventListener('click', function () {
+        if (!confirm('Desfazer todas as trocas de foto e vídeo?')) return;
+        salvarMidia({});
+        avisarMidia('Mídia restaurada para as originais.');
+        pintarFotos();
+        pintarVideos();
+      });
+    }
+
+    /* ---------------- liga a repintura ao clique nas abas ---------------- */
+    document.querySelectorAll('[data-aba-admin]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var qual = b.getAttribute('data-aba-admin');
+        if (qual === 'mensagens')  { pintarConversas(); pintarConversaAberta(); }
+        if (qual === 'pagamentos') pintarPagamentos();
+        if (qual === 'site' || qual === 'midia') { pintarFotos(); pintarVideos(); }
+        if (qual === 'montar')     { if (typeof LAAdminModelos !== 'undefined') { LAAdminModelos.pintarMontagem(); LAAdminModelos.pintarModelos(); LAAdminModelos.pintarLiberar(); } }
+        if (qual === 'produtos')   { if (typeof LAAdminLoja !== 'undefined') { LAAdminLoja.pintarProdutos(); LAAdminLoja.pintarVendas(); } }
+      });
+    });
+
+    /* exposto para a navegacao unica alcancar estas funcoes */
+    window._admConversas   = pintarConversas;
+    window._admConversas2  = pintarConversaAberta;
+    window._admPagamentos  = pintarPagamentos;
+    window._admFotos       = pintarFotos;
+    window._admVideos      = pintarVideos;
+
+    pintarConversas();
+    pintarConversaAberta();
+    pintarPagamentos();
+    pintarFotos();
+    pintarVideos();
+    try { if (typeof LAAdminModelos !== 'undefined') LAAdminModelos.iniciar(); }
+    catch (e) { console.warn('Modelos de treino:', e); }
+    try { if (typeof LAAdminLoja !== 'undefined') LAAdminLoja.iniciar(); }
+    catch (e) { console.warn('Loja do painel:', e); }
+  });
+  </script>
+  <script>
+/* ==========================================================================
+   PAINEL — MONTAR TREINO, PRODUTOS E VENDAS
+   ========================================================================== */
+
+const LAAdminLoja = {
+
+  rascunho: null,
+
+  iniciar() {
+    this.rascunho = laRascunho();
+    this.ligarMontagem();
+    this.ligarProdutos();
+    this.pintarMontagem();
+    this.pintarProdutos();
+    this.pintarVendas();
+  },
+
+  /* ==================== MONTAR TREINO ==================== */
+  ligarMontagem() {
+    const aluno = document.getElementById('mont-aluno');
+    if (aluno) {
+      /* lista de alunos */
+      const lista = (typeof laListarAlunos === 'function') ? laListarAlunos() : [];
+      aluno.innerHTML = '<option value="">— escolha o aluno —</option>' +
+        lista.map(function (a) {
+          return '<option value="' + a.id + '"' + (this.rascunho.alunoId === a.id ? ' selected' : '') + '>' +
+                 laEscapar(a.nome) + ' · ' + laEscapar(a.matricula || '') + '</option>';
+        }.bind(this)).join('');
+
+      /* se nao tem aluno nenhum, avisa */
+      if (!lista.length) {
+        aluno.innerHTML = '<option value="">Nenhum aluno cadastrado — cadastre na aba Alunos</option>';
+      }
+
+      aluno.addEventListener('change', () => {
+        this.rascunho.alunoId = aluno.value;
+        laSalvarRascunho(this.rascunho);
+        this.pintarMontagem();
+      });
+    }
+
+    ['mont-nome', 'mont-objetivo', 'mont-nivel'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const chave = id === 'mont-nome' ? 'nome' : id === 'mont-objetivo' ? 'objetivo' : 'nivel';
+      el.value = this.rascunho[chave] || el.value;
+      el.addEventListener('input', () => {
+        this.rascunho[chave] = el.value;
+        laSalvarRascunho(this.rascunho);
+      });
+      el.addEventListener('change', () => {
+        this.rascunho[chave] = el.value;
+        laSalvarRascunho(this.rascunho);
+      });
+    });
+
+    /* sugerir exercicios do banco */
+    const dl = document.getElementById('lista-exercicios');
+    if (dl && typeof laListarExercicios === 'function') {
+      dl.innerHTML = laListarExercicios().map(function (e) {
+        return '<option value="' + laEscapar(e.nome) + '">' + laEscapar(e.grupo || '') + '</option>';
+      }).join('');
+    }
+    const dg = document.getElementById('lista-grupos');
+    if (dg) {
+      const grupos = {};
+      (typeof laListarExercicios === 'function' ? laListarExercicios() : []).forEach(function (e) {
+        if (e.grupo) grupos[e.grupo] = 1;
+      });
+      dg.innerHTML = Object.keys(grupos).sort().map(function (g) {
+        return '<option value="' + laEscapar(g) + '">';
+      }).join('');
+    }
+
+    const add = document.getElementById('mont-adicionar');
+    if (add && !add._ligado) {
+      add._ligado = true;
+      add.addEventListener('click', () => this.adicionarExercicio());
+    }
+
+    const salvar = document.getElementById('mont-salvar');
+    if (salvar && !salvar._ligado) {
+      salvar._ligado = true;
+      salvar.addEventListener('click', () => this.salvarTreino());
+    }
+
+    const limpar = document.getElementById('mont-limpar');
+    if (limpar && !limpar._ligado) {
+      limpar._ligado = true;
+      limpar.addEventListener('click', () => {
+        if (!confirm('Limpar o treino em montagem?')) return;
+        laLimparRascunho();
+        this.rascunho = laRascunho();
+        this.pintarMontagem();
+      });
+    }
+  },
+
+  adicionarExercicio() {
+    const v = function (id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+    const nome = v('mont-ex-nome');
+    if (!nome) { this.avisar('Escreva o nome do exercício.'); return; }
+
+    this.rascunho.exercicios.push({
+      nome: nome,
+      grupo: v('mont-ex-grupo'),
+      letra: v('mont-ex-letra') || 'A',
+      series: Number(v('mont-ex-series')) || 3,
+      repeticoes: v('mont-ex-reps') || '12',
+      descanso: v('mont-ex-descanso') || '60s',
+      equipamento: '',
+      video: ''
+    });
+    laSalvarRascunho(this.rascunho);
+
+    ['mont-ex-nome', 'mont-ex-grupo'].forEach(function (id) {
+      const e = document.getElementById(id);
+      if (e) e.value = '';
+    });
+    this.pintarMontagem();
+  },
+
+  pintarMontagem() {
+    const casa = document.querySelector('.js-montagem-lista');
+    const pil = document.querySelector('.js-mont-aluno');
+    if (pil) {
+      const a = this.rascunho.alunoId && typeof laBuscarAluno === 'function'
+        ? laBuscarAluno(this.rascunho.alunoId) : null;
+      pil.textContent = a ? a.nome : 'nenhum aluno';
+    }
+    if (!casa) return;
+
+    const exs = this.rascunho.exercicios || [];
+    if (!exs.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum exercício ainda. Adicione acima.</p>';
+      return;
+    }
+
+    /* agrupa por letra */
+    const porLetra = {};
+    exs.forEach(function (e, i) {
+      const l = e.letra || 'A';
+      if (!porLetra[l]) porLetra[l] = [];
+      porLetra[l].push({ e: e, i: i });
+    });
+
+    casa.innerHTML = Object.keys(porLetra).sort().map(function (l) {
+      return '<div class="bloco-treino-mont">' +
+               '<div class="treino-letra">Treino ' + l + ' · ' + laNomeDoTreino(l) + '</div>' +
+               porLetra[l].map(function (x) {
+                 return '<div class="linha-mont-ex">' +
+                          '<span class="ordem">' + (x.i + 1) + '</span>' +
+                          '<b>' + laEscapar(x.e.nome) + '</b>' +
+                          '<span class="detalhe">' + x.e.series + 'x' + laEscapar(x.e.repeticoes) +
+                            ' · ' + laEscapar(x.e.descanso) + '</span>' +
+                          '<button class="btn-mini js-tirar-ex" data-i="' + x.i + '">Tirar</button>' +
+                        '</div>';
+               }).join('') +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('.js-tirar-ex').forEach((b) => {
+      b.addEventListener('click', () => {
+        const i = Number(b.getAttribute('data-i'));
+        this.rascunho.exercicios.splice(i, 1);
+        laSalvarRascunho(this.rascunho);
+        this.pintarMontagem();
+      });
+    });
+  },
+
+  salvarTreino() {
+    if (!this.rascunho.alunoId) { this.avisar('Escolha o aluno primeiro.'); return; }
+    if (!this.rascunho.exercicios.length) { this.avisar('Adicione pelo menos um exercício.'); return; }
+    if (!this.rascunho.nome) {
+      const a = laBuscarAluno(this.rascunho.alunoId);
+      this.rascunho.nome = 'Treino de ' + (a ? a.nome.split(' ')[0] : 'aluno');
+    }
+
+    const r = laMontarFicha();
+    if (!r.ok) { this.avisar(r.erro); return; }
+
+    this.avisar('Treino salvo! Já aparece na área do aluno.');
+    this.rascunho = laRascunho();
+    this.pintarMontagem();
+    if (typeof LAAdmin !== 'undefined' && LAAdmin.pintarFichas) LAAdmin.pintarFichas();
+  },
+
+  avisar(txt) {
+    const a = document.querySelector('.js-aviso-montagem');
+    if (!a) return;
+    a.textContent = txt;
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 4000);
+  },
+
+  /* ==================== PRODUTOS ==================== */
+  ligarProdutos() {
+    const form = document.getElementById('form-novo-produto');
+    if (form && !form._ligado) {
+      form._ligado = true;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const v = function (id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+        const nome = v('pd-nome');
+        const preco = v('pd-preco');
+        if (!nome || !preco) return;
+
+        laCriarProduto({
+          nome: nome,
+          preco: Number(preco),
+          categoria: v('pd-categoria') || 'Outros',
+          estoque: v('pd-estoque') === '' ? null : Number(v('pd-estoque')),
+          foto: v('pd-foto')
+        });
+        form.reset();
+        this.pintarProdutos();
+      });
+    }
+  },
+
+  pintarProdutos() {
+    /* a lista de produtos agora e desenhada por window.LAProdutos.pintar() */
+    if (window.LAProdutos && window.LAProdutos.pintar) { window.LAProdutos.pintar(); return; }
+    const casa = document.querySelector('.js-lista-produtos-admin');
+    if (!casa) return;
+    const lista = laListarProdutos();
+
+    set('.js-pd-total', lista.length);
+    set('.js-pd-aguardando', laListarCompras().filter(function (c) { return c.status === 'aguardando'; }).length);
+    set('.js-pd-vendido', 'R$ ' + laTotalVendido().toFixed(2).replace('.', ','));
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum produto cadastrado.</p>';
+      return;
+    }
+
+    casa.innerHTML = '<div class="tabela-simples">' +
+      '<div class="linha-cabeca"><span>Produto</span><span>Categoria</span><span>Preço</span><span>Estoque</span><span></span></div>' +
+      lista.map(function (p) {
+        const estoque = p.estoque == null ? '—' : (p.estoque <= 0 ? '<span class="pilula esgotado">Esgotado</span>' : p.estoque);
+        return '<div class="linha-dado">' +
+                 '<span>' + laEscapar(p.nome) + (p.ativo === false ? ' <small>(escondido)</small>' : '') + '</span>' +
+                 '<span>' + laEscapar(p.categoria || '') + '</span>' +
+                 '<span>R$ ' + Number(p.preco).toFixed(2).replace('.', ',') + '</span>' +
+                 '<span>' + estoque + '</span>' +
+                 '<span class="acoes-linha">' +
+                   '<button class="btn-mini js-toggle-prod" data-id="' + p.id + '">' +
+                     (p.ativo === false ? 'Mostrar' : 'Esconder') + '</button>' +
+                   '<button class="btn-mini js-apagar-prod" data-id="' + p.id + '">Apagar</button>' +
+                 '</span>' +
+               '</div>';
+      }).join('') + '</div>';
+
+    function set(sel, v) { const e = document.querySelector(sel); if (e) e.textContent = v; }
+
+    casa.querySelectorAll('.js-toggle-prod').forEach((b) => {
+      b.addEventListener('click', () => {
+        const p = laBuscarProduto(b.getAttribute('data-id'));
+        if (!p) return;
+        laAtualizarProduto(p.id, { ativo: p.ativo === false });
+        this.pintarProdutos();
+      });
+    });
+    casa.querySelectorAll('.js-apagar-prod').forEach((b) => {
+      b.addEventListener('click', () => {
+        if (!confirm('Apagar este produto?')) return;
+        laExcluirProduto(b.getAttribute('data-id'));
+        this.pintarProdutos();
+      });
+    });
+  },
+
+  /* ==================== VENDAS ==================== */
+  pintarVendas() {
+    const casa = document.querySelector('.js-lista-vendas');
+    if (!casa) return;
+    const lista = laListarCompras().sort(function (a, b) {
+      return String(b.quando).localeCompare(String(a.quando));
+    });
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhuma venda ainda.</p>';
+      return;
+    }
+
+    const rot = { aguardando: 'Aguardando', pago: 'Pago', entregue: 'Entregue', cancelado: 'Cancelado' };
+
+    casa.innerHTML = lista.map(function (c) {
+      const itens = (c.itens || []).map(function (i) {
+        return i.quantidade + 'x ' + laEscapar(i.nome);
+      }).join(', ');
+      return '<div class="cartao-venda">' +
+               '<div class="venda-topo">' +
+                 '<div><b>' + laEscapar(c.aluno || 'Aluno') + '</b>' +
+                 '<span>' + new Date(c.quando).toLocaleString('pt-BR') + '</span></div>' +
+                 '<span class="valor-pag">R$ ' + Number(c.total).toFixed(2).replace('.', ',') + '</span>' +
+               '</div>' +
+               '<p class="venda-itens">' + itens + '</p>' +
+               '<div class="venda-acoes">' +
+                 (c.status === 'aguardando'
+                   ? '<button class="btn-mini js-pago" data-id="' + c.id + '">Confirmar pagamento</button>'
+                   : '') +
+                 (c.status === 'pago'
+                   ? '<button class="btn-mini js-entregue" data-id="' + c.id + '">Marcar entregue</button>'
+                   : '') +
+                 '<span class="pilula">' + (rot[c.status] || c.status) + '</span>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('.js-pago').forEach((b) => {
+      b.addEventListener('click', () => { laAtualizarCompra(b.getAttribute('data-id'), 'pago'); this.pintarVendas(); this.pintarProdutos(); });
+    });
+    casa.querySelectorAll('.js-entregue').forEach((b) => {
+      b.addEventListener('click', () => { laAtualizarCompra(b.getAttribute('data-id'), 'entregue'); this.pintarVendas(); });
+    });
+  }
+};
+</script>
+  <script>
+/* ==========================================================================
+   PAINEL — MODELOS DE TREINO (leve / moderado / pesado)
+   ========================================================================== */
+
+const LAAdminModelos = {
+
+  rascunho: null,
+  filtro: 'todos',
+
+  iniciar() {
+    this.rascunho = this.novoRascunho();
+    this.ligar();
+    this.pintarMontagem();
+    this.pintarModelos();
+    this.pintarLiberar();
+  },
+
+  novoRascunho() {
+    return { modalidade: 'moderado', nome: '', objetivo: '', exercicios: [] };
+  },
+
+  ligar() {
+    /* escolha da modalidade */
+    document.querySelectorAll('.js-modal').forEach((b) => {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.js-modal').forEach(function (x) { x.classList.remove('ativo'); });
+        b.classList.add('ativo');
+        this.rascunho.modalidade = b.getAttribute('data-modal');
+        const campo = document.getElementById('mont-modalidade');
+        if (campo) campo.value = this.rascunho.modalidade;
+        const pil = document.querySelector('.js-mont-modal');
+        if (pil) pil.textContent = this.rascunho.modalidade;
+      });
+    });
+
+    ['mont-nome', 'mont-objetivo'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        this.rascunho[id === 'mont-nome' ? 'nome' : 'objetivo'] = el.value;
+      });
+    });
+
+    /* sugestões do banco */
+    const dl = document.getElementById('lista-exercicios');
+    if (dl && typeof laListarExercicios === 'function') {
+      dl.innerHTML = laListarExercicios().map(function (e) {
+        return '<option value="' + laEscapar(e.nome) + '">' + laEscapar(e.grupo || '') + '</option>';
+      }).join('');
+    }
+    const dg = document.getElementById('lista-grupos');
+    if (dg) {
+      const g = {};
+      (typeof laListarExercicios === 'function' ? laListarExercicios() : []).forEach(function (e) {
+        if (e.grupo) g[e.grupo] = 1;
+      });
+      dg.innerHTML = Object.keys(g).sort().map(function (x) {
+        return '<option value="' + laEscapar(x) + '">';
+      }).join('');
+    }
+
+    const add = document.getElementById('mont-adicionar');
+    if (add && !add._ligado) { add._ligado = true; add.addEventListener('click', () => this.adicionar()); }
+
+    const salvar = document.getElementById('mont-salvar');
+    if (salvar && !salvar._ligado) { salvar._ligado = true; salvar.addEventListener('click', () => this.salvar()); }
+
+    const limpar = document.getElementById('mont-limpar');
+    if (limpar && !limpar._ligado) {
+      limpar._ligado = true;
+      limpar.addEventListener('click', () => {
+        if (!confirm('Limpar o treino em montagem?')) return;
+        this.rascunho = this.novoRascunho();
+        this.pintarMontagem();
+      });
+    }
+
+    const liberar = document.getElementById('lib-liberar');
+    if (liberar && !liberar._ligado) { liberar._ligado = true; liberar.addEventListener('click', () => this.liberar()); }
+
+    const bloquear = document.getElementById('lib-bloquear');
+    if (bloquear && !bloquear._ligado) {
+      bloquear._ligado = true;
+      bloquear.addEventListener('click', () => {
+        const sel = document.getElementById('lib-aluno');
+        if (!sel || !sel.value) { this.avisarLink('Escolha o aluno.'); return; }
+        laBloquearTreino(sel.value);
+        this.avisarLink('Treino bloqueado: não aparece mais na área do aluno.');
+        this.pintarLiberar();
+      });
+    }
+
+    document.querySelectorAll('.js-filtro-modelo').forEach((b) => {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.js-filtro-modelo').forEach(function (x) { x.classList.remove('ativo'); });
+        b.classList.add('ativo');
+        this.filtro = b.getAttribute('data-f');
+        this.pintarModelos();
+      });
+    });
+
+    /* botao de enviar o link no cadastro do aluno */
+    const link = document.querySelector('.js-enviar-link');
+    if (link && !link._ligado) {
+      link._ligado = true;
+      link.addEventListener('click', () => this.enviarLink());
+    }
+  },
+
+  adicionar() {
+    const v = function (id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+    const nome = v('mont-ex-nome');
+    if (!nome) { this.avisar('Escreva o nome do exercício.'); return; }
+
+    /* tenta achar o GIF no catalogo pelo nome */
+    let gif = v('mont-ex-gif');
+    if (!gif && typeof laGifDoExercicio === 'function') {
+      const m = laGifDoExercicio({ nome: nome });
+      if (m && m.gif) gif = m.gif;
+    }
+
+    this.rascunho.exercicios.push({
+      nome: nome,
+      grupo: v('mont-ex-grupo'),
+      letra: v('mont-ex-letra') || 'A',
+      series: Number(v('mont-ex-series')) || 3,
+      repeticoes: v('mont-ex-reps') || '12',
+      carga: v('mont-ex-carga'),
+      gif: gif || '',
+      descanso: '60s'
+    });
+
+    ['mont-ex-nome', 'mont-ex-grupo', 'mont-ex-carga', 'mont-ex-gif'].forEach(function (id) {
+      const e = document.getElementById(id); if (e) e.value = '';
+    });
+    this.pintarMontagem();
+  },
+
+  pintarMontagem() {
+    const casa = document.querySelector('.js-montagem-lista');
+    if (!casa) return;
+    const exs = this.rascunho.exercicios || [];
+    if (!exs.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum exercício ainda. Adicione acima.</p>';
+      return;
+    }
+
+    const porLetra = {};
+    exs.forEach(function (e, i) {
+      const l = e.letra || 'A';
+      if (!porLetra[l]) porLetra[l] = [];
+      porLetra[l].push({ e: e, i: i });
+    });
+
+    casa.innerHTML = Object.keys(porLetra).sort().map(function (l) {
+      return '<div class="bloco-treino-mont">' +
+               '<div class="treino-letra">Treino ' + l + ' · ' + laNomeDoTreino(l) + '</div>' +
+               porLetra[l].map(function (x) {
+                 return '<div class="linha-mont-ex">' +
+                          '<span class="ordem">' + (x.i + 1) + '</span>' +
+                          (x.e.gif ? '<img class="minigif" src="' + laEscapar(x.e.gif) + '" alt="" onerror="this.style.display=\'none\'">' : '') +
+                          '<b>' + laEscapar(x.e.nome) + '</b>' +
+                          '<span class="detalhe">' + x.e.series + 'x' + laEscapar(x.e.repeticoes) +
+                            (x.e.carga ? ' · ' + laEscapar(x.e.carga) : '') + '</span>' +
+                          '<button class="btn-mini js-tirar-ex" type="button" data-i="' + x.i + '">Tirar</button>' +
+                        '</div>';
+               }).join('') +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('.js-tirar-ex').forEach((b) => {
+      b.addEventListener('click', () => {
+        this.rascunho.exercicios.splice(Number(b.getAttribute('data-i')), 1);
+        this.pintarMontagem();
+      });
+    });
+  },
+
+  salvar() {
+    if (!this.rascunho.exercicios.length) { this.avisar('Adicione pelo menos um exercício.'); return; }
+
+    const porLetra = {};
+    this.rascunho.exercicios.forEach(function (e) {
+      const l = e.letra || 'A';
+      if (!porLetra[l]) porLetra[l] = [];
+      porLetra[l].push(e);
+    });
+    const treinos = Object.keys(porLetra).sort().map(function (l) {
+      return { letra: l, nome: laNomeDoTreino(l), exercicios: porLetra[l] };
+    });
+
+    laCriarModelo({
+      modalidade: this.rascunho.modalidade,
+      nome: this.rascunho.nome,
+      descricao: this.rascunho.objetivo,
+      treinos: treinos
+    });
+
+    this.avisar('Modelo salvo! Agora libere para o aluno abaixo.');
+    this.rascunho = this.novoRascunho();
+    document.getElementById('mont-modalidade').value = 'moderado';
+    const campoNome = document.getElementById('mont-nome'); if (campoNome) campoNome.value = '';
+    const campoObj = document.getElementById('mont-objetivo'); if (campoObj) campoObj.value = '';
+    document.querySelectorAll('.js-modal').forEach(function (x) { x.classList.remove('ativo'); });
+    this.pintarMontagem();
+    this.pintarModelos();
+    this.pintarLiberar();
+  },
+
+  pintarModelos() {
+    const casa = document.querySelector('.js-lista-modelos');
+    if (!casa) return;
+    let lista = laListarModelos();
+    if (this.filtro !== 'todos') {
+      lista = lista.filter(function (m) { return m.modalidade === this.filtro; }.bind(this));
+    }
+
+    if (!lista.length) {
+      casa.innerHTML = '<p class="vazio">Nenhum modelo guardado ainda.</p>';
+      return;
+    }
+
+    casa.innerHTML = lista.map(function (m) {
+      const mo = laModalidade(m.modalidade);
+      return '<div class="cartao-modelo">' +
+               '<div class="mo-topo">' +
+                 '<span class="mo-etiqueta" style="border-color:' + mo.cor + '; color:' + mo.cor + '">' +
+                   laEscapar(mo.nome) + '</span>' +
+                 '<span class="mo-qtd">' + laTotalDoModelo(m) + ' exercícios</span>' +
+               '</div>' +
+               '<b>' + laEscapar(m.nome) + '</b>' +
+               (m.descricao ? '<p>' + laEscapar(m.descricao) + '</p>' : '') +
+               '<div class="mo-divisoes">' +
+                 (m.treinos || []).map(function (t) {
+                   return '<span class="divisao">Treino ' + laEscapar(t.letra) + ' · ' +
+                          (t.exercicios || []).length + ' ex</span>';
+                 }).join('') +
+               '</div>' +
+               '<div class="mo-acoes">' +
+                 '<button class="btn-mini js-apagar-modelo" type="button" data-id="' + m.id + '">Apagar</button>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+
+    casa.querySelectorAll('.js-apagar-modelo').forEach((b) => {
+      b.addEventListener('click', () => {
+        if (!confirm('Apagar este modelo?')) return;
+        laExcluirModelo(b.getAttribute('data-id'));
+        this.pintarModelos();
+        this.pintarLiberar();
+      });
+    });
+  },
+
+  pintarLiberar() {
+    const selA = document.getElementById('lib-aluno');
+    const selM = document.getElementById('lib-modelo');
+    if (!selA || !selM) return;
+
+    const alunos = (typeof laListarAlunos === 'function') ? laListarAlunos() : [];
+    selA.innerHTML = alunos.length
+      ? '<option value="">— escolha o aluno —</option>' + alunos.map(function (a) {
+          const tem = laTreinoLiberado(a.id);
+          return '<option value="' + a.id + '">' + laEscapar(a.nome) +
+                 (tem ? ' ✓ ' + laEscapar(tem.modalidade.nome) : '') + '</option>';
+        }).join('')
+      : '<option value="">Nenhum aluno cadastrado</option>';
+
+    const modelos = laListarModelos();
+    selM.innerHTML = modelos.length
+      ? '<option value="">— escolha o treino —</option>' + modelos.map(function (m) {
+          return '<option value="' + m.id + '">' + laEscapar(laModalidade(m.modalidade).nome) +
+                 ' · ' + laEscapar(m.nome) + '</option>';
+        }).join('')
+      : '<option value="">Nenhum modelo guardado</option>';
+  },
+
+  liberar() {
+    const selA = document.getElementById('lib-aluno');
+    const selM = document.getElementById('lib-modelo');
+    if (!selA || !selA.value) { this.avisarLink('Escolha o aluno.'); return; }
+    if (!selM || !selM.value) { this.avisarLink('Escolha o treino.'); return; }
+
+    laLiberarTreino(selA.value, selM.value);
+    const a = laBuscarAluno(selA.value);
+    const m = laBuscarModelo(selM.value);
+    this.avisarLink('Treino liberado para ' + (a ? a.nome : 'o aluno') +
+      ': ' + (m ? m.nome : '') + '. Já aparece na área dele.');
+
+    if (typeof laEnviarMensagem === 'function') {
+      laEnviarMensagem(selA.value, 'Seu treino está pronto na área do aluno: ' +
+        (m ? m.nome : '') + '.', 'academia');
+    }
+    this.pintarLiberar();
+  },
+
+  avisar(txt) {
+    const a = document.querySelector('.js-aviso-montagem');
+    if (!a) return;
+    a.textContent = txt;
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 4000);
+  },
+
+  avisarLink(txt) {
+    const a = document.querySelector('.js-aviso-liberar');
+    if (!a) return;
+    a.textContent = txt;
+    a.classList.remove('hidden');
+    setTimeout(function () { a.classList.add('hidden'); }, 4500);
+  },
+
+  /* manda o link do site para o WhatsApp do aluno */
+  enviarLink() {
+    const tel = document.getElementById('aluno-telefone');
+    const nome = document.getElementById('aluno-nome');
+    const numero = tel ? String(tel.value).replace(/\D/g, '') : '';
+    const primeiro = nome && nome.value ? nome.value.split(' ')[0] : '';
+
+    const c = (typeof laGarantirConteudo === 'function') ? laGarantirConteudo() : {};
+    const inst = (c && c.geral && c.geral.instagram) ? c.geral.instagram : 'academial.afitness';
+
+    const texto = 'Olá' + (primeiro ? ', ' + primeiro : '') +
+      '! Seu acesso à área do aluno da L.A Fitness está pronto. ' +
+      'Abra o site no celular, entre com seu CPF e a senha que a recepção te passou. ' +
+      'Qualquer dúvida é só responder aqui.';
+
+    const link = window.location.href.replace(/admin\.html.*$/, 'index.html');
+    const msg = texto + '\n\n' + link;
+
+    if (!numero) {
+      this.avisarLink('Preencha o telefone do aluno para enviar o link.');
+      return;
+    }
+    window.open('https://wa.me/55' + numero.replace(/^55/, '') + '?text=' + encodeURIComponent(msg), '_blank');
+    this.avisarLink('Abrindo o WhatsApp com a mensagem pronta.');
+  }
+};
+  </script>
+  <script>
+
+  </script>
+
+  <!-- ================= MODAL: ESCOLHER O DESENHO DO EXERCÍCIO ================= -->
+  <div class="modal-overlay" id="modal-gif">
+    <div class="modal-admin modal-gif-caixa">
+      <div class="topo-modal">
+        <h3><i class="fa-solid fa-images"></i> Escolher o desenho</h3>
+        <i class="fa-solid fa-xmark js-fechar-gif" style="cursor:pointer; font-size:1.2rem;"></i>
+      </div>
+
+      <div class="gif-busca">
+        <input class="form-input" id="gif-busca" placeholder="Buscar pelo nome do exercício (ex.: supino, agachamento)">
+        <select class="form-input" id="gif-grupo">
+          <option value="">Todos os grupos</option>
+        </select>
+      </div>
+
+      <p class="nota-bloco js-gif-fonte"></p>
+      <div class="gif-grade js-gif-grade"></div>
+      <div class="acoes-modal">
+        <button class="btn-secondary js-fechar-gif" type="button"><i class="fa-solid fa-xmark"></i> Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ==========================================================================
+     SELETOR DE DESENHO (GIF) DO EXERCÍCIO
+     A dona escolhe o GIF da pasta videos/ clicando, em vez de digitar o caminho.
+     Quando o catalogo data/exercises.json existe, ele lista os 1.324 com nome.
+     Quando nao existe, ela ainda pode apontar para um arquivo da pasta.
+     ========================================================================== */
+  (function () {
+
+    var escolhido = '';
+
+    function abrir() {
+      var m = document.getElementById('modal-gif');
+      if (m) m.classList.add('active');
+    }
+    function fechar() {
+      var m = document.getElementById('modal-gif');
+      if (m) m.classList.remove('active');
+    }
+
+    function atualizarPrevia() {
+      var caixa = document.querySelector('.js-gif-previa');
+      if (!caixa) return;
+      if (escolhido) {
+        caixa.innerHTML = '<img src="' + escolhido + '" alt="desenho escolhido">';
+        caixa.classList.add('tem-gif');
+      } else {
+        caixa.innerHTML = '<i class="fa-solid fa-image"></i><span>nenhum escolhido</span>';
+        caixa.classList.remove('tem-gif');
+      }
+      var campo = document.getElementById('mont-ex-gif');
+      if (campo) campo.value = escolhido;
+    }
+
+    /* lista do catalogo, quando existir */
+    var catalogo = null;
+
+    function carregarCatalogo() {
+      var aviso = document.querySelector('.js-gif-fonte');
+      var grade = document.querySelector('.js-gif-grade');
+      if (grade) grade.innerHTML = '<p class="vazio">Carregando os desenhos...</p>';
+
+      if (typeof laCarregarCatalogo === 'function') {
+        laCarregarCatalogo().then(function (lista) {
+          catalogo = lista;
+          if (aviso) {
+            if (lista && lista.length) {
+              aviso.textContent = lista.length + ' desenhos encontrados em data/exercises.json';
+            } else {
+              /* mostra o motivo real, não um texto genérico */
+              aviso.innerHTML = (typeof LA_CATALOGO_ERRO !== 'undefined' && LA_CATALOGO_ERRO)
+                ? '<b style="color:#ffb020">' + laEscapar(LA_CATALOGO_ERRO) + '</b>'
+                : 'Nenhum catálogo encontrado. Coloque o arquivo <b>data/exercises.json</b> na pasta data/.';
+            }
+          }
+          pintar();
+        }).catch(function () {
+          semCatalogo();
+        });
+      } else {
+        semCatalogo();
+      }
+    }
+
+    function semCatalogo() {
+      catalogo = null;
+      var aviso = document.querySelector('.js-gif-fonte');
+      if (aviso) {
+        aviso.innerHTML = (typeof LA_CATALOGO_ERRO !== 'undefined' && LA_CATALOGO_ERRO)
+          ? '<b style="color:#ffb020">' + laEscapar(LA_CATALOGO_ERRO) + '</b>'
+          : 'Sem o arquivo <b>data/exercises.json</b> na pasta data/.';
+      }
+      writeFallback();
+      pintar();
+    }
+
+    /* quando nao ha catalogo, mostra os exercicios que o banco do painel ja tem */
+    function writeFallback() {
+      var exs = (typeof laListarExercicios === 'function') ? laListarExercicios() : [];
+      catalogo = exs.map(function (e) {
+        return { nome: e.nome, grupo: e.grupo || '', gif: e.video || '', imagem: '' };
+      }).filter(function (e) { return e.gif; });
+    }
+
+    function pintar() {
+      var grade = document.querySelector('.js-gif-grade');
+      if (!grade) return;
+
+      var busca = document.getElementById('gif-busca');
+      var grupo = document.getElementById('gif-grupo');
+      var termo = busca ? busca.value.toLowerCase().trim() : '';
+      var g = grupo ? grupo.value.toLowerCase() : '';
+
+      /* preenche os grupos uma vez */
+      if (grupo && !grupo._pintado && catalogo) {
+        grupo._pintado = true;
+        var gs = {};
+        catalogo.forEach(function (e) { if (e.grupo) gs[e.grupo] = 1; });
+        Object.keys(gs).sort().forEach(function (x) {
+          var o = document.createElement('option');
+          o.value = x; o.textContent = x;
+          grupo.appendChild(o);
+        });
+      }
+
+      if (!catalogo || !catalogo.length) {
+        grade.innerHTML = '<p class="vazio">Nenhum desenho encontrado. ' +
+          'Coloque o arquivo <b>data/exercises.json</b> na pasta data/ ou escreva o caminho do GIF à mão.</p>';
+        return;
+      }
+
+      var lista = catalogo.filter(function (e) {
+        if (g && String(e.grupo || '').toLowerCase() !== g) return false;
+        if (!termo) return true;
+        return String(e.nome || '').toLowerCase().indexOf(termo) !== -1;
+      });
+
+      if (!lista.length) {
+        grade.innerHTML = '<p class="vazio">Nada encontrado para essa busca.</p>';
+        return;
+      }
+
+      grade.innerHTML = lista.slice(0, 120).map(function (e) {
+        var src = e.gif || e.imagem || '';
+        return '<button type="button" class="gif-item js-pegar-gif" data-gif="' + laEscapar(src) + '">' +
+                 '<img src="' + laEscapar(src) + '" alt="' + laEscapar(e.nome) + '" loading="lazy" ' +
+                   'onerror="this.style.opacity=.2">' +
+                 '<b>' + laEscapar(e.nome) + '</b>' +
+                 (e.grupo ? '<span>' + laEscapar(e.grupo) + '</span>' : '') +
+               '</button>';
+      }).join('') + (lista.length > 120
+        ? '<p class="nota-bloco">Mostrando 120 de ' + lista.length + '. Use a busca para achar o resto.</p>'
+        : '');
+
+      grade.querySelectorAll('.js-pegar-gif').forEach(function (b) {
+        b.addEventListener('click', function () {
+          escolhido = b.getAttribute('data-gif');
+          atualizarPrevia();
+          fechar();
+        });
+      });
+    }
+
+    function ligar() {
+      var abrirBtn = document.getElementById('mont-escolher-gif');
+      if (abrirBtn && !abrirBtn._ligado) {
+        abrirBtn._ligado = true;
+        abrirBtn.addEventListener('click', function () {
+          abrir();
+          if (!catalogo) carregarCatalogo(); else pintar();
+        });
+      }
+
+      document.querySelectorAll('.js-fechar-gif').forEach(function (b) {
+        if (b._ligado) return;
+        b._ligado = true;
+        b.addEventListener('click', fechar);
+      });
+
+      var tirar = document.getElementById('mont-tirar-gif');
+      if (tirar && !tirar._ligado) {
+        tirar._ligado = true;
+        tirar.addEventListener('click', function () {
+          escolhido = '';
+          atualizarPrevia();
+        });
+      }
+
+      var busca = document.getElementById('gif-busca');
+      if (busca && !busca._ligado) {
+        busca._ligado = true;
+        busca.addEventListener('input', pintar);
+      }
+      var grupo = document.getElementById('gif-grupo');
+      if (grupo && !grupo._ligado) {
+        grupo._ligado = true;
+        grupo.addEventListener('change', pintar);
+      }
+
+      var modal = document.getElementById('modal-gif');
+      if (modal && !modal._ligado) {
+        modal._ligado = true;
+        modal.addEventListener('click', function (e) {
+          if (e.target === modal) fechar();
+        });
+      }
+    }
+
+    /* depois de adicionar um exercicio, a previa volta ao inicio */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('#mont-adicionar') : null;
+      if (b) setTimeout(function () { escolhido = ''; atualizarPrevia(); }, 40);
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ligar);
+    } else {
+      ligar();
+    }
+  })();
+  </script>
+
+  <script>
+  /* ==========================================================================
+     PRODUTOS — editar, foto e lista completa
+     Acrescenta o botao Editar em cada produto e a escolha da foto.
+     Substitui a pintura antiga da lista, que nao tinha essas duas coisas.
+     ========================================================================== */
+  (function () {
+
+    var EM_EDICAO = null;     /* id do produto sendo editado */
+    var FOTO = '';            /* foto escolhida, em base64 ou caminho */
+
+    function q(s) { return document.querySelector(s); }
+    function el(id) { return document.getElementById(id); }
+
+    /* ---------- aviso ---------- */
+    function avisar(txt, cor) {
+      var a = q('.js-aviso-produto');
+      if (!a) return;
+      a.textContent = txt;
+      a.style.color = cor || 'var(--la-accent-green)';
+      a.classList.remove('hidden');
+      setTimeout(function () { a.classList.add('hidden'); }, 4000);
+    }
+
+    /* ---------- previa da foto ---------- */
+    function pintarPrevia() {
+      var caixa = el('pd-foto-previa');
+      if (!caixa) return;
+      if (FOTO) {
+        caixa.innerHTML = '<img src="' + FOTO + '" alt="foto do produto">';
+        caixa.classList.add('tem-gif');
+      } else {
+        caixa.innerHTML = '<i class="fa-solid fa-image"></i><span>sem foto</span>';
+        caixa.classList.remove('tem-gif');
+      }
+    }
+
+    /* ---------- limpa o formulario ---------- */
+    function limpar() {
+      EM_EDICAO = null;
+      FOTO = '';
+      ['pd-nome', 'pd-preco', 'pd-categoria', 'pd-estoque'].forEach(function (id) {
+        var e = el(id); if (e) e.value = '';
+      });
+      pintarPrevia();
+      var b = el('pd-salvar');
+      if (b) b.innerHTML = '<i class="fa-solid fa-check"></i> Cadastrar';
+      var c = el('pd-cancelar-edicao');
+      if (c) c.style.display = 'none';
+    }
+
+    /* ---------- carrega um produto no formulario para editar ---------- */
+    function editar(id) {
+      var p = (typeof laBuscarProduto === 'function') ? laBuscarProduto(id) : null;
+      if (!p) return;
+
+      EM_EDICAO = p.id;
+      FOTO = p.foto || '';
+      if (el('pd-nome')) el('pd-nome').value = p.nome || '';
+      if (el('pd-preco')) el('pd-preco').value = p.preco != null ? p.preco : '';
+      if (el('pd-categoria')) el('pd-categoria').value = p.categoria || '';
+      if (el('pd-estoque')) el('pd-estoque').value = (p.estoque == null ? '' : p.estoque);
+      pintarPrevia();
+
+      var b = el('pd-salvar');
+      if (b) b.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar alterações';
+      var c = el('pd-cancelar-edicao');
+      if (c) c.style.display = 'inline-flex';
+
+      var alvo = el('form-novo-produto');
+      if (alvo) alvo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ---------- salva (novo ou edicao) ---------- */
+    function salvar(ev) {
+      if (ev) ev.preventDefault();
+      var nome = el('pd-nome') ? el('pd-nome').value.trim() : '';
+      var preco = el('pd-preco') ? el('pd-preco').value.trim() : '';
+      if (!nome || preco === '') { avisar('Nome e preço são obrigatórios.', 'var(--la-red)'); return; }
+
+      var dados = {
+        nome: nome,
+        preco: Number(preco),
+        categoria: (el('pd-categoria') ? el('pd-categoria').value.trim() : '') || 'Outros',
+        estoque: (el('pd-estoque') && el('pd-estoque').value !== '') ? Number(el('pd-estoque').value) : null,
+        foto: FOTO || ''
+      };
+
+      if (EM_EDICAO) {
+        laAtualizarProduto(EM_EDICAO, dados);
+        avisar('Produto atualizado!');
+      } else {
+        laCriarProduto(dados);
+        avisar('Produto cadastrado! Já aparece na loja do aluno.');
+      }
+      limpar();
+      pintarLista();
+    }
+
+    /* ---------- a lista, agora com foto e Editar ---------- */
+    function pintarLista() {
+      var casa = q('.js-lista-produtos-admin');
+      if (!casa) return;
+
+      var lista = laListarProdutos();
+
+      if (!lista.length) {
+        casa.innerHTML = '<p class="vazio">Nenhum produto cadastrado.</p>';
+        return;
+      }
+
+      casa.innerHTML = '<div class="grade-produtos">' + lista.map(function (p) {
+        var semEstoque = p.estoque != null && Number(p.estoque) <= 0;
+        return '<div class="cartao-produto' + (p.ativo === false ? ' escondido' : '') + '">' +
+                 '<div class="prod-foto">' +
+                   (p.foto
+                     ? '<img src="' + laEscapar(p.foto) + '" alt="' + laEscapar(p.nome) + '" onerror="this.style.display=\'none\'">'
+                     : '<i class="fa-solid fa-box"></i>') +
+                 '</div>' +
+                 '<div class="prod-dados">' +
+                   '<b>' + laEscapar(p.nome) + '</b>' +
+                   '<span>' + laEscapar(p.categoria || '') + '</span>' +
+                   '<strong>R$ ' + Number(p.preco || 0).toFixed(2).replace('.', ',') + '</strong>' +
+                   '<small class="' + (semEstoque ? 'sem' : '') + '">' +
+                     (p.estoque == null ? 'sem controle de estoque'
+                       : (semEstoque ? 'esgotado' : p.estoque + ' em estoque')) +
+                     (p.ativo === false ? ' · escondido' : '') +
+                   '</small>' +
+                 '</div>' +
+                 '<div class="prod-acoes">' +
+                   '<button class="btn-mini js-editar-prod" type="button" data-id="' + p.id + '">' +
+                     '<i class="fa-solid fa-pen"></i> Editar</button>' +
+                   '<button class="btn-mini js-toggle-prod" type="button" data-id="' + p.id + '">' +
+                     (p.ativo === false ? 'Mostrar' : 'Esconder') + '</button>' +
+                   '<button class="btn-mini js-apagar-prod" type="button" data-id="' + p.id + '">Apagar</button>' +
+                 '</div>' +
+               '</div>';
+      }).join('') + '</div>';
+
+      casa.querySelectorAll('.js-editar-prod').forEach(function (b) {
+        b.addEventListener('click', function () { editar(b.getAttribute('data-id')); });
+      });
+
+      casa.querySelectorAll('.js-toggle-prod').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var p = laBuscarProduto(b.getAttribute('data-id'));
+          if (!p) return;
+          laAtualizarProduto(p.id, { ativo: p.ativo === false });
+          pintarLista();
+        });
+      });
+
+      casa.querySelectorAll('.js-apagar-prod').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (!confirm('Apagar este produto?')) return;
+          laExcluirProduto(b.getAttribute('data-id'));
+          if (EM_EDICAO === b.getAttribute('data-id')) limpar();
+          pintarLista();
+        });
+      });
+    }
+
+    /* ---------- liga as acoes ---------- */
+    function ligar() {
+      var form = el('form-novo-produto');
+      if (form && !form._novo) {
+        /* tira o listener antigo, que nao conhece edicao nem foto */
+        form._novo = true;
+        form.addEventListener('submit', salvar, true);
+      }
+
+      var escolher = el('pd-escolher-foto');
+      if (escolher && !escolher._ligado) {
+        escolher._ligado = true;
+        escolher.addEventListener('click', function () {
+          var f = el('pd-foto-arquivo');
+          if (f) f.click();
+        });
+      }
+
+      var arquivo = el('pd-foto-arquivo');
+      if (arquivo && !arquivo._ligado) {
+        arquivo._ligado = true;
+        arquivo.addEventListener('change', function () {
+          var f = arquivo.files && arquivo.files[0];
+          if (!f) return;
+          if (f.size > 2 * 1024 * 1024) {
+            avisar('A foto é grande (mais de 2MB). Escolha uma menor.', 'var(--ffb020, #ffb020)');
+          }
+          var leitor = new FileReader();
+          leitor.onload = function () {
+            FOTO = leitor.result;
+            pintarPrevia();
+          };
+          leitor.readAsDataURL(f);
+        });
+      }
+
+      var tirar = el('pd-tirar-foto');
+      if (tirar && !tirar._ligado) {
+        tirar._ligado = true;
+        tirar.addEventListener('click', function () {
+          FOTO = '';
+          var f = el('pd-foto-arquivo'); if (f) f.value = '';
+          pintarPrevia();
+        });
+      }
+
+      var cancelar = el('pd-cancelar-edicao');
+      if (cancelar && !cancelar._ligado) {
+        cancelar._ligado = true;
+        cancelar.addEventListener('click', limpar);
+      }
+
+      pintarPrevia();
+      pintarLista();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ligar);
+    } else {
+      ligar();
+    }
+
+    /* quando a aba Produtos abre, repinta a lista nova */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-aba-admin="produtos"]') : null;
+      if (b) setTimeout(pintarLista, 40);
+    });
+
+    window.LAProdutos = { pintar: pintarLista, editar: editar, limpar: limpar };
+  })();
+  </script>
+
+  <script>
+  /* ==========================================================================
+     FRENTE DO SITE — Sobre, fotos do Sobre e blocos novos
+     A dona edita o conteudo da frente do site. A estrutura nao muda.
+     ========================================================================== */
+  (function () {
+
+    function q(s) { return document.querySelector(s); }
+    function el(id) { return document.getElementById(id); }
+
+    function conteudo() {
+      return (typeof laGarantirConteudo === 'function') ? laGarantirConteudo() : {};
+    }
+    function gravar(c) {
+      if (typeof laSalvarConteudo === 'function') laSalvarConteudo(c);
+    }
+    function avisar(sel, txt) {
+      var a = q(sel);
+      if (!a) return;
+      a.textContent = txt;
+      a.classList.remove('hidden');
+      setTimeout(function () { a.classList.add('hidden'); }, 4000);
+    }
+
+    /* ---------------- SOBRE ---------------- */
+    function pintarSobre() {
+      var c = conteudo();
+      var so = c.sobre || {};
+
+      if (el('sobre-etiqueta')) el('sobre-etiqueta').value = so.etiqueta || '';
+      if (el('sobre-titulo'))   el('sobre-titulo').value   = so.titulo || '';
+      if (el('sobre-titulo2'))  el('sobre-titulo2').value  = so.titulo2 || '';
+      if (el('sobre-olar'))     el('sobre-olar').value     = so.olar || '';
+      if (el('sobre-paragrafos')) el('sobre-paragrafos').value =
+        (Array.isArray(so.paragrafos) ? so.paragrafos.join('\n\n') : '');
+
+      /* fotos do Sobre */
+      var casa = q('.js-sobre-fotos');
+      if (!casa) return;
+      var fotos = Array.isArray(so.fotos) && so.fotos.length ? so.fotos : [
+        { nome: 'Musculação', texto: '' }, { nome: 'Peso livre', texto: '' },
+        { nome: 'Acessórios', texto: '' }, { nome: 'Estrutura', texto: '' }
+      ];
+      var padrao = ['img/musculacao.jpg', 'img/halteres-estante.jpg',
+                    'img/cordas-cintos.jpg', 'img/fachada-logo.jpg'];
+
+      casa.innerHTML = fotos.map(function (f, i) {
+        var src = f.foto || padrao[i] || '';
+        return '<div class="editor-linha">' +
+                 (src ? '<img class="editor-thumb" src="' + laEscapar(src) + '" alt="" onerror="this.style.opacity=.2">'
+                      : '<div class="editor-thumb vazio-thumb"><i class="fa-solid fa-image"></i></div>') +
+                 '<div class="editor-campos">' +
+                   '<input class="form-input js-sf-nome" data-i="' + i + '" placeholder="Título da foto" value="' + laEscapar(f.nome || '') + '">' +
+                   '<input class="form-input js-sf-texto" data-i="' + i + '" placeholder="Descrição curta" value="' + laEscapar(f.texto || '') + '">' +
+                 '</div>' +
+                 '<div class="editor-acoes">' +
+                   '<button class="btn-secondary btn-mini js-sf-carregar" data-i="' + i + '" type="button">' +
+                     '<i class="fa-solid fa-camera"></i> Foto</button>' +
+                 '</div>' +
+                 '<input type="file" class="js-sf-arquivo" data-i="' + i + '" accept="image/*" hidden>' +
+               '</div>';
+      }).join('');
+
+      casa.querySelectorAll('.js-sf-carregar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var arq = casa.querySelector('.js-sf-arquivo[data-i="' + b.getAttribute('data-i') + '"]');
+          if (arq) arq.click();
+        });
+      });
+
+      casa.querySelectorAll('.js-sf-arquivo').forEach(function (arq) {
+        arq.addEventListener('change', function () {
+          var i = Number(arq.getAttribute('data-i'));
+          var f = arq.files && arq.files[0];
+          if (!f) return;
+          if (f.size > 2 * 1024 * 1024) { avisar('.js-aviso-sobre', 'Imagem grande demais (mais de 2MB).'); return; }
+          var leitor = new FileReader();
+          leitor.onload = function () {
+            var c2 = conteudo();
+            c2.sobre = c2.sobre || {};
+            c2.sobre.fotos = c2.sobre.fotos || fotos;
+            c2.sobre.fotos[i] = c2.sobre.fotos[i] || {};
+            c2.sobre.fotos[i].foto = leitor.result;
+            gravar(c2);
+            avisar('.js-aviso-sobre', 'Foto ' + (i + 1) + ' trocada!');
+            pintarSobre();
+          };
+          leitor.readAsDataURL(f);
+        });
+      });
+    }
+
+    function salvarSobre() {
+      var c = conteudo();
+      c.sobre = c.sobre || {};
+      if (el('sobre-etiqueta')) c.sobre.etiqueta = el('sobre-etiqueta').value.trim();
+      if (el('sobre-titulo'))   c.sobre.titulo   = el('sobre-titulo').value.trim();
+      if (el('sobre-titulo2'))  c.sobre.titulo2  = el('sobre-titulo2').value.trim();
+      if (el('sobre-olar'))     c.sobre.olar     = el('sobre-olar').value.trim();
+      if (el('sobre-paragrafos')) {
+        c.sobre.paragrafos = el('sobre-paragrafos').value
+          .split('\n').map(function (t) { return t.trim(); }).filter(Boolean);
+      }
+      /* os titulos das fotos */
+      var casa = q('.js-sobre-fotos');
+      if (casa) {
+        c.sobre.fotos = c.sobre.fotos || [];
+        casa.querySelectorAll('.js-sf-nome').forEach(function (inp) {
+          var i = Number(inp.getAttribute('data-i'));
+          c.sobre.fotos[i] = c.sobre.fotos[i] || {};
+          c.sobre.fotos[i].nome = inp.value.trim();
+        });
+        casa.querySelectorAll('.js-sf-texto').forEach(function (inp) {
+          var i = Number(inp.getAttribute('data-i'));
+          c.sobre.fotos[i] = c.sobre.fotos[i] || {};
+          c.sobre.fotos[i].texto = inp.value.trim();
+        });
+      }
+      gravar(c);
+      avisar('.js-aviso-sobre', 'Sobre salvo! O site já mostra os novos textos.');
+    }
+
+    /* ---------------- BLOCOS NOVOS ---------------- */
+    function pintarBlocos() {
+      var casa = q('.js-blocos-edit');
+      if (!casa) return;
+      var c = conteudo();
+      var lista = Array.isArray(c.blocos) ? c.blocos : [];
+      if (!lista.length) {
+        casa.innerHTML = '<p class="vazio">Nenhum bloco novo ainda. Use o botão abaixo para criar.</p>';
+        return;
+      }
+
+      casa.innerHTML = lista.map(function (b, i) {
+        var fmt = b.formato || 'foto-texto';
+        var lado = b.lado || 'foto-esquerda';
+        return '<div class="bloco-novo' + (b.ativo === false ? ' desligado' : '') + '">' +
+                 '<div class="bn-topo">' +
+                   '<b>Bloco ' + (i + 1) + '</b>' +
+                   '<label class="bn-liga">' +
+                     '<input type="checkbox" class="js-bn-ativo" data-i="' + i + '"' +
+                       (b.ativo === false ? '' : ' checked') + '> aparece no site' +
+                   '</label>' +
+                 '</div>' +
+
+                 /* formato do bloco */
+                 '<div class="bn-formato">' +
+                   '<span class="bn-rotulo">Como este bloco aparece</span>' +
+                   '<div class="bn-opcoes">' +
+                     ['foto-texto','texto-foto','duas-fotos','so-foto'].map(function (f) {
+                       var rot = { 'foto-texto':'Foto e texto', 'texto-foto':'Texto e foto',
+                                   'duas-fotos':'Duas fotos', 'so-foto':'Só foto' }[f];
+                       return '<button type="button" class="bn-op' + (fmt === f ? ' ativo' : '') +
+                         ' js-bn-formato" data-i="' + i + '" data-f="' + f + '">' + rot + '</button>';
+                     }).join('') +
+                   '</div>' +
+                 '</div>' +
+
+                 /* previa das fotos */
+                 '<div class="bn-fotos">' +
+                   '<div class="bn-foto-caixa">' +
+                     (b.foto ? '<img src="' + laEscapar(b.foto) + '" alt="" onerror="this.style.opacity=.2">'
+                             : '<i class="fa-solid fa-image"></i>') +
+                     '<button type="button" class="btn-secondary btn-mini js-bn-carregar" data-i="' + i + '">' +
+                       '<i class="fa-solid fa-camera"></i> ' + (fmt === 'duas-fotos' ? 'Foto 1' : 'Trocar foto') + '</button>' +
+                   '</div>' +
+                   (fmt === 'duas-fotos'
+                     ? '<div class="bn-foto-caixa">' +
+                         (b.foto2 ? '<img src="' + laEscapar(b.foto2) + '" alt="" onerror="this.style.opacity=.2">'
+                                  : '<i class="fa-solid fa-image"></i>') +
+                         '<button type="button" class="btn-secondary btn-mini js-bn-carregar2" data-i="' + i + '">' +
+                           '<i class="fa-solid fa-camera"></i> Foto 2</button>' +
+                       '</div>'
+                     : '') +
+                 '</div>' +
+
+                 /* textos */
+                 '<div class="grade-form">' +
+                   '<div>' +
+                     '<label class="form-label">Etiqueta</label>' +
+                     '<input class="form-input js-bn-etiqueta" data-i="' + i + '" value="' + laEscapar(b.etiqueta || '') + '" placeholder="Novidade">' +
+                   '</div>' +
+                   '<div>' +
+                     '<label class="form-label">Título</label>' +
+                     '<input class="form-input js-bn-titulo" data-i="' + i + '" value="' + laEscapar(b.titulo || '') + '" placeholder="Ex.: Ginástica Artística">' +
+                   '</div>' +
+                 '</div>' +
+                 '<div style="margin-top:10px;">' +
+                   '<label class="form-label">Conteúdo</label>' +
+                   '<textarea class="form-input js-bn-texto" data-i="' + i + '" rows="3">' + laEscapar(b.texto || '') + '</textarea>' +
+                 '</div>' +
+
+                 '<div class="bn-acoes">' +
+                   '<button type="button" class="btn-mini js-bn-salvar" data-i="' + i + '">Salvar</button>' +
+                   '<button type="button" class="btn-mini js-bn-apagar" data-i="' + i + '">Apagar</button>' +
+                 '</div>' +
+
+                 '<input type="file" class="js-bn-arquivo" data-i="' + i + '" accept="image/*" hidden>' +
+                 '<input type="file" class="js-bn-arquivo2" data-i="' + i + '" accept="image/*" hidden>' +
+               '</div>';
+      }).join('');
+
+      /* escolher o formato do bloco */
+      casa.querySelectorAll('.js-bn-formato').forEach(function (bt) {
+        bt.addEventListener('click', function () {
+          var i = Number(bt.getAttribute('data-i'));
+          var f = bt.getAttribute('data-f');
+          var c2 = conteudo();
+          c2.blocos[i].formato = f;
+          gravar(c2);
+          avisar('.js-aviso-bloco', 'Formato "' + f + '" salvo. Já mudou no site.');
+          pintarBlocos();
+        });
+      });
+
+      /* segunda foto */
+      casa.querySelectorAll('.js-bn-carregar2').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var arq = casa.querySelector('.js-bn-arquivo2[data-i="' + b.getAttribute('data-i') + '"]');
+          if (arq) arq.click();
+        });
+      });
+
+      casa.querySelectorAll('.js-bn-arquivo2').forEach(function (arq) {
+        arq.addEventListener('change', function () {
+          var i = Number(arq.getAttribute('data-i'));
+          var f = arq.files && arq.files[0];
+          if (!f) return;
+          if (f.size > 2 * 1024 * 1024) { avisar('.js-aviso-bloco', 'Imagem grande (mais de 2MB).'); return; }
+          var leitor = new FileReader();
+          leitor.onload = function () {
+            var c2 = conteudo();
+            c2.blocos[i].foto2 = leitor.result;
+            gravar(c2);
+            avisar('.js-aviso-bloco', 'Segunda foto salva.');
+            pintarBlocos();
+          };
+          leitor.readAsDataURL(f);
+        });
+      });
+
+      casa.querySelectorAll('.js-bn-carregar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var arq = casa.querySelector('.js-bn-arquivo[data-i="' + b.getAttribute('data-i') + '"]');
+          if (arq) arq.click();
+        });
+      });
+      casa.querySelectorAll('.js-bn-arquivo').forEach(function (arq) {
+        arq.addEventListener('change', function () {
+          var i = Number(arq.getAttribute('data-i'));
+          var f = arq.files && arq.files[0];
+          if (!f) return;
+          if (f.size > 2 * 1024 * 1024) { avisar('.js-aviso-bloco', 'Imagem grande demais (mais de 2MB).'); return; }
+          var leitor = new FileReader();
+          leitor.onload = function () {
+            var c2 = conteudo();
+            c2.blocos[i].foto = leitor.result;
+            gravar(c2);
+            avisar('.js-aviso-bloco', 'Foto do bloco trocada!');
+            pintarBlocos();
+          };
+          leitor.readAsDataURL(f);
+        });
+      });
+
+      casa.querySelectorAll('.js-bn-salvar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var i = Number(b.getAttribute('data-i'));
+          var c2 = conteudo();
+          c2.blocos[i].titulo = (casa.querySelector('.js-bn-titulo[data-i="' + i + '"]') || {}).value || '';
+          c2.blocos[i].etiqueta = (casa.querySelector('.js-bn-etiqueta[data-i="' + i + '"]') || {}).value || '';
+          c2.blocos[i].texto = (casa.querySelector('.js-bn-texto[data-i="' + i + '"]') || {}).value || '';
+          var at = casa.querySelector('.js-bn-ativo[data-i="' + i + '"]');
+          c2.blocos[i].ativo = at ? at.checked : true;
+          gravar(c2);
+          avisar('.js-aviso-bloco', 'Bloco salvo! Já aparece no site.');
+          pintarBlocos();
+        });
+      });
+
+      casa.querySelectorAll('.js-bn-apagar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var i = Number(b.getAttribute('data-i'));
+          if (!confirm('Apagar este bloco do site?')) return;
+          var c2 = conteudo();
+          c2.blocos.splice(i, 1);
+          gravar(c2);
+          avisar('.js-aviso-bloco', 'Bloco apagado.');
+          pintarBlocos();
+        });
+      });
+
+      casa.querySelectorAll('.js-bn-ativo').forEach(function (chk) {
+        chk.addEventListener('change', function () {
+          var i = Number(chk.getAttribute('data-i'));
+          var c2 = conteudo();
+          c2.blocos[i].ativo = chk.checked;
+          gravar(c2);
+          avisar('.js-aviso-bloco', chk.checked ? 'Bloco aparecendo no site.' : 'Bloco escondido do site.');
+        });
+      });
+    }
+
+    function adicionarBloco() {
+      var c = conteudo();
+      c.blocos = Array.isArray(c.blocos) ? c.blocos : [];
+      c.blocos.push({
+        id: 'b' + Date.now().toString(36),
+        ativo: true, formato: 'foto-texto', titulo: '', etiqueta: 'Novidade',
+        texto: '', foto: '', foto2: ''
+      });
+      gravar(c);
+      pintarBlocos();
+      avisar('.js-aviso-bloco', 'Bloco criado. Preencha o título, o texto e a foto.');
+    }
+
+    /* ---------------- LIGAR ---------------- */
+    function ligar() {
+      var b1 = el('salvar-sobre');
+      if (b1 && !b1._ligado) { b1._ligado = true; b1.addEventListener('click', salvarSobre); }
+
+      var b2 = el('add-bloco');
+      if (b2 && !b2._ligado) { b2._ligado = true; b2.addEventListener('click', adicionarBloco); }
+
+      pintarSobre();
+      pintarBlocos();
+    }
+
+    /* repinta ao abrir a aba */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-aba-admin="site"]') : null;
+      if (b) setTimeout(ligar, 30);
+    }, true);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ligar);
+    } else {
+      ligar();
+    }
+
+    window.LAFrente = { sobre: pintarSobre, blocos: pintarBlocos };
+  })();
+
+  /* ==========================================================================
+     EDITOR DA FRENTE DO SITE
+     O dono troca foto e texto de cada faixa. O desenho (jr-*) nao muda.
+     Salva no mesmo lugar que a tela de fotos: laGarantirConteudo().sobre
+     e .blocos
+     ========================================================================== */
+  (function () {
+    var q = function (sel) { return document.querySelector(sel); };
+    var qa = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
+
+    function conteudo() {
+      return (typeof laGarantirConteudo === 'function') ? laGarantirConteudo() : {};
+    }
+    function gravar() {
+      var c = conteudo();
+      if (typeof laSalvarConteudo === 'function') laSalvarConteudo(c);
+      if (typeof LAAdmin !== 'undefined' && LAAdmin.avisar) LAAdmin.avisar('salvo');
+    }
+    function avisar(sel, txt, ruim) {
+      var a = q(sel);
+      if (!a) return;
+      a.textContent = txt;
+      a.classList.remove('hidden');
+      a.style.color = ruim ? '#ff6b6b' : '';
+      setTimeout(function () { a.classList.add('hidden'); }, 3500);
+    }
+
+    var FORMATOS = [
+      { id: 'foto-texto', rotulo: 'Foto + texto' },
+      { id: 'texto-foto', rotulo: 'Texto + foto' },
+      { id: 'so-foto',    rotulo: 'Só foto' },
+      { id: 'duas-fotos', rotulo: 'Duas fotos' }
+    ];
+
+    /* ---------- desenha UMA faixa (usada no Sobre e nos blocos) ---------- */
+    function faixaHTML(prefixo, dado, rotulo, extra) {
+      var f = dado.formato || 'foto-texto';
+      var dois = (f === 'duas-fotos');
+      var h = '<div class="ed-faixa" data-pref="' + prefixo + '">' +
+        '<div class="ed-faixa-topo">' +
+          '<span class="ed-titulo">' + laEscapar(rotulo) + '</span>' +
+          '<div class="ed-formato">' +
+            FORMATOS.map(function (x) {
+              return '<button type="button" class="js-ed-formato' + (x.id === f ? ' on' : '') +
+                '" data-pref="' + prefixo + '" data-f="' + x.id + '">' + x.rotulo + '</button>';
+            }).join('') +
+          '</div>' +
+        '</div>' +
+
+        /* foto 1 */
+        '<div class="ed-foto-linha">' +
+          '<div class="ed-foto-box">' +
+            (dado.foto ? '<img src="' + laEscapar(dado.foto) + '" alt="">'
+                       : '<i class="fa-solid fa-image"></i>') +
+          '</div>' +
+          '<div class="ed-foto-campos">' +
+            '<label class="form-label">Foto principal</label>' +
+            '<input class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="foto" ' +
+              'placeholder="img/musculacao.jpg ou link" value="' + laEscapar(dado.foto || '') + '">' +
+            '<div class="ed-mini-acoes">' +
+              '<button class="btn-secondary btn-mini js-ed-carregar" data-pref="' + prefixo +
+                '" data-k="foto"><i class="fa-solid fa-camera"></i> Carregar foto</button>' +
+              (dado.foto && dado.foto.indexOf('data:') === 0
+                ? '<button class="btn-mini js-ed-limpar" data-pref="' + prefixo +
+                  '" data-k="foto">Voltar ao original</button>' : '') +
+            '</div>' +
+            '<input type="file" class="js-ed-arquivo" data-pref="' + prefixo + '" data-k="foto" ' +
+              'accept="image/*" capture="environment" hidden>' +
+          '</div>' +
+        '</div>' +
+
+        /* foto 2 — so quando escolhe duas fotos */
+        (dois
+          ? '<div class="ed-foto-linha">' +
+              '<div class="ed-foto-box">' +
+                (dado.foto2 ? '<img src="' + laEscapar(dado.foto2) + '" alt="">'
+                            : '<i class="fa-solid fa-image"></i>') +
+              '</div>' +
+              '<div class="ed-foto-campos">' +
+                '<label class="form-label">Segunda foto</label>' +
+                '<input class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="foto2" ' +
+                  'placeholder="segunda imagem" value="' + laEscapar(dado.foto2 || '') + '">' +
+                '<div class="ed-mini-acoes">' +
+                  '<button class="btn-secondary btn-mini js-ed-carregar" data-pref="' + prefixo +
+                    '" data-k="foto2"><i class="fa-solid fa-camera"></i> Carregar foto</button>' +
+                '</div>' +
+                '<input type="file" class="js-ed-arquivo" data-pref="' + prefixo + '" data-k="foto2" ' +
+                  'accept="image/*" capture="environment" hidden>' +
+              '</div>' +
+            '</div>'
+          : '') +
+
+        /* textos */
+        '<div class="ed-grade">' +
+          '<div>' +
+            '<label class="form-label">Etiqueta</label>' +
+            '<input class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="etiqueta" ' +
+              'value="' + laEscapar(dado.etiqueta || '') + '" placeholder="Novidade">' +
+          '</div>' +
+          '<div>' +
+            '<label class="form-label">Título</label>' +
+            '<input class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="titulo" ' +
+              'value="' + laEscapar(dado.titulo || '') + '" placeholder="Ginástica Artística">' +
+          '</div>' +
+          '<div class="largo">' +
+            '<label class="form-label">Legenda da foto</label>' +
+            '<input class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="legenda" ' +
+              'value="' + laEscapar(dado.legenda || '') + '" placeholder="A fachada: onde tudo começa">' +
+          '</div>' +
+          (dois
+            ? '<div class="largo">' +
+                '<label class="form-label">Legenda da segunda foto</label>' +
+                '<input class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="legenda2" ' +
+                  'value="' + laEscapar(dado.legenda2 || '') + '">' +
+              '</div>'
+            : '') +
+          '<div class="largo">' +
+            '<label class="form-label">Texto</label>' +
+            '<textarea class="form-input js-ed-campo" data-pref="' + prefixo + '" data-k="texto" ' +
+              'rows="4" placeholder="Escreva o texto desta faixa">' + laEscapar(dado.texto || '') + '</textarea>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="ed-mini-acoes" style="margin-top:12px;">' +
+          '<button class="btn-primary btn-mini js-ed-salvar" data-pref="' + prefixo + '">' +
+            '<i class="fa-solid fa-floppy-disk"></i> Salvar esta faixa</button>' +
+          (extra || '') +
+        '</div>' +
+      '</div>';
+      return h;
+    }
+
+    /* ---------- acha o dado pelo prefixo ---------- */
+    function dadoDe(prefixo) {
+      var c = conteudo();
+      if (prefixo === 'sobre') {
+        c.sobre = c.sobre || {};
+        c.sobre.faixa = c.sobre.faixa || {};
+        return c.sobre.faixa;
+      }
+      var id = prefixo.replace('bloco-', '');
+      c.blocos = Array.isArray(c.blocos) ? c.blocos : [];
+      var b = c.blocos.filter(function (x) { return x.id === id; })[0];
+      if (!b) { b = { id: id, ativo: true, formato: 'foto-texto' }; c.blocos.push(b); }
+      return b;
+    }
+
+    /* ---------- pinta o Sobre ---------- */
+    function pintarSobre() {
+      var casa = q('.js-editor-sobre');
+      if (!casa) return;
+      var c = conteudo();
+      var so = c.sobre || {};
+      var f = so.faixa || {};
+      casa.innerHTML = faixaHTML('sobre', f, 'Faixa principal do Sobre', '');
+      ligar(casa, '.js-aviso-bloco');
+    }
+
+    /* ---------- pinta os blocos ---------- */
+    function pintarBlocos() {
+      var casa = q('.js-editor-blocos');
+      if (!casa) return;
+      var c = conteudo();
+      var lista = Array.isArray(c.blocos) ? c.blocos : [];
+      if (!lista.length) {
+        casa.innerHTML = '<p class="vazio">Você ainda não criou nenhum bloco. ' +
+                         'Clique em "Adicionar um bloco novo" abaixo.</p>';
+        return;
+      }
+      casa.innerHTML = lista.map(function (b, i) {
+        var extra = '<button class="btn-mini js-ed-apagar" data-id="' + laEscapar(b.id) + '">' +
+                    'Apagar este bloco</button>';
+        return faixaHTML('bloco-' + b.id, b, 'Bloco ' + (i + 1) + (b.ativo === false ? ' (oculto)' : ''), extra);
+      }).join('');
+      ligar(casa, '.js-aviso-bloco');
+    }
+
+    /* ---------- liga os cliques de um container ---------- */
+    function ligar(casa, avisoSel) {
+      /* escolher o formato */
+      qa2(casa, '.js-ed-formato').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var d = dadoDe(b.getAttribute('data-pref'));
+          d.formato = b.getAttribute('data-f');
+          gravar();
+          atualizarTudo();
+        });
+      });
+
+      /* salvar os campos escritos */
+      qa2(casa, '.js-ed-salvar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var pref = b.getAttribute('data-pref');
+          var d = dadoDe(pref);
+          qa2(casa, '.js-ed-campo[data-pref="' + pref + '"]').forEach(function (campo) {
+            d[campo.getAttribute('data-k')] = campo.value;
+          });
+          gravar();
+          avisar(avisoSel, 'Faixa salva. O site já está usando o novo conteúdo.');
+          atualizarTudo();
+        });
+      });
+
+      /* carregar foto do aparelho ou da câmera */
+      qa2(casa, '.js-ed-carregar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var pref = b.getAttribute('data-pref'), k = b.getAttribute('data-k');
+          var arq = casa.querySelector('.js-ed-arquivo[data-pref="' + pref + '"][data-k="' + k + '"]');
+          if (arq) arq.click();
+        });
+      });
+
+      qa2(casa, '.js-ed-arquivo').forEach(function (arq) {
+        arq.addEventListener('change', function () {
+          var f = arq.files && arq.files[0];
+          if (!f) return;
+          if (f.size > 3 * 1024 * 1024) {
+            avisar(avisoSel, 'A imagem é grande (mais de 3MB). Escolha uma menor.', true);
+            return;
+          }
+          var pref = arq.getAttribute('data-pref'), k = arq.getAttribute('data-k');
+          var leitor = new FileReader();
+          leitor.onload = function () {
+            var d = dadoDe(pref);
+            d[k] = leitor.result;
+            gravar();
+            avisar(avisoSel, 'Foto trocada! O site já está usando a nova.');
+            atualizarTudo();
+          };
+          leitor.readAsDataURL(f);
+        });
+      });
+
+      /* voltar a foto ao original */
+      qa2(casa, '.js-ed-limpar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var pref = b.getAttribute('data-pref'), k = b.getAttribute('data-k');
+          if (!confirm('Voltar esta foto para a original?')) return;
+          var d = dadoDe(pref);
+          delete d[k];
+          gravar();
+          atualizarTudo();
+        });
+      });
+
+      /* apagar bloco */
+      qa2(casa, '.js-ed-apagar').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (!confirm('Apagar este bloco do site?')) return;
+          var id = b.getAttribute('data-id');
+          var c = conteudo();
+          c.blocos = (c.blocos || []).filter(function (x) { return x.id !== id; });
+          gravar();
+          avisar(avisoSel, 'Bloco apagado.');
+          atualizarTudo();
+        });
+      });
+    }
+
+    /* querySelectorAll escopado, sem depender de :scope */
+    function qa2(raiz, sel) {
+      return Array.prototype.slice.call(raiz.querySelectorAll(sel));
+    }
+
+    function atualizarTudo() {
+      pintarSobre();
+      pintarBlocos();
+    }
+
+    /* ---------- adicionar bloco novo ---------- */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('#add-bloco') : null;
+      if (!b) return;
+      var c = conteudo();
+      c.blocos = Array.isArray(c.blocos) ? c.blocos : [];
+      c.blocos.push({
+        id: 'b' + Date.now().toString(36),
+        ativo: true,
+        formato: 'foto-texto',
+        etiqueta: 'Novidade',
+        titulo: '',
+        texto: '',
+        foto: '',
+        legenda: ''
+      });
+      gravar();
+      pintarBlocos();
+      avisar('.js-aviso-bloco', 'Bloco criado. Escreva o título e escolha a foto.');
+    });
+
+    /* ---------- quando a aba abre, pinta ---------- */
+    window.LAAdminFrente = {
+      pintar: atualizarTudo,
+      iniciar: atualizarTudo
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      atualizarTudo();
+    });
+  })();
+
+  </script>
+  <script>
+
+  /* ==========================================================================
+     SINO DE NOTIFICAÇÕES
+     Le as novidades que o site ja registra e mostra numa lista.
+     Aluno: mensagem da academia, grupo, convite, treino liberado, cobranca, mural
+     Admin: mensagem nova, pedido de cadastro, aluno em risco
+     ========================================================================== */
+  (function () {
+    function q(sel, raiz) { return (raiz || document).querySelector(sel); }
+    function seguro(fn, padrao) { try { return fn(); } catch (e) { return padrao; } }
+
+    /* ---------- monta a lista do ALUNO ---------- */
+    function novidadesAluno() {
+      var eu = seguro(function () { return laAlunoLogado(); }, null);
+      if (!eu) return [];
+      var itens = [];
+
+      /* mensagens nao lidas da academia */
+      var naoLidas = seguro(function () { return laNaoLidasDoAluno(eu.id); }, 0);
+      if (naoLidas) itens.push({ icone: 'fa-envelope', tipo: 'ok',
+        titulo: naoLidas + (naoLidas === 1 ? ' mensagem nova' : ' mensagens novas'),
+        texto: 'A academia respondeu você.', ir: 'mensagens' });
+
+      /* mensagens no grupo */
+      var grupo = seguro(function () { return laGrupoListar(); }, []);
+      var doGrupo = grupo.filter(function (m) { return m && m.de !== 'eu' && !m.lida; }).length;
+      if (doGrupo) itens.push({ icone: 'fa-comments', tipo: 'ok',
+        titulo: doGrupo + ' no bate-papo do grupo', texto: 'Veja o que o pessoal escreveu.', ir: 'mensagens' });
+
+      /* convites de amizade */
+      var convites = seguro(function () { return laConvitesRecebidos(eu.id); }, []);
+      if (convites && convites.length) itens.push({ icone: 'fa-user-plus', tipo: 'ok',
+        titulo: convites.length + (convites.length === 1 ? ' convite de amizade' : ' convites de amizade'),
+        texto: 'Alguém quer falar com você no chat.', ir: 'mensagens' });
+
+      /* treino liberado */
+      var treino = seguro(function () { return laTreinoLiberado(eu.id); }, null);
+      if (treino) itens.push({ icone: 'fa-dumbbell', tipo: 'destaque',
+        titulo: 'Seu treino está liberado', texto: 'A academia montou a sua ficha.', ir: 'treino' });
+
+      /* cobranca em aberto */
+      var cobrancas = seguro(function () { return laCobrancasDoAluno(eu.id); }, []);
+      var abertas = (cobrancas || []).filter(function (c) { return c && !c.pago; });
+      if (abertas.length) itens.push({ icone: 'fa-credit-card', tipo: 'alerta',
+        titulo: abertas.length === 1 ? 'Você tem 1 cobrança em aberto' : 'Você tem ' + abertas.length + ' cobranças em aberto',
+        texto: 'Confira na sua mensalidade.', ir: 'mensalidade' });
+
+      /* mural */
+      var mural = seguro(function () { return laLerMural(); }, []);
+      if (mural && mural.length) itens.push({ icone: 'fa-bullhorn', tipo: 'ok',
+        titulo: 'Recado novo no mural', texto: 'A academia publicou um aviso.', ir: 'painel' });
+
+      return itens;
+    }
+
+    /* ---------- monta a lista do ADMIN ---------- */
+    function novidadesAdmin() {
+      var itens = [];
+
+      var convs = seguro(function () { return laConversasComNovidade(); }, []);
+      var naoLidas = (convs || []).reduce(function (s, c) { return s + (c.naoLidas || 0); }, 0);
+      if (naoLidas) itens.push({ icone: 'fa-envelope', tipo: 'ok',
+        titulo: naoLidas + (naoLidas === 1 ? ' mensagem de aluno' : ' mensagens de alunos'),
+        texto: 'Responda pelo bate-papo.', ir: 'mensagens' });
+
+      /* pedidos de cadastro que vieram do site */
+      var pend = [];
+      try { pend = JSON.parse(localStorage.getItem('la_pendentes') || '[]'); } catch (e) {}
+      if (pend && pend.length) itens.push({ icone: 'fa-user-clock', tipo: 'destaque',
+        titulo: pend.length + (pend.length === 1 ? ' pedido de cadastro' : ' pedidos de cadastro'),
+        texto: 'Alguém se cadastrou pelo site e aguarda liberação.', ir: 'alunos' });
+
+      /* alunos com pagamento atrasado */
+      var risco = seguro(function () { return laAlunosEmRisco(); }, []);
+      if (risco && risco.length) itens.push({ icone: 'fa-triangle-exclamation', tipo: 'alerta',
+        titulo: risco.length + (risco.length === 1 ? ' aluno com pagamento atrasado' : ' alunos com pagamento atrasado'),
+        texto: 'Veja em Pagamentos.', ir: 'pagamentos' });
+
+      return itens;
+    }
+
+    /* ---------- desenha o sino ---------- */
+    function montar(casa, lista, ir) {
+      var total = lista.length;
+      casa.innerHTML =
+        '<button class="sino-btn js-sino-abrir" type="button" aria-label="Notificações">' +
+          '<i class="fa-solid fa-bell"></i>' +
+          (total ? '<span class="sino-conta">' + (total > 9 ? '9+' : total) + '</span>' : '') +
+        '</button>' +
+        '<div class="sino-painel hidden js-sino-painel">' +
+          '<div class="sino-topo"><b>Notificações</b>' +
+            (total ? '<span>' + total + '</span>' : '') + '</div>' +
+          (total
+            ? lista.map(function (n) {
+                return '<button class="sino-item" type="button" data-ir="' + n.ir + '">' +
+                         '<i class="fa-solid ' + n.icone + ' sino-icone ' + (n.tipo || '') + '"></i>' +
+                         '<span class="sino-txt"><b>' + laEscapar(n.titulo) + '</b>' +
+                         '<small>' + laEscapar(n.texto) + '</small></span>' +
+                       '</button>';
+              }).join('')
+            : '<p class="sino-vazio">Nada novo por aqui.</p>') +
+        '</div>';
+    }
+
+    function ligar(casa) {
+      var abrir = q('.js-sino-abrir', casa);
+      var painel = q('.js-sino-painel', casa);
+      if (abrir && !abrir._ligado) {
+        abrir._ligado = true;
+        abrir.addEventListener('click', function (e) {
+          e.stopPropagation();
+          painel.classList.toggle('hidden');
+        });
+      }
+      casa.querySelectorAll('.sino-item').forEach(function (b) {
+        if (b._ligado) return; b._ligado = true;
+        b.addEventListener('click', function () {
+          var ir = b.getAttribute('data-ir');
+          painel.classList.add('hidden');
+          var alvo = document.querySelector('[data-painel="' + ir + '"], [data-aba-admin="' + ir + '"]');
+          if (alvo) alvo.click();
+        });
+      });
+    }
+
+    function pintar() {
+      /* aluno */
+      var casaA = q('.js-sino-aluno');
+      if (casaA) { montar(casaA, novidadesAluno()); ligar(casaA); }
+      /* admin */
+      var casaB = q('.js-sino-admin');
+      if (casaB) { montar(casaB, novidadesAdmin()); ligar(casaB); }
+    }
+
+    /* fecha ao clicar fora */
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.js-sino-painel').forEach(function (p) {
+        if (!e.target.closest || !e.target.closest('.js-sino-aluno, .js-sino-admin')) p.classList.add('hidden');
+      });
+    });
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pintar);
+    else pintar();
+    setInterval(pintar, 8000);
+
+    window.LASino = { pintar: pintar };
+  })();
+  </script>
+
+  <script>
+
+  /* ==========================================================================
+     ACESSIBILIDADE — botão flutuante + Libras (VLibras)
+     Ajustes: tamanho da letra, contraste, espaço entre linhas,
+     links destacados, esconder imagens e leitura em voz alta.
+     ========================================================================== */
+  (function () {
+    var CHAVE = 'la_acesso';
+
+    function lerPrefs() {
+      try { return JSON.parse(localStorage.getItem(CHAVE) || '{}'); } catch (e) { return {}; }
+    }
+    function gravarPrefs(p) {
+      try { localStorage.setItem(CHAVE, JSON.stringify(p)); } catch (e) {}
+    }
+
+    /* aplica no <html> o que o usuario escolheu */
+    function aplicar(p) {
+      var h = document.documentElement;
+      h.classList.toggle('a-fonte-1', p.fonte === 1);
+      h.classList.toggle('a-fonte-2', p.fonte === 2);
+      h.classList.toggle('a-fonte-3', p.fonte === 3);
+      h.classList.toggle('a-contraste', !!p.contraste);
+      h.classList.toggle('a-espaco', !!p.espaco);
+      h.classList.toggle('a-links', !!p.links);
+      h.classList.toggle('a-sem-imagem', !!p.semImagem);
+      h.classList.toggle('a-guia', !!p.guia);
+    }
+
+    /* ---------- a barra ---------- */
+    var botoes = [
+      { k: 'fonte',       icone: 'fa-magnifying-glass-plus', rot: 'Aumentar a letra' },
+      { k: 'contraste',   icone: 'fa-circle-half-stroke',    rot: 'Alto contraste' },
+      { k: 'espaco',      icone: 'fa-text-height',           rot: 'Espaço entre linhas' },
+      { k: 'links',       icone: 'fa-link',                  rot: 'Destacar links' },
+      { k: 'semImagem',   icone: 'fa-image',                 rot: 'Esconder imagens' },
+      { k: 'guia',        icone: 'fa-crosshairs',            rot: 'Guia de leitura' },
+      { k: 'ler',         icone: 'fa-volume-high',           rot: 'Ler a página em voz alta' },
+      { k: 'libras',      icone: 'fa-hands',                 rot: 'Libras' },
+      { k: 'reset',       icone: 'fa-rotate-left',           rot: 'Voltar ao normal' }
+    ];
+
+    function montar() {
+      if (document.querySelector('.a-barra')) return;
+      var caixa = document.createElement('div');
+      caixa.className = 'a-caixa';
+      caixa.innerHTML =
+        '<button class="a-abrir js-a-abrir" type="button" aria-label="Acessibilidade" title="Acessibilidade">' +
+          '<i class="fa-solid fa-universal-access"></i>' +
+        '</button>' +
+        '<div class="a-barra hidden js-a-barra" role="group" aria-label="Ferramentas de acessibilidade">' +
+          '<b class="a-titulo">Acessibilidade</b>' +
+          botoes.map(function (b) {
+            return '<button class="a-btn js-a-btn" type="button" data-k="' + b.k + '" ' +
+                     'aria-label="' + b.rot + '" title="' + b.rot + '">' +
+                     '<i class="fa-solid ' + b.icone + '"></i></button>';
+          }).join('') +
+        '</div>';
+      document.body.appendChild(caixa);
+    }
+
+    function ligar() {
+      var abrir = document.querySelector('.js-a-abrir');
+      var barra = document.querySelector('.js-a-barra');
+      if (abrir && !abrir._ligado) {
+        abrir._ligado = true;
+        abrir.addEventListener('click', function () { barra.classList.toggle('hidden'); });
+      }
+
+      document.querySelectorAll('.js-a-btn').forEach(function (b) {
+        if (b._ligado) return; b._ligado = true;
+        b.addEventListener('click', function () {
+          var k = b.getAttribute('data-k');
+          var p = lerPrefs();
+
+          if (k === 'reset') {
+            gravarPrefs({});
+            aplicar({});
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            b.classList.remove('on');
+            document.querySelectorAll('.js-a-btn').forEach(function (x) { x.classList.remove('on'); });
+            return;
+          }
+
+          if (k === 'ler') {
+            if (!('speechSynthesis' in window)) return;
+            if (window.speechSynthesis.speaking) {
+              window.speechSynthesis.cancel();
+              b.classList.remove('on');
+              return;
+            }
+            var texto = (document.querySelector('main') || document.body).innerText.slice(0, 3000);
+            var fala = new SpeechSynthesisUtterance(texto);
+            fala.lang = 'pt-BR';
+            fala.rate = 1;
+            fala.onend = function () { b.classList.remove('on'); };
+            window.speechSynthesis.speak(fala);
+            b.classList.add('on');
+            return;
+          }
+
+          if (k === 'libras') {
+            var v = document.querySelector('[vw]') || document.querySelector('.vw-plugin-wrapper');
+            if (v) {
+              v.classList.toggle('vw-plugin-hidden');
+              b.classList.toggle('on');
+            } else {
+              alert('O tradutor de Libras está carregando. Se não aparecer, verifique a internet.');
+            }
+            return;
+          }
+
+          if (k === 'fonte') {
+            p.fonte = ((p.fonte || 0) + 1) % 4;
+            marcarFonte(p.fonte, b);
+          } else {
+            p[k] = !p[k];
+            b.classList.toggle('on', !!p[k]);
+          }
+
+          gravarPrefs(p);
+          aplicar(p);
+        });
+      });
+
+      /* marca o estado que ja estava salvo */
+      var p = lerPrefs();
+      if (p.fonte) {
+        var bf = document.querySelector('.js-a-btn[data-k="fonte"]');
+        if (bf) marcarFonte(p.fonte, bf);
+      }
+      ['contraste', 'espaco', 'links', 'semImagem', 'guia'].forEach(function (k) {
+        var bb = document.querySelector('.js-a-btn[data-k="' + k + '"]');
+        if (bb && p[k]) bb.classList.add('on');
+      });
+    }
+
+    function marcarFonte(nivel, botao) {
+      botao.classList.toggle('on', nivel > 0);
+      botao.setAttribute('title', 'Tamanho da letra: ' + (nivel === 0 ? 'normal' : nivel + ' de 3'));
+    }
+
+    /* ---------- VLibras (tradutor oficial de Libras) ---------- */
+    function libras() {
+      if (document.querySelector('[vw]')) return;
+      var d = document.createElement('div');
+      d.setAttribute('vw', '');
+      d.className = 'enabled';
+      d.innerHTML =
+        '<div vw-access-button class="active"></div>' +
+        '<div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>';
+      document.body.appendChild(d);
+
+      var s = document.createElement('script');
+      s.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
+      s.onload = function () {
+        try { new window.VLibras.Widget('https://vlibras.gov.br/app'); } catch (e) {}
+      };
+      document.body.appendChild(s);
+    }
+
+    function iniciar() {
+      aplicar(lerPrefs());
+      montar();
+      ligar();
+      libras();
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
+    else iniciar();
+  })();
+  </script>
+</body>
+</html>

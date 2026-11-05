@@ -1,0 +1,429 @@
+/* ==========================================================================
+   L.A FITNESS — área do aluno (console)
+   Estrutura: sidebar + topo + KPIs + gráfico + esteira + treino + loja
+   Depende de: dados.js, treinos.js, entrada.js
+   ========================================================================== */
+
+const LAShell = {
+
+  aluno: null,
+
+  iniciar(aluno) {
+    this.aluno = aluno || laAlunoLogado();
+    if (!this.aluno) return;
+
+    this.pintarTopo();
+    this.pintarKpis();
+    this.pintarGrafico();
+    this.pintarEsteira();
+    this.pintarTreino();
+    this.pintarHistorico();
+    this.pintarLoja();
+    this.pintarPlano();
+    this.ligarNav();
+    this.ligarEsteira();
+  },
+
+  /* ---------------- topo ---------------- */
+  pintarTopo() {
+    const a = this.aluno;
+    const nome = document.querySelector('.js-aluno-nome');
+    const matr = document.querySelector('.js-aluno-matricula');
+    const av = document.querySelector('.js-aluno-avatar');
+    if (nome) nome.textContent = a.nome;
+    if (matr) matr.textContent = a.matricula;
+    if (av) av.textContent = laIniciais(a.nome);
+  },
+
+  /* ---------------- KPIs ---------------- */
+  pintarKpis() {
+    const a = this.aluno;
+    const feitos = laTreinosFeitosNaSemana(a.id);
+    const medidas = laListarMedidas(a.id);
+    const agenda = laAgendaDoAluno(a.id);
+
+    const vinculo = laFichaDoAluno(a.id);
+    let seriesFeitas = 0, seriesTotal = 0;
+    const porTreino = [];
+    if (vinculo) {
+      (vinculo.ficha.treinos || []).forEach(function (t) {
+        const p = laProgressoDoTreino(a.id, t);
+        seriesFeitas += p.feitas;
+        seriesTotal += p.total;
+        porTreino.push({ letra: t.letra, pct: p.pct });
+      });
+    }
+
+    const pct = seriesTotal ? Math.round((seriesFeitas / seriesTotal) * 100) : 0;
+    const ultima = medidas.length ? medidas[medidas.length - 1] : null;
+    const primeira = medidas.length ? medidas[0] : null;
+    let variacao = '—';
+    if (ultima && primeira && medidas.length > 1) {
+      const d = (parseFloat(String(ultima.peso).replace(',', '.')) -
+                 parseFloat(String(primeira.peso).replace(',', '.')));
+      if (!isNaN(d)) variacao = (d > 0 ? '+' : '') + d.toFixed(1) + ' kg';
+    }
+
+    const set = function (sel, v) { const e = document.querySelector(sel); if (e) e.textContent = v; };
+    set('.js-k-treinos', feitos.length + '/' + agenda.length);
+    set('.js-k-series', seriesFeitas + '/' + seriesTotal);
+    set('.js-k-pct', pct + '%');
+    set('.js-k-medidas', medidas.length);
+    set('.js-k-variacao', variacao);
+    set('.js-k-peso', ultima ? String(ultima.peso) + ' kg' : '—');
+
+    /* barras por treino */
+    const barras = document.querySelector('.js-k-treinos-barras');
+    if (barras) {
+      barras.innerHTML = porTreino.map(function (t) {
+        return '<div class="mini-barra" title="Treino ' + t.letra + ': ' + t.pct + '%">' +
+                 '<span>' + t.letra + '</span>' +
+                 '<i style="height:' + Math.max(6, t.pct) + '%"></i>' +
+               '</div>';
+      }).join('') || '<p class="vazio-mini">Sem ficha</p>';
+    }
+  },
+
+  /* ---------------- gráfico de evolução ---------------- */
+  pintarGrafico() {
+    const cv = document.querySelector('.js-grafico-evolucao');
+    if (!cv) return;
+    const medidas = laListarMedidas(this.aluno.id);
+    laDesenharGrafico(this.aluno.id);
+    this.descreverGrafico(medidas);
+  },
+
+  descreverGrafico(medidas) {
+    const casa = document.querySelector('.js-legenda-grafico');
+    if (!casa) return;
+
+    if (!medidas.length) {
+      casa.innerHTML = '<p class="vazio-mini">Nenhuma medida registrada ainda.</p>';
+      return;
+    }
+
+    const u = medidas[medidas.length - 1];
+    const d = new Date(u.quando);
+    casa.innerHTML =
+      '<div class="kv"><span>Último peso</span><b>' + laEscapar(u.peso) + ' kg</b></div>' +
+      '<div class="kv"><span>Cintura</span><b>' + (u.cintura ? laEscapar(u.cintura) + ' cm' : '—') + '</b></div>' +
+      '<div class="kv"><span>Registrado em</span><b>' +
+        d.getDate().toString().padStart(2, '0') + '/' +
+        (d.getMonth() + 1).toString().padStart(2, '0') + '</b></div>';
+  },
+
+  /* ======================================================================
+     ESTEIRA — cronômetro de corrida
+     ====================================================================== */
+
+  esteira: { rodando: false, segundos: 0, intervalo: null, distancia: 0, velocidade: 8 },
+
+  pintarEsteira() {
+    const casa = document.querySelector('.js-esteira');
+    if (!casa) return;
+
+    const hoje = laCorridasDoDia(this.aluno.id);
+    const total = laCorridas(this.aluno.id);
+
+    casa.innerHTML =
+      '<div class="esteira-painel">' +
+        '<div class="cronometro js-crono">00:00:00</div>' +
+        '<div class="esteira-dados">' +
+          '<div class="dado"><span>Distância</span><b class="js-dist">0,00 km</b></div>' +
+          '<div class="dado"><span>Velocidade</span><b class="js-vel">8,0 km/h</b></div>' +
+          '<div class="dado"><span>Ritmo</span><b class="js-ritmo">7:30 /km</b></div>' +
+          '<div class="dado"><span>Hoje</span><b>' + hoje.length + ' corrida(s)</b></div>' +
+        '</div>' +
+        '<div class="esteira-acoes">' +
+          '<button class="btn-corrida js-iniciar-corrida"><i class="fa-solid fa-play"></i> Iniciar corrida</button>' +
+          '<button class="btn-corrida parar js-parar-corrida hidden"><i class="fa-solid fa-stop"></i> Parar e salvar</button>' +
+          '<button class="btn-corrida zerar js-zerar-corrida hidden"><i class="fa-solid fa-rotate-left"></i> Zerar</button>' +
+        '</div>' +
+        '<div class="esteira-velocidade">' +
+          '<label>Velocidade (km/h)</label>' +
+          '<input type="range" class="js-vel-range" min="4" max="16" step="0.5" value="8">' +
+        '</div>' +
+      '</div>' +
+      '<div class="esteira-historico js-corridas">' +
+        (total.length
+          ? total.slice(-4).reverse().map(function (c) {
+              const d = new Date(c.quando);
+              return '<div class="linha-mini">' +
+                       '<i class="fa-solid fa-person-running"></i>' +
+                       '<b>' + c.distancia.toFixed(2).replace('.', ',') + ' km</b>' +
+                       '<span>' + laDuracao(c.segundos) + '</span>' +
+                       '<span class="data-mini">' +
+                         d.getDate().toString().padStart(2, '0') + '/' +
+                         (d.getMonth() + 1).toString().padStart(2, '0') + '</span>' +
+                     '</div>';
+            }).join('')
+          : '<p class="vazio-mini">Nenhuma corrida registrada.</p>') +
+      '</div>';
+  },
+
+  ligarEsteira() {
+    const eu = this;
+    const painel = document.querySelector('.js-esteira');
+    if (!painel || painel._ligado) return;
+    painel._ligado = true;
+
+    const btnIni = document.querySelector('.js-iniciar-corrida');
+    const btnPar = document.querySelector('.js-parar-corrida');
+    const btnZer = document.querySelector('.js-zerar-corrida');
+    const range = document.querySelector('.js-vel-range');
+
+    if (range) range.addEventListener('input', function () {
+      eu.esteira.velocidade = parseFloat(range.value);
+      eu.atualizarEsteira();
+    });
+
+    if (btnIni) btnIni.addEventListener('click', function () {
+      eu.esteira.rodando = true;
+      eu.esteira.intervalo = setInterval(function () {
+        eu.esteira.segundos++;
+        eu.esteira.distancia += eu.esteira.velocidade / 3600;
+        eu.atualizarEsteira();
+      }, 1000);
+
+      btnIni.classList.add('hidden');
+      if (btnPar) btnPar.classList.remove('hidden');
+      if (btnZer) btnZer.classList.remove('hidden');
+    });
+
+    if (btnPar) btnPar.addEventListener('click', function () {
+      if (!eu.esteira.rodando) return;
+      clearInterval(eu.esteira.intervalo);
+      eu.esteira.rodando = false;
+
+      if (eu.esteira.segundos < 10) {
+        alert('Corrida muito curta — menos de 10 segundos não é salva.');
+      } else {
+        laSalvarCorrida(eu.aluno.id, eu.esteira.segundos, eu.esteira.distancia);
+      }
+      eu.zerarEsteira();
+      eu.pintarEsteira();
+      eu.ligarEsteira();
+    });
+
+    if (btnZer) btnZer.addEventListener('click', function () {
+      eu.zerarEsteira();
+      eu.pintarEsteira();
+      eu.ligarEsteira();
+    });
+  },
+
+  zerarEsteira() {
+    clearInterval(this.esteira.intervalo);
+    this.esteira = { rodando: false, segundos: 0, intervalo: null, distancia: 0, velocidade: 8 };
+  },
+
+  atualizarEsteira() {
+    const e = this.esteira;
+    const c = document.querySelector('.js-crono');
+    const d = document.querySelector('.js-dist');
+    const v = document.querySelector('.js-vel');
+    const r = document.querySelector('.js-ritmo');
+
+    if (c) c.textContent = laDuracao(e.segundos);
+    if (d) d.textContent = e.distancia.toFixed(2).replace('.', ',') + ' km';
+    if (v) v.textContent = e.velocidade.toFixed(1).replace('.', ',') + ' km/h';
+
+    if (r) {
+      const ritmo = e.velocidade > 0 ? (60 / e.velocidade) : 0;
+      const m = Math.floor(ritmo);
+      const s = Math.round((ritmo - m) * 60);
+      r.textContent = m + ':' + s.toString().padStart(2, '0') + ' /km';
+    }
+  },
+
+  /* ---------------- treino de hoje ---------------- */
+  pintarTreino() {
+    const casa = document.querySelector('.js-treino-hoje');
+    if (!casa) return;
+
+    const vinculo = laFichaDoAluno(this.aluno.id);
+    if (!vinculo) {
+      casa.innerHTML = '<p class="vazio-mini">Sua ficha ainda não foi liberada.</p>';
+      return;
+    }
+
+    const hoje = laTreinoDeHoje(this.aluno.id);
+    const treino = hoje
+      ? (vinculo.ficha.treinos || []).find(function (t) { return t.letra === hoje.letra; })
+      : vinculo.ficha.treinos[0];
+    if (!treino) return;
+
+    const p = laProgressoDoTreino(this.aluno.id, treino);
+
+    casa.innerHTML =
+      '<div class="cartao-treino-hoje">' +
+        '<span class="etiqueta-treino">TREINO ' + laEscapar(treino.letra) + '</span>' +
+        '<h3>' + laEscapar(treino.nome) + '</h3>' +
+        '<p class="sub">' + treino.exercicios.length + ' exercícios · ' +
+          (hoje ? hoje.dia : 'hoje') + '</p>' +
+        '<div class="progresso"><div class="barra-progresso"><i style="width:' + p.pct + '%"></i></div>' +
+          '<span>' + p.feitas + ' de ' + p.total + ' séries</span></div>' +
+        '<button class="btn-primary js-iniciar" style="width:100%;justify-content:center;margin-top:14px;">' +
+          '<i class="fa-solid fa-play"></i> Iniciar Treino</button>' +
+      '</div>';
+
+    const b = casa.querySelector('.js-iniciar');
+    if (b) b.addEventListener('click', function () { LAAluno.abrirTreino(treino); });
+  },
+
+  /* ---------------- histórico ---------------- */
+  pintarHistorico() {
+    const casa = document.querySelector('.js-historico');
+    if (!casa) return;
+
+    const feitos = laTreinosFeitos(this.aluno.id).slice().reverse().slice(0, 6);
+    if (!feitos.length) {
+      casa.innerHTML = '<p class="vazio-mini">Nenhum treino concluído ainda.</p>';
+      return;
+    }
+
+    const nomesDia = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    casa.innerHTML = feitos.map(function (t) {
+      const d = new Date(t.quando);
+      return '<div class="linha-mini">' +
+               '<i class="fa-solid fa-circle-check"></i>' +
+               '<b>Treino ' + laEscapar(t.letra) + '</b>' +
+               '<span>' + nomesDia[d.getDay()] + ' ' +
+                 d.getDate().toString().padStart(2, '0') + '/' +
+                 (d.getMonth() + 1).toString().padStart(2, '0') + '</span>' +
+             '</div>';
+    }).join('');
+  },
+
+  /* ---------------- loja ---------------- */
+  pintarLoja() {
+    const casa = document.querySelector('.js-loja');
+    if (!casa) return;
+
+    casa.innerHTML = LA_PRODUTOS.map(function (p) {
+      return '<div class="item-loja">' +
+               '<div class="icone-loja"><i class="fa-solid ' + p.icone + '"></i></div>' +
+               '<div class="info-loja">' +
+                 '<b>' + laEscapar(p.nome) + '</b>' +
+                 '<span>' + laEscapar(p.categoria) + '</span>' +
+                 '<strong>R$ ' + p.preco.toFixed(2).replace('.', ',') + '</strong>' +
+               '</div>' +
+               '<button class="btn-reservar js-reservar" data-id="' + p.id + '">Reservar</button>' +
+             '</div>';
+    }).join('');
+
+    const eu = this;
+    casa.querySelectorAll('.js-reservar').forEach(function (b) {
+      b.addEventListener('click', function () {
+        const prod = LA_PRODUTOS.find(function (x) { return x.id === b.getAttribute('data-id'); });
+        if (!prod) return;
+        laReservarProduto(eu.aluno.id, prod);
+        b.textContent = 'Reservado ✓';
+        b.disabled = true;
+        b.classList.add('reservado');
+      });
+    });
+  },
+
+  /* ---------------- plano ---------------- */
+  pintarPlano() { laPintarPlano(this.aluno.id); },
+
+  /* ---------------- navegação por seções ---------------- */
+  ligarNav() {
+    document.querySelectorAll('[data-painel]').forEach(function (b) {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', function () {
+        const qual = b.getAttribute('data-painel');
+        document.querySelectorAll('[data-painel]').forEach(function (x) { x.classList.remove('ativo'); });
+        document.querySelectorAll('.painel').forEach(function (x) { x.classList.remove('ativo'); });
+        b.classList.add('ativo');
+        const p = document.getElementById('painel-' + qual);
+        if (p) p.classList.add('ativo');
+        const crumb = document.querySelector('.js-crumb');
+        if (crumb) crumb.textContent = b.textContent.trim();
+
+        if (qual === 'evolucao') setTimeout(function () { laDesenharGrafico(LAShell.aluno.id); }, 40);
+      });
+    });
+
+    /* abas de loja/perfil antigas continuam funcionando */
+    document.querySelectorAll('[data-aba-app]').forEach(function (b) {
+      if (b._ligado) return;
+      b._ligado = true;
+      b.addEventListener('click', function () {
+        const qual = b.getAttribute('data-aba-app');
+        const alvo = { treinos: 'treino', loja: 'loja', perfil: 'perfil' }[qual];
+        const botao = document.querySelector('[data-painel="' + alvo + '"]');
+        if (botao) botao.click();
+      });
+    });
+  }
+};
+
+/* ==========================================================================
+   CORRIDAS
+   ========================================================================== */
+
+const LA_CORRIDAS = 'la_corridas_';
+
+function laDuracao(seg) {
+  const h = Math.floor(seg / 3600);
+  const m = Math.floor((seg % 3600) / 60);
+  const s = seg % 60;
+  return h.toString().padStart(2, '0') + ':' +
+         m.toString().padStart(2, '0') + ':' +
+         s.toString().padStart(2, '0');
+}
+
+function laCorridas(alunoId) {
+  try {
+    const b = localStorage.getItem(LA_CORRIDAS + alunoId);
+    return b ? JSON.parse(b) : [];
+  } catch (e) { return []; }
+}
+
+function laCorridasDoDia(alunoId) {
+  const hoje = new Date().toISOString().slice(0, 10);
+  return laCorridas(alunoId).filter(function (c) { return c.quando.slice(0, 10) === hoje; });
+}
+
+function laSalvarCorrida(alunoId, segundos, distancia) {
+  try {
+    const lista = laCorridas(alunoId);
+    lista.push({ segundos: segundos, distancia: distancia, quando: new Date().toISOString() });
+    localStorage.setItem(LA_CORRIDAS + alunoId, JSON.stringify(lista.slice(-100)));
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ==========================================================================
+   PEDIDOS DA LOJA
+   ========================================================================== */
+
+const LA_PEDIDOS = 'la_pedidos';
+
+function laReservarProduto(alunoId, produto) {
+  try {
+    const b = localStorage.getItem(LA_PEDIDOS);
+    const lista = b ? JSON.parse(b) : [];
+    lista.push({
+      alunoId: alunoId,
+      aluno: (laBuscarAluno(alunoId) || {}).nome || '',
+      produto: produto.nome,
+      preco: produto.preco,
+      status: 'reservado',
+      quando: new Date().toISOString()
+    });
+    localStorage.setItem(LA_PEDIDOS, JSON.stringify(lista));
+    return true;
+  } catch (e) { return false; }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const alvo = document.getElementById('view-app-dash');
+  if (alvo) {
+    /* o LAAluno chama o shell quando o login acontece */
+    window.LAShell = LAShell;
+  }
+});
