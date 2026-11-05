@@ -217,13 +217,6 @@ const LAAdmin = {
     const buscar = document.getElementById('busca-aluno');
     if (buscar) buscar.addEventListener('input', function () { eu.pintarAlunos(buscar.value); });
 
-    const semear = document.querySelector('.js-semear');
-    if (semear) semear.addEventListener('click', function () {
-      const a = laSemearExemplo();
-      eu.pintarAlunos();
-      if (a) eu.avisarSucesso('Aluno de exemplo criado: ' + a.nome + ' (CPF 123.456.789-00, senha 123456).');
-      else eu.avisarSucesso('Já existe aluno cadastrado — o exemplo só entra quando a lista está vazia.');
-    });
   },
 
   avisar(el, msg) {

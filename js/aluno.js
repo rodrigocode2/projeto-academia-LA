@@ -344,12 +344,18 @@ const LAAluno = {
 
     modal.classList.add('active');
 
-    /* baixa o dataset (só na primeira vez) e repinta quando chegar */
+    /* o catalogo de 1,6 MB so desce se houver internet boa; a ficha abre antes */
     if (typeof laCarregarDataset === 'function' && !LA_DATASET) {
       const eu = this;
-      laCarregarDataset()
-        .then(function () { eu.pintarExercicio(); })
-        .catch(function () { /* sem internet: segue com o que tem */ });
+      const conexao = navigator.connection || {};
+      const fraca = conexao.saveData || /2g/i.test(conexao.effectiveType || '');
+      if (!fraca) {
+        setTimeout(function () {
+          laCarregarDataset()
+            .then(function () { eu.pintarExercicio(); })
+            .catch(function () { /* sem internet: segue com o que tem */ });
+        }, 1200);
+      }
     }
     laRegistrarAcesso('treino', 'clique', { alvo: 'iniciar-treino', letra: treino.letra });
     this.pintarExercicio();

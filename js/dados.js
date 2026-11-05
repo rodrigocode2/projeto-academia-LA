@@ -728,18 +728,3 @@ function laEscapar(txt) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
-
-function laSemearExemplo() {
-  if (laListarAlunos().length) return null;
-  const aluno = laCriarAluno({
-    nome: 'Rodrigo Silva',
-    cpf: '12345678900',
-    senha: '123456',
-    plano: 'Recorrente',
-    objetivo: 'Hipertrofia',
-    telefone: '(61) 99999-0000'
-  });
-  aluno.treinos = laTreinoPadrao();
-  laAtualizarAluno(aluno.id, { treinos: aluno.treinos });
-  return aluno;
-}

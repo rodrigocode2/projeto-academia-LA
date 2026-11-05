@@ -301,10 +301,6 @@
 
           <p class="link-esqueci js-esqueci">Esqueci minha senha</p>
 
-          <p class="dica-login">
-            <i class="fa-solid fa-circle-info"></i>
-            Demonstração: CPF <b>123.456.789-00</b> · senha <b>123456</b>
-          </p>
         </div>
 
         <!-- CADASTRAR -->
@@ -331,7 +327,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">WhatsApp</label>
-              <input type="text" class="form-input" id="cad-zap" placeholder="(61) 90000-0000" inputmode="tel">
+              <input type="text" class="form-input" id="cad-zap" placeholder="(61) 9 9266-3142" inputmode="tel">
             </div>
             <div class="form-group">
               <label class="form-label">E-mail</label>
@@ -931,7 +927,7 @@
                   </div>
                   <div>
                     <label class="form-label">Telefone / WhatsApp</label>
-                    <input class="form-input" id="perf-telefone" placeholder="(61) 90000-0000">
+                    <input class="form-input" id="perf-telefone" placeholder="(61) 9 9266-3142">
                   </div>
                   <div>
                     <label class="form-label">E-mail</label>
@@ -2544,7 +2540,15 @@ const LAMural = {
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pintar);
     else pintar();
-    setInterval(pintar, 8000);
+
+    /* no celular, so atualiza quando a tela esta a vista */
+    var relogio = setInterval(function () {
+      if (document.hidden) return;
+      pintar();
+    }, 20000);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) pintar();
+    });
 
     window.LASino = { pintar: pintar };
   })();

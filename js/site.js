@@ -31,8 +31,6 @@ const LASite = {
     this.ligarLogin();
     this.ligarFicha();
     this.ligarMedicao();
-    this.semear();
-
     LABot.iniciar();
 
     if (this._destinoInicial) {
@@ -451,10 +449,6 @@ const LASite = {
     });
   },
 
-  semear() {
-    /* aluno de exemplo, se ainda não houver nenhum cadastrado */
-    laSemearExemplo();
-  }
 };
 
 /* atalhos usados pelos onclick que já existiam no HTML */

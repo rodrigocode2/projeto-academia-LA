@@ -39,7 +39,6 @@ const ESSENCIAIS = [
   'js/admin.js',
   'js/app-admin.js',
   'js/app-admin-msg.js',
-  'js/supabase.js',
   'img/logo.png',
   'img/logo-la.png',
   'manifest.json',
@@ -49,7 +48,8 @@ const ESSENCIAIS = [
   'js/app-admin-fin.js',
   'js/emojis.js',
   'js/financeiro.js',
-  'setup.html'
+  'setup.html',
+
 ];
 
 /* ---------------- instalacao ---------------- */
