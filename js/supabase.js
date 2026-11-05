@@ -4,8 +4,8 @@
    Se o banco nao responder, o site cai no navegador e continua funcionando.
    ========================================================================== */
 
-const LA_DB_URL = 'https://ypyqnvtzbpuhwvnphexw.supabase.co';
-const LA_DB_CHAVE = 'sb_publishable_ZC3GjFj8Hi6ZA43NdZxtDA_725Xd034';
+const LA_DB_URL = 'https://jpqdytagzdadberfcri.supabase.co';
+const LA_DB_CHAVE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impwb2R5dGFxemRhZGJlcmZpY3JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM4OTA1NTUsImV4cCI6MjEwOTQ2NjU1NX0.B2zbSKMOKQUMvc1hG7FIlFiUfj9ZWDIHerwEx-7a67k';
 
 /* o cliente e criado aqui, sem depender de CDN: usamos fetch direto na API */
 const LADB = {
