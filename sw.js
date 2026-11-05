@@ -13,7 +13,7 @@
    suba a VERSAO abaixo (ex.: 'v2') para o cache antigo ser descartado.
    ========================================================================== */
 
-const VERSAO = 'la-fitness-v2';
+const VERSAO = 'la-fitness-v3';
 
 const ESSENCIAIS = [
   'index.html',
@@ -39,6 +39,7 @@ const ESSENCIAIS = [
   'js/admin.js',
   'js/app-admin.js',
   'js/app-admin-msg.js',
+  'js/supabase.js',
   'img/logo.png',
   'img/logo-la.png',
   'manifest.json',
@@ -48,8 +49,7 @@ const ESSENCIAIS = [
   'js/app-admin-fin.js',
   'js/emojis.js',
   'js/financeiro.js',
-  'setup.html',
-  'data/exercises.json'
+  'setup.html'
 ];
 
 /* ---------------- instalacao ---------------- */
