@@ -13,6 +13,7 @@ function laLerMural() {
     return Array.isArray(l) ? l : [];
   } catch (e) { return []; }
 }
+
 function laMuralAberto() {
   try {
     const b = localStorage.getItem(LA_MURAL_ESTADO);
@@ -42,6 +43,16 @@ function laPostarNoMural(alunoId, texto) {
   lista.push(post);
   try { localStorage.setItem(LA_MURAL_CHAVE, JSON.stringify(lista)); } catch (e) {}
   return post;
+
+  /* manda para o banco */
+  if (window.LADB && window.LADB.pronto) {
+    try {
+      var l = laLerMural();
+      var u = l[l.length - 1];
+      if (u) window.LADB.gravar('la_mural', [{ texto: u.texto, autor: u.autor, quando: u.quando }])
+        .catch(function (e) { console.warn('[LADB] mural so no navegador:', e.message); });
+    } catch (e) {}
+  }
 }
 
 /* post da academia no mural */

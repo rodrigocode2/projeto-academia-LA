@@ -49,6 +49,15 @@ function laProdutosVisiveis() {
 function laSalvarProdutos(lista) {
   try { localStorage.setItem(LA_PRODUTOS_CHAVE, JSON.stringify(lista)); return true; }
   catch (e) { return false; }
+
+  /* manda para o banco */
+  if (window.LADB && window.LADB.pronto && Array.isArray(lista)) {
+    window.LADB.gravar('la_produtos', lista.map(function (p) {
+      return { id: p.id, nome: p.nome, preco: p.preco, categoria: p.categoria,
+               icone: p.icone, foto: p.foto, estoque: p.estoque,
+               ativo: p.ativo === undefined ? true : p.ativo };
+    }), 'id').catch(function (e) { console.warn('[LADB] produtos so no navegador:', e.message); });
+  }
 }
 
 function laBuscarProduto(id) {

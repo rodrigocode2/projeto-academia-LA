@@ -20,6 +20,20 @@ function laLerLista(chave) {
 function laGravarLista(chave, lista) {
   try { localStorage.setItem(chave, JSON.stringify(lista)); return true; }
   catch (e) { return false; }
+
+  /* manda para o banco */
+  if (window.LADB && window.LADB.pronto && chave === LA_MENSAGENS && Array.isArray(lista)) {
+    window.LADB.gravar('la_mensagens', lista.map(function (m) {
+      return { aluno_id: m.alunoId, aluno: m.aluno, de: m.de || 'aluno',
+               texto: m.texto, resposta: m.resposta, lida: !!m.lida, quando: m.quando };
+    })).catch(function (e) { console.warn('[LADB] mensagens so no navegador:', e.message); });
+  }
+  if (window.LADB && window.LADB.pronto && chave === LA_PARTICULAR && Array.isArray(lista)) {
+    window.LADB.gravar('la_particular', lista.map(function (m) {
+      return { de: m.de, para: m.para, par: m.par, texto: m.texto,
+               midia: m.midia, lida: !!m.lida, quando: m.quando };
+    })).catch(function (e) { console.warn('[LADB] particular so no navegador:', e.message); });
+  }
 }
 
 function laAgora() { return new Date().toISOString(); }

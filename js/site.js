@@ -11,6 +11,18 @@ const LASite = {
     const params = new URLSearchParams(window.location.search);
     const destino = params.get('ir');
     this._destinoInicial = destino || null;
+    /* liga no banco: se responder, o conteudo vem de la */
+    if (window.LADB) {
+      window.LADB.conferir().then(function (ok) {
+        if (!ok) return;
+        if (typeof laBuscarConteudoDoBanco === 'function') {
+          laBuscarConteudoDoBanco().then(function (c) {
+            if (c) { try { LASite.pintarConteudo(); } catch (e) {} }
+          });
+        }
+      });
+    }
+
     laGarantirConteudo();
     laRegistrarVisita('inicio');
 

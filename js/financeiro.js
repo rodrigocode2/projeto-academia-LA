@@ -24,6 +24,14 @@ function laLerCobrancas() {
 function laGravarCobrancas(l) {
   try { localStorage.setItem(LA_COBRANCAS_CHAVE, JSON.stringify(l)); return true; }
   catch (e) { return false; }
+
+  /* manda para o banco */
+  if (window.LADB && window.LADB.pronto && Array.isArray(l)) {
+    window.LADB.gravar('la_cobrancas', l.map(function (c) {
+      return { aluno_id: c.alunoId, valor: c.valor, descricao: c.descricao,
+               competencia: c.competencia, pago: !!c.pago, pago_em: c.pagoEm || null };
+    })).catch(function (e) { console.warn('[LADB] cobrancas so no navegador:', e.message); });
+  }
 }
 
 /* valor do plano — igual ao da mensalidade que o aluno ja ve */

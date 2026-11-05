@@ -36,6 +36,15 @@ function laListarModelos() {
 function laSalvarModelos(lista) {
   try { localStorage.setItem(LA_MODELOS_CHAVE, JSON.stringify(lista)); return true; }
   catch (e) { return false; }
+
+  /* manda para o banco */
+  if (window.LADB && window.LADB.pronto && Array.isArray(lista)) {
+    window.LADB.gravar('la_modelos', lista.map(function (m) {
+      return { id: m.id, modalidade: m.modalidade, nome: m.nome,
+               descricao: m.descricao, treinos: m.treinos || [],
+               atualizado_em: new Date().toISOString() };
+    }), 'id').catch(function (e) { console.warn('[LADB] modelos so no navegador:', e.message); });
+  }
 }
 
 function laBuscarModelo(id) {

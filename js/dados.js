@@ -200,17 +200,60 @@ function laPadrao() {
 }
 
 function laLerConteudo() {
+  /* 1. o que ja esta aqui (resposta instantanea) */
   try {
     const bruto = localStorage.getItem(LA_CHAVE);
-    return bruto ? JSON.parse(bruto) : null;
-  } catch (e) { return null; }
+    if (bruto) {
+      const local = JSON.parse(bruto);
+      /* pede a versao do banco em segundo plano e troca quando chegar */
+      if (window.LADB && window.LADB.pronto && !window.LA_CONTEUDO_BUSCANDO) {
+        window.LA_CONTEUDO_BUSCANDO = true;
+        window.LADB.ler('la_conteudo', '?id=eq.1&select=dados')
+          .then(function (r) {
+            const doBanco = r && r[0] ? r[0].dados : null;
+            if (doBanco && Object.keys(doBanco).length) {
+              localStorage.setItem(LA_CHAVE, JSON.stringify(doBanco));
+              window.LA_CONTEUDO_BUSCANDO = false;
+              if (window.LASite && LASite.pintarConteudo) LASite.pintarConteudo();
+            } else { window.LA_CONTEUDO_BUSCANDO = false; }
+          })
+          .catch(function () { window.LA_CONTEUDO_BUSCANDO = false; });
+      }
+      return local;
+    }
+  } catch (e) {}
+
+  /* 2. sem nada local: espera o banco na primeira carga */
+  return null;
+}
+
+/* busca o conteudo no banco pela primeira vez (chamado ao abrir o site) */
+function laBuscarConteudoDoBanco() {
+  if (!window.LADB) return Promise.resolve(null);
+  return window.LADB.conferir().then(function (ok) {
+    if (!ok) return null;
+    return window.LADB.ler('la_conteudo', '?id=eq.1&select=dados');
+  }).then(function (r) {
+    const doBanco = r && r[0] ? r[0].dados : null;
+    if (doBanco && Object.keys(doBanco).length) {
+      try { localStorage.setItem(LA_CHAVE, JSON.stringify(doBanco)); } catch (e) {}
+      return doBanco;
+    }
+    return null;
+  }).catch(function () { return null; });
 }
 
 function laSalvarConteudo(dados) {
-  try {
-    localStorage.setItem(LA_CHAVE, JSON.stringify(dados));
-    return true;
-  } catch (e) { return false; }
+  /* grava aqui na hora (o site nunca trava) */
+  try { localStorage.setItem(LA_CHAVE, JSON.stringify(dados)); } catch (e) {}
+
+  /* e manda para o banco, para todas as telas verem */
+  if (window.LADB) {
+    window.LADB.gravar('la_conteudo', [{ id: 1, dados: dados, atualizado_em: new Date().toISOString() }], 'id')
+      .then(function () { console.log('[LADB] conteudo salvo no banco'); })
+      .catch(function (e) { console.warn('[LADB] conteudo so no navegador:', e.message); });
+  }
+  return true;
 }
 
 /* garante TODOS os campos: dado antigo não pode derrubar o site nem o painel */
@@ -246,15 +289,52 @@ function laListarAlunos() {
   try {
     const bruto = localStorage.getItem(LA_ALUNOS);
     const lista = bruto ? JSON.parse(bruto) : [];
-    return Array.isArray(lista) ? lista : [];
+    const arr = Array.isArray(lista) ? lista : [];
+
+    /* pede a lista do banco em segundo plano e atualiza */
+    if (window.LADB && window.LADB.pronto && !window.LA_ALUNOS_BUSCANDO) {
+      window.LA_ALUNOS_BUSCANDO = true;
+      window.LADB.ler('la_alunos', '?select=*&order=criado_em.desc')
+        .then(function (linhas) {
+          window.LA_ALUNOS_BUSCANDO = false;
+          if (!linhas || !linhas.length) return;
+          const convertidos = linhas.map(function (l) {
+            return {
+              id: l.id, matricula: l.matricula, nome: l.nome, cpf: l.cpf,
+              senha: l.senha, telefone: l.telefone, email: l.email,
+              plano: l.plano, objetivo: l.objetivo, foto: l.foto,
+              ativo: l.ativo, pendente: l.pendente, criadoEm: l.criado_em
+            };
+          });
+          try { localStorage.setItem(LA_ALUNOS, JSON.stringify(convertidos)); } catch (e) {}
+          if (window.LAAdmin && LAAdmin.pintarAlunos) { try { LAAdmin.pintarAlunos(); } catch (e) {} }
+        })
+        .catch(function () { window.LA_ALUNOS_BUSCANDO = false; });
+    }
+    return arr;
   } catch (e) { return []; }
 }
 
 function laSalvarAlunos(lista) {
-  try {
-    localStorage.setItem(LA_ALUNOS, JSON.stringify(lista));
-    return true;
-  } catch (e) { return false; }
+  try { localStorage.setItem(LA_ALUNOS, JSON.stringify(lista)); } catch (e) {}
+
+  /* manda cada aluno para o banco (a lista vem inteira do site) */
+  if (window.LADB && window.LADB.pronto && Array.isArray(lista) && lista.length) {
+    const linhas = lista.map(function (a) {
+      return {
+        id: a.id, matricula: a.matricula, nome: a.nome, cpf: a.cpf,
+        senha: a.senha, telefone: a.telefone, email: a.email,
+        plano: a.plano, objetivo: a.objetivo, foto: a.foto,
+        ativo: a.ativo === undefined ? true : a.ativo,
+        pendente: !!a.pendente,
+        atualizado_em: new Date().toISOString()
+      };
+    });
+    window.LADB.gravar('la_alunos', linhas, 'id')
+      .then(function () { console.log('[LADB] alunos salvos no banco'); })
+      .catch(function (e) { console.warn('[LADB] alunos so no navegador:', e.message); });
+  }
+  return true;
 }
 
 function laNovaMatricula() {

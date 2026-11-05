@@ -27,6 +27,13 @@ function laConvLer(chave) {
 function laConvGravar(chave, lista) {
   try { localStorage.setItem(chave, JSON.stringify(lista)); return true; }
   catch (e) { return false; }
+
+  /* manda para o banco */
+  if (window.LADB && window.LADB.pronto && chave === LA_GRUPO_CHAVE && Array.isArray(lista)) {
+    window.LADB.gravar('la_grupo', lista.map(function (m) {
+      return { autor: m.autor, aluno_id: m.alunoId, texto: m.texto, midia: m.midia, quando: m.quando };
+    })).catch(function (e) { console.warn('[LADB] grupo so no navegador:', e.message); });
+  }
 }
 
 function laConvAgora() { return new Date().toISOString(); }
