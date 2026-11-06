@@ -1334,7 +1334,7 @@
         var comTrocado = exs.filter(function (e) { return !!m['ex_' + e.id]; });
 
         var mostrar = exs;
-        if (soTrocados) mostrar = comTrocados;
+        if (soTrocados) mostrar = comTrocado;
         if (termo) {
           mostrar = mostrar.filter(function (e) {
             return String(e.nome || '').toLowerCase().indexOf(termo) !== -1 ||
@@ -1344,7 +1344,7 @@
 
         if (conta) {
           conta.textContent = exs.length
-            ? exs.length + ' exercícios no banco · ' + comTrocados.length + ' com vídeo trocado'
+            ? exs.length + ' exercícios no banco · ' + comTrocado.length + ' com vídeo trocado'
             : 'Nenhum exercício cadastrado ainda.';
         }
 
