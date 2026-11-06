@@ -128,29 +128,19 @@ const LABot = {
 
     setTimeout(() => {
 
-      /* ---- 1. está esperando a senha do painel? ---- */
-      if (this.esperandoSenha) {
-        if (laVerificarSenhaAdmin(texto)) {
-          this.esperandoSenha = false;
-          this.escrever('✅ <strong>Senha correta.</strong> Abrindo o painel de controle da L.A Fitness...');
-          laRegistrarAcesso('admin', 'acesso', { via: 'chat' });
-          setTimeout(() => { window.location.href = 'admin.html'; }, 900);
-        } else {
-          this.escrever('❌ Senha incorreta. Tente de novo ou fale com a recepção.');
-        }
-        return;
-      }
+      /* Admin chat access is temporarily unavailable. */
+if (this.esperandoSenha) {
+  this.esperandoSenha = false;
+  this.escrever('Acesso administrativo temporariamente indisponivel.');
+  return;
+}
+var tLimpo = String(texto || '').replace(/[\s\u00a0]+/g, '').toLowerCase();
+if (/^#admin/i.test(tLimpo)) {
+  this.escrever('Acesso administrativo temporariamente indisponivel.');
+  return;
+}
 
-      /* ---- 2. chave do painel: SÓ a chave exata abre, sem pista nenhuma ----
-         O celular costuma mandar espaco junto; limpar evita nao abrir. */
-      var tLimpo = String(texto || '').replace(/[\s\u00a0]+/g, '').toLowerCase();
-      if (tLimpo === LA_COMANDO_ADMIN.toLowerCase()) {
-        this.esperandoSenha = true;
-        this.escrever('🔒 <strong>Acesso restrito.</strong> Digite a senha do painel de controle:');
-        return;
-      }
-
-      /* ---- 2.5 O VISITANTE DIZ O NOME: "meu nome é Rodrigo" ---- */
+/* ---- 2.5 O VISITANTE DIZ O NOME: "meu nome é Rodrigo" ---- */
       const mNome = t.match(/(?:meu nome (?:e|é|eh)\s+|me chamo\s+|pode me chamar de\s+|sou (?:o|a)\s+)([a-zà-ú]{2,20})/i);
       if (mNome) {
         const bruto = mNome[1].trim();

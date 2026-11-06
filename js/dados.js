@@ -542,72 +542,9 @@ function laProgressoTreino(treino) {
   return { feitas: feitas, total: total, pct: total ? Math.round((feitas / total) * 100) : 0 };
 }
 
-/* ==========================================================================
-   4. ACESSO AO PAINEL
-   ========================================================================== */
-
-/* Chave de acesso ao painel. Só esta string exata abre o prompt.
-   Nada de "admin" ou "academia" solto: quem não sabe a chave não descobre nada. */
-const LA_COMANDO_ADMIN = '#adminacademiaLA2026';
-
-/* A senha nao fica mais escrita aqui. Guardamos o HASH dela.
-   Para trocar a senha: abra o site, va no console do navegador e rode
-   laGerarHash('a-sua-nova-senha')  — ele devolve o valor para colar abaixo.
-   Assim quem abrir o codigo-fonte nao le a senha. */
-const LA_SENHA_HASH = 'la1keql7l';
-
-function laHash(txt) {
-  /* hash simples e estavel, suficiente para nao deixar a senha legivel.
-     Em producao com Supabase, quem cuida disso e o servidor. */
-  var t = String(txt || '') + '|LA-FITNESS|2026';
-  var h = 2166136261;
-  for (var i = 0; i < t.length; i++) {
-    h ^= t.charCodeAt(i);
-    h = (h * 16777619) >>> 0;
-  }
-  return 'la' + h.toString(36);
-}
-
-function laGerarHash(senha) {
-  var codigo = laHash(senha);
-  console.log('Senha:', senha, '-> hash:', codigo);
-  console.log('Cole em LA_SENHA_HASH dentro de js/dados.js');
-  return codigo;
-}
-
-function laVerificarSenhaAdmin(senha) {
-  /* Verificacao DIRETA e simples: compara com a senha, limpando o que o
-     celular manda junto (espaco, quebra de linha, espaco invisivel).
-     Funciona em qualquer aparelho, sem depender de hash. */
-  var senhaCerta = 'academiaLA2026';
-  var bate = false;
-
-  try {
-    var limpa = String(senha || '').replace(/[\s\u00a0]+/g, '').trim();
-
-    /* aceita a senha exata e a variacao de maiuscula */
-    if (limpa === senhaCerta ||
-        limpa.toLowerCase() === senhaCerta.toLowerCase()) {
-      bate = true;
-    }
-
-    /* compatibilidade: se o hash ainda estiver no arquivo, aceita tambem */
-    if (!bate && typeof laHash === 'function' && typeof LA_SENHA_HASH !== 'undefined') {
-      bate = (laHash(limpa) === LA_SENHA_HASH);
-    }
-  } catch (e) { bate = false; }
-
-  if (bate) {
-    try { sessionStorage.setItem(LA_CHAVE_ADMIN, '1'); } catch (e) {}
-  }
-  return bate;
-}
-
-function laAdminLogado() {
-  try { return sessionStorage.getItem(LA_CHAVE_ADMIN) === '1'; } catch (e) { return false; }
-}
-
-function laSairAdmin() { try { sessionStorage.removeItem(LA_CHAVE_ADMIN); } catch (e) {} }
+/* Admin access is disabled until server authentication is deployed. */
+function laAdminLogado() { return false; }
+function laSairAdmin() {}
 
 /* ==========================================================================
    5. MEDIÇÃO DE ACESSOS
