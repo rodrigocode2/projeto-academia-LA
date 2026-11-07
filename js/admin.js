@@ -85,7 +85,7 @@ const LAAdmin = {
         document.querySelectorAll('.painel-aba').forEach(function (p) { p.classList.remove('ativa'); });
         b.classList.add('ativo');
         const alvo = document.getElementById('painel-' + qual);
-        if (alvo) alvo.classList.add('ativo');
+        if (alvo) alvo.classList.add('ativa');
       });
     });
   },
