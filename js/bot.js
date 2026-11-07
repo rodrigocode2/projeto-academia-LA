@@ -1,18 +1,12 @@
 /* ==========================================================================
    L.A BOT — assistente da L.A Fitness
    Mesmo padrão do IAurélio (CiR): roteiros prontos que casam por palavra-chave,
-   transbordo para o WhatsApp da recepção e um caminho secreto para o painel.
-
-   O acesso ao dashboard acontece DENTRO do chat:
-     1. o visitante digita o comando  /admin-academia-LA
-     2. o bot pede a senha
-     3. senha correta  ->  abre o painel de controle
+   transbordo para o WhatsApp da recepção e navegação pública do site.
    ========================================================================== */
 
 const LABot = {
 
   aberto: false,
-  esperandoSenha: false,
   contexto: 'inicio',
 
   /* ---------- monta a janela do chat ---------- */
@@ -120,27 +114,23 @@ const LABot = {
 
   /* ---------- o cérebro do bot ---------- */
   processar(texto) {
-    this.usuario(texto);
-    laRegistrarAcesso('bot', 'mensagem', { texto: String(texto).slice(0, 120) });
+    const convite = String(texto || '').trim();
+    const tentativaAdmin = convite.toLowerCase().startsWith('#admin');
+    this.usuario(tentativaAdmin ? '••••••••' : texto);
+    laRegistrarAcesso('bot', 'mensagem', {
+      texto: tentativaAdmin ? '[convite administrativo omitido]' : String(texto).slice(0, 120)
+    });
+
+    if (tentativaAdmin) {
+      this.abrirLoginAdmin();
+      return;
+    }
 
     const conteudo = laGarantirConteudo();
     const t = String(texto).toLowerCase().trim();
 
     setTimeout(() => {
-
-      /* Admin chat access is temporarily unavailable. */
-if (this.esperandoSenha) {
-  this.esperandoSenha = false;
-  this.escrever('Acesso administrativo temporariamente indisponivel.');
-  return;
-}
-var tLimpo = String(texto || '').replace(/[\s\u00a0]+/g, '').toLowerCase();
-if (/^#admin/i.test(tLimpo)) {
-  this.escrever('Acesso administrativo temporariamente indisponivel.');
-  return;
-}
-
-/* ---- 2.5 O VISITANTE DIZ O NOME: "meu nome é Rodrigo" ---- */
+      /* ---- 2.5 O VISITANTE DIZ O NOME: "meu nome é Rodrigo" ---- */
       const mNome = t.match(/(?:meu nome (?:e|é|eh)\s+|me chamo\s+|pode me chamar de\s+|sou (?:o|a)\s+)([a-zà-ú]{2,20})/i);
       if (mNome) {
         const bruto = mNome[1].trim();
@@ -247,6 +237,11 @@ if (/^#admin/i.test(tLimpo)) {
       this.botaoWhatsApp(conteudo.whatsappBotao, 'Olá! Gostaria de informações sobre: ' + texto);
 
     }, 450);
+  },
+
+  abrirLoginAdmin() {
+    this.escrever('Para entrar no painel, <a href="admin.html">clique aqui para abrir o login administrativo</a>. ' +
+      'O acesso ao painel só é liberado após entrar com uma conta administradora do Supabase.');
   },
 
   /* ---------- escreve as bolhas ---------- */

@@ -1,19 +1,80 @@
 /* ==========================================================================
    L.A FITNESS — painel de controle
-   Acesso: comando /admin-academia-LA no chat do bot + senha
+   Acesso autenticado pelo Supabase Auth + papel em la_admins
    Depende de: js/dados.js e js/treinos.js
    ========================================================================== */
 
 const LAAdmin = {
 
-  iniciar() {
-    if (!laAdminLogado()) { window.location.href = 'index.html'; return; }
+  async iniciar() {
+    window.LA_ADMIN_AUTHENTICADO = false;
+    const gate = document.getElementById('admin-auth-gate');
+    const formAuth = document.getElementById('admin-auth-form');
+    const erroAuth = document.getElementById('admin-auth-error');
+
+    const mostrarGate = function (mensagem) {
+      if (gate) gate.classList.remove('hidden');
+      if (erroAuth && mensagem) {
+        erroAuth.textContent = mensagem;
+        erroAuth.classList.remove('hidden');
+      }
+    };
+
+    if (!window.LADB) {
+      mostrarGate('Não foi possível carregar a conexão segura. Atualize a página e tente novamente.');
+      return;
+    }
+
+    if (formAuth && !formAuth._ligado) {
+      formAuth._ligado = true;
+      formAuth.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const botao = formAuth.querySelector('[type="submit"]');
+        if (botao) botao.disabled = true;
+        if (erroAuth) erroAuth.classList.add('hidden');
+        try {
+          await LADB.auth.signInAdmin(
+            document.getElementById('admin-auth-email').value,
+            document.getElementById('admin-auth-password').value
+          );
+          window.location.reload();
+        } catch (error) {
+          mostrarGate(error.message || 'Não foi possível entrar.');
+        } finally {
+          if (botao) botao.disabled = false;
+        }
+      });
+    }
+
+    try {
+      if (!window.LADB || !(await LADB.auth.isAdmin())) {
+        mostrarGate();
+        return;
+      }
+      if (!(await LADB.conferir())) {
+        throw new Error(LADB.aviso || 'Não foi possível conectar ao banco de dados.');
+      }
+      await LADB.auth.loadStudents();
+      window.LA_ADMIN_AUTHENTICADO = true;
+      await LADB.dadosAluno.carregar();
+    } catch (error) {
+      window.LA_ADMIN_AUTHENTICADO = false;
+      mostrarGate(error.message || 'Não foi possível validar o acesso.');
+      return;
+    }
+
+    document.body.classList.add('admin-authenticated');
+    if (gate) gate.classList.add('hidden');
+    try { sessionStorage.setItem('la_admin_logado', '1'); } catch (error) {}
     laGarantirConteudo();
     this.ligarAbas();
     this.ligarSair();
     this.ligarAlunos();
     this.ligarTreinos();
     this.pintarTudo();
+    if (window.LAFinanceiro && typeof window.LAFinanceiro.pintar === 'function') {
+      window.LAFinanceiro.pintar();
+    }
   },
 
   ligarAbas() {
@@ -31,9 +92,11 @@ const LAAdmin = {
 
   ligarSair() {
     const b = document.querySelector('.js-admin-sair');
-    if (b) b.addEventListener('click', function () {
+    if (b) b.addEventListener('click', async function () {
       if (!confirm('Sair do painel de controle?')) return;
       laSairAdmin();
+      try { await LADB.auth.signOut(); }
+      catch (error) { console.error('[LADB] Falha ao encerrar sessão administrativa:', error); }
       /* toda saída volta para a TELA DE ABERTURA do site */
       window.location.href = 'index.html';
     });
@@ -198,35 +261,43 @@ const LAAdmin = {
     const eu = this;
 
     const form = document.getElementById('form-novo-aluno');
-    if (form) form.addEventListener('submit', function (e) {
+    if (form) form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const nome  = document.getElementById('aluno-nome').value.trim();
       const cpf   = document.getElementById('aluno-cpf').value.replace(/\D/g, '');
-      const senha = document.getElementById('aluno-senha').value.trim();
+      const senha = document.getElementById('aluno-senha').value;
+      const email = document.getElementById('aluno-email').value.trim();
       const erro  = document.getElementById('aluno-erro');
 
       if (nome.split(/\s+/).length < 2) { eu.avisar(erro, 'Informe o nome completo.'); return; }
       if (cpf.length !== 11) { eu.avisar(erro, 'O CPF precisa ter 11 números.'); return; }
-      if (senha.length < 4) { eu.avisar(erro, 'A senha precisa ter pelo menos 4 caracteres.'); return; }
-      if (laListarAlunos().some(function (a) { return a.cpf === cpf; })) {
-        eu.avisar(erro, 'Já existe um aluno com esse CPF.'); return;
+      if (senha.length < 8) { eu.avisar(erro, 'A senha temporária precisa ter pelo menos 8 caracteres.'); return; }
+
+      const botao = form.querySelector('[type="submit"]');
+      if (botao) botao.disabled = true;
+      try {
+        const aluno = await LADB.auth.createStudent({
+          nome: nome,
+          cpf: cpf,
+          senha: senha,
+          email: email,
+          telefone: document.getElementById('aluno-telefone').value.trim(),
+          plano: document.getElementById('aluno-plano').value,
+          objetivo: document.getElementById('aluno-objetivo').value.trim()
+        });
+        const cache = laListarAlunos().filter(function (existente) { return existente.id !== aluno.id; });
+        cache.unshift(aluno);
+        localStorage.setItem('la_alunos', JSON.stringify(cache));
+        if (erro) erro.classList.add('hidden');
+        form.reset();
+        eu.pintarAlunos();
+        eu.avisarSucesso('Aluno cadastrado. Matrícula ' + aluno.matricula + ' — entregue a senha temporária em particular.');
+      } catch (error) {
+        eu.avisar(erro, error.message || 'Não foi possível cadastrar o aluno.');
+      } finally {
+        if (botao) botao.disabled = false;
       }
-
-      const aluno = laCriarAluno({
-        nome: nome,
-        cpf: cpf,
-        senha: senha,
-        telefone: document.getElementById('aluno-telefone').value.trim(),
-        email: document.getElementById('aluno-email').value.trim(),
-        plano: document.getElementById('aluno-plano').value,
-        objetivo: document.getElementById('aluno-objetivo').value.trim()
-      });
-
-      if (erro) erro.classList.add('hidden');
-      form.reset();
-      eu.pintarAlunos();
-      eu.avisarSucesso('Aluno cadastrado. Matrícula ' + aluno.matricula + ' — entregue o acesso a ele.');
     });
 
     const buscar = document.getElementById('busca-aluno');
@@ -302,17 +373,22 @@ const LAAdmin = {
     });
 
     casa.querySelectorAll('.js-excluir').forEach(function (b) {
-      b.addEventListener('click', function () {
+      b.addEventListener('click', async function () {
         const a = laBuscarAluno(b.getAttribute('data-id'));
         if (!a) return;
-        if (!confirm('Excluir ' + a.nome + '?\n\nSai do sistema: treinos, conversas, cobranças e amizades. Não pode ser desfeito.')) return;
-        /* apaga tudo que pertence ao aluno, nao so o cadastro */
-        if (typeof laExcluirAlunoDeVez === 'function') {
-          laExcluirAlunoDeVez(a.id);
-        } else {
-          laExcluirAluno(a.id);
+        if (!confirm('Excluir ' + a.nome + '?\n\nO cadastro será removido e o acesso revogado. Dados associados fora do perfil podem exigir revisão manual. Não pode ser desfeito.')) return;
+        b.disabled = true;
+        try {
+          if (typeof laExcluirAlunoDeVez !== 'function') {
+            throw new Error('A exclusão segura não está disponível. Atualize o painel.');
+          }
+          await laExcluirAlunoDeVez(a.id);
+          eu.pintarAlunos();
+        } catch (error) {
+          eu.avisar(document.getElementById('aluno-erro'), error.message || 'Não foi possível excluir o aluno.');
+        } finally {
+          b.disabled = false;
         }
-        eu.pintarAlunos();
       });
     });
 

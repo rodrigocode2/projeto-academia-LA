@@ -13,7 +13,7 @@
    suba a VERSAO abaixo (ex.: 'v2') para o cache antigo ser descartado.
    ========================================================================== */
 
-const VERSAO = 'la-fitness-v6';
+const VERSAO = 'la-fitness-v7';
 
 const ESSENCIAIS = [
   'index.html',

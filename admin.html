@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel de Controle — L.A FITNESS</title>
-  <style>html { visibility: hidden !important; }</style>
-  <script>window.location.replace('index.html');</script>
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +13,21 @@
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="corpo-admin">
+
+  <section id="admin-auth-gate" class="admin-auth-gate hidden" aria-labelledby="admin-auth-title">
+    <form id="admin-auth-form" class="admin-auth-card">
+      <img src="img/logo.png" alt="L.A Fitness" class="admin-auth-logo">
+      <h1 id="admin-auth-title">Acesso administrativo</h1>
+      <p>Entre com a conta de administrador cadastrada no Supabase.</p>
+      <div id="admin-auth-error" class="aviso-erro hidden" role="alert"></div>
+      <label class="form-label" for="admin-auth-email">E-mail</label>
+      <input class="form-input" id="admin-auth-email" type="email" autocomplete="username" required>
+      <label class="form-label" for="admin-auth-password">Senha</label>
+      <input class="form-input" id="admin-auth-password" type="password" autocomplete="current-password" required>
+      <button class="btn-primary" type="submit">Entrar no painel</button>
+      <a href="index.html">Voltar ao site</a>
+    </form>
+  </section>
 
   <!-- ================= TOPO ================= -->
 
@@ -156,7 +169,7 @@
       <div class="bloco">
         <h3><i class="fa-solid fa-user-plus"></i> Cadastrar aluno</h3>
         <p class="nota-bloco">
-          O acesso é criado aqui e entregue ao aluno, como um crachá. Ele entra com o CPF ou a matrícula.
+        Crie uma senha temporária com pelo menos 8 caracteres e entregue ao aluno em particular. Ele entra com CPF ou matrícula.
         </p>
 
         <div class="js-aviso-sucesso hidden"></div>
@@ -173,7 +186,7 @@
           </div>
           <div>
             <label class="form-label">Senha de acesso *</label>
-            <input class="form-input" id="aluno-senha" placeholder="Mínimo 4 caracteres" required>
+            <input class="form-input" id="aluno-senha" type="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" minlength="8" required>
           </div>
           <div>
             <label class="form-label">Telefone</label>
@@ -181,7 +194,7 @@
           </div>
           <div>
             <label class="form-label">E-mail</label>
-            <input class="form-input" id="aluno-email" type="email" placeholder="opcional">
+            <input class="form-input" id="aluno-email" type="email" placeholder="E-mail usado para a conta" required>
           </div>
           <div>
             <label class="form-label">Plano</label>
@@ -788,15 +801,15 @@
       <div class="bloco">
         <h3><i class="fa-solid fa-key"></i> Acesso ao painel</h3>
         <p class="nota-bloco">
-          Para entrar aqui, o visitante digita <b>/admin-academia-LA</b> no chat do L.A Bot e depois a senha.
+          O painel exige uma conta autenticada no Supabase e uma permissão registrada em <code>la_admins</code>.
         </p>
         <div class="caixa-alerta">
-          <i class="fa-solid fa-triangle-exclamation"></i>
+          <i class="fa-solid fa-shield-halved"></i>
           <div>
-            <b>Atenção de segurança</b>
+            <b>Configuração segura</b>
             <span>
-              A senha fica dentro do arquivo JavaScript, então alguém com conhecimento técnico consegue lê-la.
-              Isso serve para o projeto e para o uso interno, mas em produção precisa de login no servidor.
+              A senha não é solicitada pelo chat nem fica no JavaScript. Consulte <code>supabase/README.md</code>
+              para configurar a migração, criar o primeiro administrador e publicar a função de autenticação.
             </span>
           </div>
         </div>

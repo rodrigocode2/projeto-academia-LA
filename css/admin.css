@@ -9,6 +9,36 @@
   display: block;
 }
 
+.corpo-admin:not(.admin-authenticated) .ad-side,
+.corpo-admin:not(.admin-authenticated) .ad-main {
+  display: none !important;
+}
+
+.admin-auth-gate {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #0b0b0d;
+}
+
+.admin-auth-card {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 12px;
+  padding: 32px;
+  border: 1px solid var(--la-border);
+  border-radius: 16px;
+  background: #141416;
+}
+
+.admin-auth-card h1,
+.admin-auth-card p { margin: 0; }
+.admin-auth-card p { color: #aaa; line-height: 1.5; }
+.admin-auth-logo { width: 76px; height: 76px; object-fit: contain; }
+.admin-auth-card .btn-primary { justify-content: center; margin-top: 8px; }
+.admin-auth-card > a { color: #aaa; text-align: center; text-decoration: none; }
+
 /* ---------------- topo ---------------- */
 .topo-admin {
   position: sticky;
