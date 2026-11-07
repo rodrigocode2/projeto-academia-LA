@@ -95,6 +95,8 @@ const LAAdmin = {
     if (b) b.addEventListener('click', async function () {
       if (!confirm('Sair do painel de controle?')) return;
       laSairAdmin();
+      try { sessionStorage.removeItem('la_admin_chat_entry'); }
+      catch (error) { console.error('Não foi possível limpar o caminho administrativo:', error); }
       try { await LADB.auth.signOut(); }
       catch (error) { console.error('[LADB] Falha ao encerrar sessão administrativa:', error); }
       /* toda saída volta para a TELA DE ABERTURA do site */

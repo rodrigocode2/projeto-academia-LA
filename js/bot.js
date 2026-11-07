@@ -240,6 +240,13 @@ const LABot = {
   },
 
   abrirLoginAdmin() {
+    try {
+      sessionStorage.setItem('la_admin_chat_entry', '1');
+    } catch (error) {
+      console.error('[L.A Bot] Não foi possível liberar a navegação ao login administrativo:', error);
+      this.escrever('Não consegui abrir o caminho para o login neste navegador. Atualize a página e tente novamente.');
+      return;
+    }
     this.escrever('Para entrar no painel, <a href="admin.html">clique aqui para abrir o login administrativo</a>. ' +
       'O acesso ao painel só é liberado após entrar com uma conta administradora do Supabase.');
   },

@@ -20,20 +20,6 @@ function laLerLista(chave) {
 function laGravarLista(chave, lista) {
   try { localStorage.setItem(chave, JSON.stringify(lista)); return true; }
   catch (e) { return false; }
-
-  /* manda para o banco */
-  if (window.LADB && window.LADB.pronto && chave === LA_MENSAGENS && Array.isArray(lista)) {
-    window.LADB.gravar('la_mensagens', lista.map(function (m) {
-      return { aluno_id: m.alunoId, aluno: m.aluno, de: m.de || 'aluno',
-               texto: m.texto, resposta: m.resposta, lida: !!m.lida, quando: m.quando };
-    })).catch(function (e) { console.warn('[LADB] mensagens so no navegador:', e.message); });
-  }
-  if (window.LADB && window.LADB.pronto && chave === LA_PARTICULAR && Array.isArray(lista)) {
-    window.LADB.gravar('la_particular', lista.map(function (m) {
-      return { de: m.de, para: m.para, par: m.par, texto: m.texto,
-               midia: m.midia, lida: !!m.lida, quando: m.quando };
-    })).catch(function (e) { console.warn('[LADB] particular so no navegador:', e.message); });
-  }
 }
 
 function laAgora() { return new Date().toISOString(); }
@@ -71,6 +57,9 @@ function laEnviarMensagem(alunoId, texto, deQuem) {
   const lista = laLerLista(LA_MENSAGENS);
   lista.push(msg);
   laGravarLista(LA_MENSAGENS, lista);
+  if (window.LADB && window.LADB.auth.sessionKey()) {
+    window.LADB.syncAluno(window.LADB.dadosAluno.inserirMensagem(msg), 'mensagem');
+  }
   return msg;
 }
 
@@ -90,7 +79,12 @@ function laMarcarLidas(alunoId) {
   lista.forEach(function (m) {
     if (m.alunoId === alunoId && m.de === 'academia' && !m.lida) { m.lida = true; mudou = true; }
   });
-  if (mudou) laGravarLista(LA_MENSAGENS, lista);
+  if (mudou) {
+    laGravarLista(LA_MENSAGENS, lista);
+    if (window.LADB && window.LADB.auth.sessionKey()) {
+      window.LADB.syncAluno(window.LADB.dadosAluno.marcarMensagensLidas(alunoId, 'academia'), 'leitura de mensagens');
+    }
+  }
 }
 
 /* quantas conversas tem mensagem nova, para o painel */
@@ -114,7 +108,12 @@ function laMarcarLidasDoAlunoNoPainel(alunoId) {
   lista.forEach(function (m) {
     if (m.alunoId === alunoId && m.de === 'aluno' && !m.lida) { m.lida = true; mudou = true; }
   });
-  if (mudou) laGravarLista(LA_MENSAGENS, lista);
+  if (mudou) {
+    laGravarLista(LA_MENSAGENS, lista);
+    if (window.LADB && window.LA_ADMIN_AUTHENTICADO) {
+      window.LADB.syncAluno(window.LADB.dadosAluno.marcarMensagensLidas(alunoId, 'aluno'), 'leitura de mensagens');
+    }
+  }
 }
 
 /* ---------------- MENSALIDADE ---------------- */
@@ -127,13 +126,7 @@ function laListarPagamentos(alunoId) {
 function laRegistrarPagamento(alunoId, competencia, valor) {
   const lista = laLerLista(LA_PAGAMENTOS);
   const jaTem = lista.find(function (p) { return p.alunoId === alunoId && p.competencia === competencia; });
-  if (jaTem) {
-    jaTem.status = 'aguardando';
-    jaTem.valor = valor;
-    jaTem.registradoEm = laAgora();
-    laGravarLista(LA_PAGAMENTOS, lista);
-    return jaTem;
-  }
+  if (jaTem) return jaTem;
   const p = {
     id: 'pg' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
     alunoId: alunoId,
@@ -145,6 +138,9 @@ function laRegistrarPagamento(alunoId, competencia, valor) {
   };
   lista.push(p);
   laGravarLista(LA_PAGAMENTOS, lista);
+  if (window.LADB && window.LADB.auth.sessionKey()) {
+    window.LADB.syncAluno(window.LADB.dadosAluno.inserirPagamento(p), 'pagamento informado');
+  }
   return p;
 }
 
@@ -155,6 +151,9 @@ function laConfirmarPagamento(id) {
   p.status = 'pago';
   p.confirmadoEm = laAgora();
   laGravarLista(LA_PAGAMENTOS, lista);
+  if (window.LADB && window.LA_ADMIN_AUTHENTICADO) {
+    window.LADB.syncAluno(window.LADB.dadosAluno.confirmarPagamento(id), 'pagamento confirmado');
+  }
   return true;
 }
 
@@ -306,9 +305,13 @@ const LAAlunoExtra = {
     const venc = String(c.vencimento || '').split('-').reverse().join('/');
     const atrasada = c.status === 'atrasada';
     const paga = c.status === 'paga';
+    const aguardandoConfirmacao = laListarPagamentos(a.id).some(function (p) {
+      return p.competencia === c.competencia && p.status === 'aguardando';
+    });
 
     const cor = paga ? 'var(--la-accent-green)' : (atrasada ? 'var(--la-red)' : '#ffb020');
-    const texto = paga ? 'Paga' : (atrasada ? 'Em atraso' : 'Em aberto');
+    const texto = paga ? 'Paga' :
+      (aguardandoConfirmacao ? 'Aguardando confirmação' : (atrasada ? 'Em atraso' : 'Em aberto'));
 
     casa.innerHTML =
       '<div class="mensal-topo">' +
@@ -327,7 +330,7 @@ const LAAlunoExtra = {
           'R$ ' + m.valorEmAtraso.toFixed(2).replace('.', ',') + '. ' +
           'Procure a recepção para regularizar.</p>'
         : '') +
-      (!paga
+      (!paga && !aguardandoConfirmacao
         ? '<button class="btn-primary js-pagar" style="margin-top:18px;">' +
             '<i class="fa-solid fa-circle-check"></i> Já paguei — avisar a recepção</button>'
         : '');

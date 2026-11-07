@@ -11,6 +11,21 @@ const LA_ALUNOS      = 'la_alunos';
 const LA_SESSAO      = 'la_sessao_aluno';
 const LA_CHAVE_ADMIN = 'la_admin_logado';
 
+try {
+  const dadosLegados = JSON.parse(localStorage.getItem(LA_ALUNOS) || 'null');
+  if (Array.isArray(dadosLegados)) {
+    const dadosSeguros = dadosLegados.map(function (aluno) {
+      const seguro = Object.assign({}, aluno);
+      delete seguro.senha;
+      return seguro;
+    });
+    localStorage.setItem(LA_ALUNOS, JSON.stringify(dadosSeguros));
+  }
+  localStorage.removeItem('la_pendentes');
+} catch (error) {
+  console.error('[LADB] Não foi possível remover senhas legadas do armazenamento local:', error);
+}
+
 /* A CONFIRMAR COM A DONA ----------------------------------------------------
    1. Plano semestral da Ginástica Artística: R$ 160,00 é POR MÊS dentro do
       semestre, ou o valor fechado dos seis meses? Está escrito como sendo
@@ -289,19 +304,27 @@ function laListarAlunos() {
   try {
     const bruto = localStorage.getItem(LA_ALUNOS);
     const lista = bruto ? JSON.parse(bruto) : [];
-    const arr = Array.isArray(lista) ? lista : [];
+    const arr = Array.isArray(lista) ? lista.map(function (aluno) {
+      const seguro = Object.assign({}, aluno);
+      delete seguro.senha;
+      return seguro;
+    }) : [];
+    try { localStorage.setItem(LA_ALUNOS, JSON.stringify(arr)); } catch (e) {}
 
     /* pede a lista do banco em segundo plano e atualiza */
-    if (window.LADB && window.LADB.pronto && !window.LA_ALUNOS_BUSCANDO) {
+    let temSessao = false;
+    try { temSessao = !!(window.LADB && window.LADB.auth.sessionKey()); } catch (e) {}
+    if (window.LADB && window.LADB.pronto && temSessao &&
+        !window.LA_ALUNOS_CARREGADO && !window.LA_ALUNOS_BUSCANDO) {
       window.LA_ALUNOS_BUSCANDO = true;
-      window.LADB.ler('la_alunos', '?select=*&order=criado_em.desc')
+      window.LADB.ler('la_alunos', '?select=id,auth_user_id,matricula,nome,cpf,telefone,email,plano,objetivo,foto,ativo,pendente,criado_em&order=criado_em.desc')
         .then(function (linhas) {
           window.LA_ALUNOS_BUSCANDO = false;
-          if (!linhas || !linhas.length) return;
-          const convertidos = linhas.map(function (l) {
+          window.LA_ALUNOS_CARREGADO = true;
+          const convertidos = (linhas || []).map(function (l) {
             return {
-              id: l.id, matricula: l.matricula, nome: l.nome, cpf: l.cpf,
-              senha: l.senha, telefone: l.telefone, email: l.email,
+              id: l.id, auth_user_id: l.auth_user_id, matricula: l.matricula, nome: l.nome, cpf: l.cpf,
+              telefone: l.telefone, email: l.email,
               plano: l.plano, objetivo: l.objetivo, foto: l.foto,
               ativo: l.ativo, pendente: l.pendente, criadoEm: l.criado_em
             };
@@ -316,14 +339,22 @@ function laListarAlunos() {
 }
 
 function laSalvarAlunos(lista) {
-  try { localStorage.setItem(LA_ALUNOS, JSON.stringify(lista)); } catch (e) {}
+  const seguros = (Array.isArray(lista) ? lista : []).map(function (aluno) {
+    const seguro = Object.assign({}, aluno);
+    delete seguro.senha;
+    return seguro;
+  });
+  try { localStorage.setItem(LA_ALUNOS, JSON.stringify(seguros)); } catch (e) {}
 
-  /* manda cada aluno para o banco (a lista vem inteira do site) */
-  if (window.LADB && window.LADB.pronto && Array.isArray(lista) && lista.length) {
-    const linhas = lista.map(function (a) {
+  /* Senhas e contas sao gerenciadas pelo Supabase Auth, nunca por esta tabela. */
+  let temSessao = false;
+  try { temSessao = !!(window.LADB && window.LADB.auth.sessionKey()); } catch (e) {}
+  if (window.LADB && window.LADB.pronto && temSessao &&
+      window.LA_ADMIN_AUTHENTICADO && seguros.length) {
+    const linhas = seguros.map(function (a) {
       return {
         id: a.id, matricula: a.matricula, nome: a.nome, cpf: a.cpf,
-        senha: a.senha, telefone: a.telefone, email: a.email,
+        telefone: a.telefone, email: a.email, auth_user_id: a.auth_user_id,
         plano: a.plano, objetivo: a.objetivo, foto: a.foto,
         ativo: a.ativo === undefined ? true : a.ativo,
         pendente: !!a.pendente,
@@ -424,7 +455,6 @@ function laCriarAluno(dados) {
     matricula: dados.matricula || laNovaMatricula(),
     nome: dados.nome || '',
     cpf: (dados.cpf || '').replace(/\D/g, ''),
-    senha: dados.senha || '',
     telefone: dados.telefone || '',
     email: dados.email || '',
     plano: dados.plano || 'Mensal',
@@ -457,27 +487,12 @@ function laExcluirAluno(id) {
   return true;
 }
 
-function laAutenticar(usuario, senha) {
-  const limpo = String(usuario || '').replace(/\D/g, '');
-  const bruto = String(usuario || '').trim().toUpperCase();
-
-  const aluno = laListarAlunos().find(function (a) {
-    const bateCpf = limpo && a.cpf === limpo;
-    const bateMatricula = (a.matricula || '').toUpperCase() === bruto;
-    return (bateCpf || bateMatricula) && a.senha === senha;
-  });
-
-  if (!aluno) return { ok: false, erro: 'CPF, matrícula ou senha incorretos.' };
-  if (!aluno.ativo) return { ok: false, erro: 'Sua matrícula está inativa. Fale com a recepção.' };
-
-  laAbrirSessaoAluno(aluno.id);
-  return { ok: true, aluno: aluno };
-}
-
 function laAbrirSessaoAluno(id) { try { sessionStorage.setItem(LA_SESSAO, id); } catch (e) {} }
 function laAlunoLogado() {
   try {
-    const id = sessionStorage.getItem(LA_SESSAO);
+    if (!window.LADB || !window.LADB.auth.sessionKey()) return null;
+    const lembrado = JSON.parse(localStorage.getItem('la_lembrar') || 'null');
+    const id = sessionStorage.getItem(LA_SESSAO) || (lembrado && lembrado.id);
     return id ? laBuscarAluno(id) : null;
   } catch (e) { return null; }
 }
@@ -542,9 +557,17 @@ function laProgressoTreino(treino) {
   return { feitas: feitas, total: total, pct: total ? Math.round((feitas / total) * 100) : 0 };
 }
 
-/* Admin access is disabled until server authentication is deployed. */
-function laAdminLogado() { return false; }
-function laSairAdmin() {}
+/* ==========================================================================
+   4. ACESSO AO PAINEL
+   ========================================================================== */
+
+function laAdminLogado() {
+  try { return sessionStorage.getItem(LA_CHAVE_ADMIN) === '1'; } catch (e) { return false; }
+}
+
+function laSairAdmin() {
+  try { sessionStorage.removeItem(LA_CHAVE_ADMIN); } catch (e) {}
+}
 
 /* ==========================================================================
    5. MEDIÇÃO DE ACESSOS

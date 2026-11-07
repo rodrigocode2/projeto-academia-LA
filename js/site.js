@@ -28,7 +28,6 @@ const LASite = {
 
     this.pintarConteudo();
     this.ligarNavegacao();
-    this.ligarLogin();
     this.ligarFicha();
     this.ligarMedicao();
     LABot.iniciar();
@@ -42,9 +41,19 @@ const LASite = {
       }, 60);
     }
 
-    /* se o aluno já tem sessão aberta nesta aba, entra direto */
-    const aluno = laAlunoLogado();
-    if (aluno) this.entrarApp(aluno);
+    /* restaura o perfil apenas depois de validar a sessão Supabase */
+    let temSessao = false;
+    try { temSessao = !!(window.LADB && window.LADB.auth.sessionKey()); } catch (e) {}
+    if (temSessao) {
+      window.LADB.auth.restoreStudent().then(function (alunoRestaurado) {
+        if (alunoRestaurado && alunoRestaurado.ativo && !alunoRestaurado.pendente) {
+          laSalvarSessao(alunoRestaurado, LADB.auth.remembered());
+          LASite.entrarApp(alunoRestaurado);
+        }
+      }).catch(function (error) {
+        console.error('[LADB] Não foi possível restaurar a sessão do aluno:', error);
+      });
+    }
   },
 
   /* ---------- conteúdo vindo da camada de dados ---------- */
@@ -282,34 +291,6 @@ const LASite = {
              '<div class="jr-linha"></div>' +
              '<span class="jr-data">' + laEscapar(cidade) + '</span>' +
            '</div>' + miolo;
-  },
-
-  /* ---------- login do aluno ---------- */
-  ligarLogin() {
-    const form = document.getElementById('form-login-aluno');
-    if (!form) return;
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const usuario = document.getElementById('login-usuario').value;
-      const senha   = document.getElementById('login-senha').value;
-      const aviso   = document.getElementById('login-aviso');
-
-      const r = laAutenticar(usuario, senha);
-
-      if (!r.ok) {
-        if (aviso) {
-          aviso.textContent = r.erro;
-          aviso.classList.remove('hidden');
-        }
-        laRegistrarAcesso('login', 'clique', { alvo: 'login-falhou' });
-        return;
-      }
-
-      if (aviso) aviso.classList.add('hidden');
-      laRegistrarAcesso('login', 'clique', { alvo: 'login-ok' });
-      LASite.entrarApp(r.aluno);
-    });
   },
 
   entrarApp(aluno) {

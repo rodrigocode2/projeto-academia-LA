@@ -597,8 +597,17 @@ function laListarMedidas(alunoId) {
 function laSalvarMedida(alunoId, peso, cintura) {
   try {
     const lista = laListarMedidas(alunoId);
-    lista.push({ peso: peso, cintura: cintura, quando: new Date().toISOString() });
+    const medida = {
+      id: 'md' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+      peso: peso,
+      cintura: cintura,
+      quando: new Date().toISOString()
+    };
+    lista.push(medida);
     localStorage.setItem(LA_MEDIDAS + alunoId, JSON.stringify(lista.slice(-24)));
+    if (window.LADB && window.LADB.auth.sessionKey()) {
+      window.LADB.syncAluno(window.LADB.dadosAluno.salvarMedida(alunoId, medida), 'medidas');
+    }
     return true;
   } catch (e) { return false; }
 }

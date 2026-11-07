@@ -5,7 +5,6 @@
    ========================================================================== */
 
 const LA_LEMBRAR = 'la_lembrar';
-const LA_PENDENTES = 'la_pendentes';
 
 /* ==========================================================================
    ENTRAR E SAIR
@@ -14,9 +13,10 @@ const LA_PENDENTES = 'la_pendentes';
 function laSalvarSessao(aluno, lembrar) {
   try {
     const dados = JSON.stringify({ id: aluno.id });
-    /* lembrar = fica semanas; sem lembrar = só nesta aba */
+    sessionStorage.setItem(LA_LEMBRAR, dados);
     if (lembrar) localStorage.setItem(LA_LEMBRAR, dados);
-    else sessionStorage.setItem(LA_LEMBRAR, dados);
+    else localStorage.removeItem(LA_LEMBRAR);
+    laAbrirSessaoAluno(aluno.id);
     return true;
   } catch (e) { return false; }
 }
@@ -30,52 +30,20 @@ function laRecuperarSessao() {
   } catch (e) { return null; }
 }
 
-function laSairDeVez() {
+async function laSairDeVez() {
   try {
     localStorage.removeItem(LA_LEMBRAR);
     sessionStorage.removeItem(LA_LEMBRAR);
     sessionStorage.removeItem(LA_SESSAO);
-  } catch (e) {}
+  } catch (e) {
+    console.error('Não foi possível limpar os dados locais da sessão:', e);
+  }
+  if (window.LADB) await window.LADB.auth.signOut();
 }
 
 /* ==========================================================================
    CADASTRO — entra como "aguardando liberação"
    ========================================================================== */
-
-function laCadastrarAluno(dados) {
-  const nome = String(dados.nome || '').trim();
-  const cpf = String(dados.cpf || '').replace(/\D/g, '');
-  const senha = String(dados.senha || '').trim();
-
-  if (nome.split(/\s+/).length < 2) return { ok: false, erro: 'Informe nome e sobrenome.' };
-  if (cpf.length !== 11) return { ok: false, erro: 'O CPF precisa ter 11 números.' };
-  if (senha.length < 4) return { ok: false, erro: 'A senha precisa ter 4 caracteres ou mais.' };
-
-  const jaTem = laListarAlunos().some(function (a) { return a.cpf === cpf; });
-  if (jaTem) return { ok: false, erro: 'Já existe um cadastro com esse CPF. Tente entrar.' };
-
-  const aluno = laCriarAluno({
-    nome: nome,
-    cpf: cpf,
-    senha: senha,
-    telefone: dados.zap || '',
-    email: dados.email || '',
-    plano: 'Aguardando',
-    objetivo: ''
-  });
-
-  /* fica pendente até a academia liberar */
-  laAtualizarAluno(aluno.id, { ativo: false, pendente: true });
-
-  try {
-    const b = localStorage.getItem(LA_PENDENTES);
-    const lista = b ? JSON.parse(b) : [];
-    lista.push({ id: aluno.id, nome: nome, cpf: cpf, quando: new Date().toISOString() });
-    localStorage.setItem(LA_PENDENTES, JSON.stringify(lista));
-  } catch (e) {}
-
-  return { ok: true, aluno: aluno };
-}
 
 /* ==========================================================================
    ABAS DO APP
@@ -343,55 +311,36 @@ function laLigarEntrada() {
   const formLogin = document.getElementById('form-login-aluno');
   if (formLogin && !formLogin._ligado) {
     formLogin._ligado = true;
-    formLogin.addEventListener('submit', function (e) {
+    formLogin.addEventListener('submit', async function (e) {
       e.preventDefault();
       const usuario = document.getElementById('login-usuario').value;
       const senha = document.getElementById('login-senha').value;
       const aviso = document.getElementById('login-aviso');
       const lembrar = document.getElementById('login-lembrar');
 
-      const r = laAutenticar(usuario, senha);
-      if (!r.ok) {
-        if (aviso) { aviso.textContent = r.erro; aviso.classList.remove('hidden'); }
-        return;
+      const botao = formLogin.querySelector('[type="submit"]');
+      if (botao) botao.disabled = true;
+      try {
+        const aluno = await LADB.auth.studentLogin(usuario, senha, lembrar ? lembrar.checked : false);
+        if (aviso) aviso.classList.add('hidden');
+        laSalvarSessao(aluno, lembrar ? lembrar.checked : false);
+        LASite.entrarApp(aluno);
+      } catch (error) {
+        if (aviso) {
+          aviso.textContent = error.message || 'Não foi possível entrar. Tente novamente.';
+          aviso.classList.remove('hidden');
+        }
+      } finally {
+        if (botao) botao.disabled = false;
       }
-      if (aviso) aviso.classList.add('hidden');
-
-      laSalvarSessao(r.aluno, lembrar ? lembrar.checked : false);
-      LASite.entrarApp(r.aluno);
     });
   }
 
-  /* cadastro */
-  const formCad = document.getElementById('form-cadastro-aluno');
-  if (formCad && !formCad._ligado) {
-    formCad._ligado = true;
-    formCad.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const aviso = document.getElementById('cad-aviso');
-      const ok = document.getElementById('cad-ok');
-
-      const r = laCadastrarAluno({
-        nome: document.getElementById('cad-nome').value,
-        cpf: document.getElementById('cad-cpf').value,
-        zap: document.getElementById('cad-zap').value,
-        email: document.getElementById('cad-email').value,
-        senha: document.getElementById('cad-senha').value
-      });
-
-      if (!r.ok) {
-        if (aviso) { aviso.textContent = r.erro; aviso.classList.remove('hidden'); }
-        if (ok) ok.classList.add('hidden');
-        return;
-      }
-
-      if (aviso) aviso.classList.add('hidden');
-      if (ok) {
-        ok.innerHTML = '<b>Cadastro enviado!</b><br>Sua matrícula (' + r.aluno.matricula +
-                       ') está aguardando liberação. A recepção confirma e monta seu treino.';
-        ok.classList.remove('hidden');
-      }
-      formCad.reset();
+  const pedirAcesso = document.querySelector('.js-pedir-acesso');
+  if (pedirAcesso && !pedirAcesso._ligado) {
+    pedirAcesso._ligado = true;
+    pedirAcesso.addEventListener('click', function () {
+      LAWhatsApp.abrir('Olá! Gostaria de solicitar meu acesso à Área do Aluno da L.A Fitness.');
     });
   }
 
@@ -418,9 +367,11 @@ function laLigarEntrada() {
     b._ligado = true;
     b.addEventListener('click', function () {
       if (!confirm('Sair da sua conta neste aparelho?')) return;
-      laSairDeVez();
-      /* toda saída volta para a TELA DE ABERTURA do site */
-      window.location.href = 'index.html';
+      laSairDeVez().then(function () {
+        window.location.href = 'index.html';
+      }).catch(function (error) {
+        alert(error.message || 'Não foi possível encerrar a sessão.');
+      });
     });
   });
 }

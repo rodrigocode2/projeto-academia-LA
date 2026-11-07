@@ -371,39 +371,35 @@ function laChatLiberado(euId) {
    EXCLUSAO — a academia tira o aluno do sistema
    ========================================================================== */
 
-function laExcluirAlunoDeVez(alunoId) {
-  try {
-    /* sai da lista de alunos */
-    if (typeof laListarAlunos === 'function' && typeof laSalvarAlunos === 'function') {
-      laSalvarAlunos(laListarAlunos().filter(function (a) { return a.id !== alunoId; }));
-    }
+async function laExcluirAlunoDeVez(alunoId) {
+  await LADB.auth.deleteStudent(alunoId);
 
-    /* sai das conversas particulares */
-    const part = laConvLer(LA_PARTICULAR).filter(function (m) {
-      return m && String(m.deId) !== String(alunoId) && String(m.paraId) !== String(alunoId);
-    });
-    laConvGravar(LA_PARTICULAR, part);
-
-    /* sai do grupo */
-    const grupo = laConvLer(LA_GRUPO_CHAVE).filter(function (m) {
-      return m && String(m.alunoId) !== String(alunoId);
-    });
-    laConvGravar(LA_GRUPO_CHAVE, grupo);
-
-    /* sai das amizades e convites */
-    const amigos = laLerAmizades();
-    Object.keys(amigos).forEach(function (par) {
-      if (par.indexOf(String(alunoId)) !== -1) delete amigos[par];
-    });
-    laAmizadesGravar(amigos);
-
-    laConvitesGravar(laConvitesLer().filter(function (c) {
-      return c && String(c.deId) !== String(alunoId) && String(c.paraId) !== String(alunoId);
-    }));
-
-    return true;
-  } catch (e) {
-    console.warn('Excluir aluno:', e);
-    return false;
+  if (typeof laListarAlunos === 'function') {
+    const restantes = laListarAlunos().filter(function (a) { return a.id !== alunoId; });
+    localStorage.setItem('la_alunos', JSON.stringify(restantes));
   }
+
+  /* sai das conversas particulares */
+  const part = laConvLer(LA_PARTICULAR).filter(function (m) {
+    return m && String(m.deId) !== String(alunoId) && String(m.paraId) !== String(alunoId);
+  });
+  laConvGravar(LA_PARTICULAR, part);
+
+  /* sai do grupo */
+  const grupo = laConvLer(LA_GRUPO_CHAVE).filter(function (m) {
+    return m && String(m.alunoId) !== String(alunoId);
+  });
+  laConvGravar(LA_GRUPO_CHAVE, grupo);
+
+  /* sai das amizades e convites */
+  const amigos = laLerAmizades();
+  Object.keys(amigos).forEach(function (par) {
+    if (par.indexOf(String(alunoId)) !== -1) delete amigos[par];
+  });
+  laAmizadesGravar(amigos);
+
+  laConvitesGravar(laConvitesLer().filter(function (c) {
+    return c && String(c.deId) !== String(alunoId) && String(c.paraId) !== String(alunoId);
+  }));
+  return true;
 }

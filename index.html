@@ -272,7 +272,7 @@
         <!-- alternador -->
         <div class="abas-entrada">
           <button class="aba-entrada ativa" data-aba="entrar">Entrar</button>
-          <button class="aba-entrada" data-aba="cadastrar">Quero me cadastrar</button>
+          <button class="aba-entrada" data-aba="cadastrar">Solicitar acesso</button>
         </div>
 
         <!-- ENTRAR -->
@@ -286,7 +286,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">Senha</label>
-              <input type="password" class="form-input" id="login-senha" placeholder="••••••" inputmode="numeric" required>
+              <input type="password" class="form-input" id="login-senha" placeholder="Sua senha" autocomplete="current-password" required>
             </div>
 
             <label class="check-lembrar">
@@ -308,40 +308,14 @@
           <div class="login-notice">
             <i class="fa-solid fa-circle-info" style="font-size:1.1rem; margin-top:2px;"></i>
             <div>
-              <strong>Após o cadastro, sua matrícula fica aguardando liberação.</strong><br>
-              A recepção confirma o pagamento e monta o seu primeiro treino.
+              <strong>O acesso é criado com segurança pela recepção.</strong><br>
+              Fale conosco para solicitar sua conta e receber uma senha temporária.
             </div>
-          </div>
-
-          <div id="cad-aviso" class="aviso-erro hidden"></div>
-          <div id="cad-ok" class="aviso-erro hidden" style="background:rgba(0,230,118,.12); border-color:rgba(0,230,118,.4); color:#00e676;"></div>
-
-          <form id="form-cadastro-aluno">
-            <div class="form-group">
-              <label class="form-label">Nome completo</label>
-              <input type="text" class="form-input" id="cad-nome" placeholder="Seu nome e sobrenome" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">CPF</label>
-              <input type="text" class="form-input" id="cad-cpf" placeholder="000.000.000-00" inputmode="numeric" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">WhatsApp</label>
-              <input type="text" class="form-input" id="cad-zap" placeholder="(61) 9 9266-3142" inputmode="tel">
-            </div>
-            <div class="form-group">
-              <label class="form-label">E-mail</label>
-              <input type="email" class="form-input" id="cad-email" placeholder="seu@email.com">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Crie uma senha</label>
-              <input type="password" class="form-input" id="cad-senha" placeholder="mínimo 4 caracteres" required>
             </div>
 
-            <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">
-              CRIAR CADASTRO <i class="fa-solid fa-user-plus"></i>
+            <button class="btn-primary js-pedir-acesso" type="button" style="width:100%; justify-content:center;">
+              SOLICITAR ACESSO PELO WHATSAPP <i class="fa-brands fa-whatsapp"></i>
             </button>
-          </form>
         </div>
 
       </div>

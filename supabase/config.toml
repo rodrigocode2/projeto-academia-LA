@@ -1,0 +1,2 @@
+[functions.la-students]
+verify_jwt = false

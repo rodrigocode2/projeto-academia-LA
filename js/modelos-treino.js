@@ -34,17 +34,24 @@ function laListarModelos() {
 }
 
 function laSalvarModelos(lista) {
-  try { localStorage.setItem(LA_MODELOS_CHAVE, JSON.stringify(lista)); return true; }
+  const anteriores = laListarModelos();
+  try { localStorage.setItem(LA_MODELOS_CHAVE, JSON.stringify(lista)); }
   catch (e) { return false; }
 
-  /* manda para o banco */
-  if (window.LADB && window.LADB.pronto && Array.isArray(lista)) {
-    window.LADB.gravar('la_modelos', lista.map(function (m) {
-      return { id: m.id, modalidade: m.modalidade, nome: m.nome,
-               descricao: m.descricao, treinos: m.treinos || [],
-               atualizado_em: new Date().toISOString() };
-    }), 'id').catch(function (e) { console.warn('[LADB] modelos so no navegador:', e.message); });
+  if (window.LADB && window.LA_ADMIN_AUTHENTICADO && Array.isArray(lista)) {
+    const idsAtuais = lista.map(function (modelo) { return modelo.id; });
+    const removidos = anteriores
+      .filter(function (modelo) { return idsAtuais.indexOf(modelo.id) === -1; })
+      .map(function (modelo) { return modelo.id; });
+    let sincronizacao = window.LADB.dadosAluno.salvarModelos(lista);
+    if (removidos.length) {
+      sincronizacao = sincronizacao.then(function () {
+        return window.LADB.dadosAluno.removerModelos(removidos);
+      });
+    }
+    window.LADB.syncAluno(sincronizacao, 'modelos de treino');
   }
+  return true;
 }
 
 function laBuscarModelo(id) {
@@ -108,9 +115,15 @@ function laLerLiberados() {
 
 function laLiberarTreino(alunoId, modeloId) {
   try {
+    const modelo = laBuscarModelo(modeloId);
+    if (!modelo) return false;
     const m = laLerLiberados();
-    m[alunoId] = { modeloId: modeloId, liberadoEm: new Date().toISOString() };
+    const liberadoEm = new Date().toISOString();
+    m[alunoId] = { modeloId: modeloId, liberadoEm: liberadoEm };
     localStorage.setItem(LA_LIBERADO_CHAVE, JSON.stringify(m));
+    if (window.LADB && window.LA_ADMIN_AUTHENTICADO) {
+      window.LADB.syncAluno(window.LADB.dadosAluno.liberarTreino(alunoId, modelo), 'treino liberado');
+    }
     return true;
   } catch (e) { return false; }
 }
@@ -129,6 +142,9 @@ function laBloquearTreino(alunoId) {
     const m = laLerLiberados();
     delete m[alunoId];
     localStorage.setItem(LA_LIBERADO_CHAVE, JSON.stringify(m));
+    if (window.LADB && window.LA_ADMIN_AUTHENTICADO) {
+      window.LADB.syncAluno(window.LADB.dadosAluno.bloquearTreino(alunoId), 'treino bloqueado');
+    }
     return true;
   } catch (e) { return false; }
 }
@@ -179,6 +195,12 @@ function laMarcarExecucao(alunoId, exercicioNome, indiceSerie, carga, feito) {
     reg.quando = new Date().toISOString();
 
     localStorage.setItem(LA_EXECUCAO_CHAVE, JSON.stringify(tudo));
+    if (window.LADB && window.LADB.auth.sessionKey()) {
+      window.LADB.syncAluno(
+        window.LADB.dadosAluno.salvarExecucao(alunoId, d, exercicioNome, reg),
+        'progresso do treino'
+      );
+    }
     return true;
   } catch (e) { return false; }
 }
